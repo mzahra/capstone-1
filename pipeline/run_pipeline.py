@@ -65,6 +65,33 @@ def execute_kpi_sql(conn: sqlite3.Connection, kpis: list[dict]) -> list[dict]:
     return results
 
 
+def translate_category_values(conn: sqlite3.Connection, kpi_results: list[dict]) -> None:
+    """
+    The prompt asks the AI to join any "_translation" lookup table it finds and use the
+    English name instead of a raw code, but an LLM cannot be trusted to always do that.
+    This is a deterministic backstop: build a code -> English name map straight from the
+    database, then replace any matching value in the KPI results in place, regardless of
+    what column name or SQL the AI actually used.
+    """
+    try:
+        rows = conn.execute(
+            "SELECT product_category_name, product_category_name_english "
+            "FROM product_category_name_translation"
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return  # no translation table in this client's data, nothing to do
+
+    translation = {code: english for code, english in rows if code and english}
+    if not translation:
+        return
+
+    for kpi in kpi_results:
+        for row in kpi.get("rows", []):
+            for key, value in list(row.items()):
+                if isinstance(value, str) and value in translation:
+                    row[key] = translation[value]
+
+
 def main():
     print("1/4 Profiling database...")
     profile = profile_database()
@@ -75,6 +102,7 @@ def main():
     print("3/4 Executing generated KPI SQL against the database...")
     conn = sqlite3.connect(DB_PATH)
     kpi_results = execute_kpi_sql(conn, model_kpis.get("kpis", []))
+    translate_category_values(conn, kpi_results)
     conn.close()
 
     ok_count = sum(1 for k in kpi_results if k["status"] == "ok")

@@ -90,7 +90,11 @@ Below is a schema/quality profile of their tables. Based ONLY on this profile:
    (any column ending in "_id"), since the values are unreadable hashes or numbers, not
    something a business user can recognize. Group by a category, name, type, status, or date
    column instead. If the only breakdown available for a table is by raw id, skip it and use
-   a different table's category-style column instead.
+   a different table's category-style column instead. All monetary values in this data are in
+   Brazilian Real (BRL), not USD or EUR. Never use a "$" sign anywhere in names or reasoning.
+   If a lookup/translation table exists that maps a code column to a readable English name
+   (for example a "_translation" table), join it and use the English name column instead of
+   the raw code, so results are readable to an English-speaking reader.
 3. List the top 3-5 data quality issues found (plain language, reference the specific table/column).
 4. Suggest 2-3 forward-looking data-science opportunities this schema could support (e.g. churn
    prediction, demand forecasting) -- one sentence each, do not build them, just suggest.
@@ -115,6 +119,9 @@ Here are the KPI results computed from their database:
 And these are the data quality issues found in their raw data:
 
 {quality_findings}
+
+All monetary values are in Brazilian Real (BRL). Refer to money as "BRL" or "R$", never "$"
+(a bare "$" would wrongly imply US dollars).
 
 Write 4-6 plain-language insight bullets. Each bullet should say what the numbers show and why it
 matters for the business (not statistics jargon). Where a quality issue affects trust in a number,

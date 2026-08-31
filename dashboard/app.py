@@ -109,6 +109,7 @@ def build_mermaid_erd(profile: dict) -> str:
 
 # --- KPIs, with charts where a KPI has more than one row -------------------
 section_header("KPIs", COLORS["kpi"])
+st.caption("Monetary figures are in Brazilian Real (BRL), the currency of the source dataset (Olist is a Brazilian e-commerce company). Data covers September 2016 to October 2018 (about 2 years), so totals are cumulative over that period, not annual. Average order value is the item price only, it does not include shipping.")
 ok_kpis = [k for k in report["kpis"] if k["status"] == "ok" and k["rows"]]
 failed_kpis = [k for k in report["kpis"] if k["status"] != "ok"]
 
@@ -204,6 +205,12 @@ with st.expander("Technical details (data model, quality checks)"):
             """,
             height=550,
             scrolling=True,
+        )
+        st.caption(
+            f"More than one table can look like a hub here, since this diagram shows every "
+            f"confirmed relationship, not just the fact table. That is normal when data has "
+            f"more than one level of detail (for example an order header and its order items). "
+            f"The AI recommends **{model['fact_table']}** as the fact table, see above."
         )
 
     error_kpis = [k for k in failed_kpis if k["status"] == "failed"]
