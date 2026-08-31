@@ -19,6 +19,26 @@ instead of through a workflow builder UI.
 4. **`run_pipeline.py`**: runs all of the above end to end and writes `outputs/report.json`,
    which `dashboard/app.py` then displays.
 
+## Where the AI is actually called
+
+There are exactly 2 AI calls in the whole project, both in `model_kpi_generator.py`, both
+called from `run_pipeline.py`. Everything else, loading data, profiling, running SQL, and the
+dashboard, is deterministic Python and SQL, no AI involved.
+
+| Step | File | AI call? | What happens |
+|---|---|---|---|
+| 1. Load data | `load_data.py` | No | CSVs into SQLite |
+| 2. Profile | `profiling.py` | No | pandas: nulls, duplicates, outliers, key detection |
+| 3. Recommend model + KPIs | `model_kpi_generator.py`, `generate_model_and_kpis()` | Yes, call #1 | Input: the schema profile (text summary). Output: fact/dimension model, KPI list with SQL, quality findings, data science ideas |
+| 4. Execute KPIs | `run_pipeline.py` | No | The SQL from step 3 is run for real against SQLite, pure database execution, no AI |
+| 5. Write insights | `model_kpi_generator.py`, `generate_insights()` | Yes, call #2 | Input: the KPI results (real numbers) plus the quality findings. Output: plain language business insights |
+| 6. Dashboard | `dashboard/app.py` | No | Just reads and displays the JSON that steps 1 to 5 produced |
+
+The AI never sees raw client data, rows, or individual records.
+Call #1 only sees a compact schema and stats summary, and call #2 only sees already computed KPI
+numbers. This is also why the AI step stays cheap and fast regardless of dataset size, see
+"Data volume" below.
+
 ## What this proves, and what it does not
 
 **It proves:** the pipeline can take a genuinely messy multi table export it has never seen

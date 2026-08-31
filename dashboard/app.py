@@ -207,10 +207,11 @@ with st.expander("Technical details (data model, quality checks)"):
             scrolling=True,
         )
         st.caption(
-            f"More than one table can look like a hub here, since this diagram shows every "
-            f"confirmed relationship, not just the fact table. That is normal when data has "
-            f"more than one level of detail (for example an order header and its order items). "
-            f"The AI recommends **{model['fact_table']}** as the fact table, see above."
+            f"More than one table can look central in this diagram, since it draws every "
+            f"confirmed relationship, not only the one recommended as the fact table. That is "
+            f"normal when data has more than one level of detail (for example an order header "
+            f"and its order items). The AI recommends **{model['fact_table']}** as the fact "
+            f"table, see above."
         )
 
     error_kpis = [k for k in failed_kpis if k["status"] == "failed"]
