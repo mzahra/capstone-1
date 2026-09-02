@@ -1,42 +1,60 @@
 {
-  "generated_at": "2026-08-31T08:16:30.779430+00:00",
+  "generated_at": "2026-09-02T13:01:34.339959+00:00",
   "profile_summary": {
     "tables": {
       "customers": {
         "row_count": 99441,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       },
       "geolocation": {
         "row_count": 1000163,
-        "duplicate_rows": 261831
+        "duplicate_rows": 6309,
+        "sampled": true,
+        "sample_size": 100017
       },
       "order_items": {
         "row_count": 112650,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 112650
       },
       "order_payments": {
         "row_count": 103886,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 103886
       },
       "order_reviews": {
         "row_count": 99224,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       },
       "orders": {
         "row_count": 99441,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       },
       "products": {
         "row_count": 32951,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       },
       "sellers": {
         "row_count": 3095,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       },
       "product_category_name_translation": {
         "row_count": 71,
-        "duplicate_rows": 0
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
       }
     },
     "fk_candidates": [
@@ -100,183 +118,168 @@
       "order_payments",
       "order_reviews"
     ],
-    "rationale": "The order_items table serves as the central fact table as it contains transactional data related to each order, including product details and pricing. The dimension tables provide contextual information about customers, products, sellers, payment methods, and reviews, enabling comprehensive analysis of sales performance and customer behavior."
+    "rationale": "The order_items table serves as the central fact table because it contains transactional data related to each order, including product details, seller information, and pricing. The associated dimension tables provide context for the transactions, such as customer demographics, product categories, seller locations, payment methods, and customer reviews."
   },
   "quality_findings": [
-    "The geolocation table has 261831 duplicate rows, which may lead to inaccurate location-based analysis.",
-    "The order_reviews table has a high percentage of null values in review_comment_title (88.34%), indicating potential issues with customer feedback collection.",
-    "The order_reviews table also has a significant percentage of null values in review_comment_message (58.7%), which may limit qualitative insights from customer reviews."
+    "The 'review_comment_title' column in the 'order_reviews' table has inconsistent casing/format affecting 496 values.",
+    "The 'review_comment_message' column in the 'order_reviews' table has possible PII detected, with PERSON in 44.0% of sampled values and LOCATION in 13.5% of sampled values.",
+    "The 'seller_city' column in the 'sellers' table has inconsistent casing/format affecting 3 values."
   ],
   "data_science_opportunities": [
-    "Churn prediction could be implemented by analyzing customer purchase patterns and review scores to identify at-risk customers.",
-    "Demand forecasting can be enhanced by utilizing historical sales data from order_items to predict future sales trends.",
-    "Customer segmentation analysis could be performed based on purchasing behavior and demographics to tailor marketing strategies."
+    "Churn prediction could be implemented by analyzing customer purchase patterns and review sentiments.",
+    "Demand forecasting can be enhanced by leveraging historical order data and seasonal trends.",
+    "Customer segmentation analysis could identify distinct groups based on purchasing behavior and demographics."
   ],
   "kpis": [
     {
       "name": "Total Revenue",
-      "sql": "SELECT CAST(SUM(price) AS REAL) AS total_revenue FROM order_items;",
+      "sql": "SELECT SUM(price + freight_value) AS total_revenue FROM order_items;",
       "why_it_matters": "Total revenue is a key indicator of business performance, reflecting the overall sales generated.",
       "rows": [
         {
-          "total_revenue": 13591643.7
+          "total_revenue": 15843553.24
         }
       ],
-      "status": "ok"
-    },
-    {
-      "name": "Average Order Value",
-      "sql": "SELECT CAST(SUM(price) AS REAL) / COUNT(DISTINCT order_id) AS average_order_value FROM order_items;",
-      "why_it_matters": "Average order value helps assess customer spending behavior and can guide pricing strategies.",
-      "rows": [
-        {
-          "average_order_value": 137.75407637889444
-        }
-      ],
-      "status": "ok"
+      "status": "ok",
+      "attempts": 1
     },
     {
       "name": "Revenue by Product Category",
-      "sql": "SELECT p.product_category_name, CAST(SUM(oi.price) AS REAL) AS total_revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id GROUP BY p.product_category_name ORDER BY total_revenue DESC LIMIT 10;",
-      "why_it_matters": "Understanding revenue by product category helps identify top-performing categories and informs inventory and marketing strategies.",
+      "sql": "SELECT pc.product_category_name_english, SUM(oi.price + oi.freight_value) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN product_category_name_translation pc ON p.product_category_name = pc.product_category_name GROUP BY pc.product_category_name_english ORDER BY revenue DESC LIMIT 10;",
+      "why_it_matters": "",
       "rows": [
         {
-          "product_category_name": "health_beauty",
-          "total_revenue": 1258681.34
+          "product_category_name_english": "health_beauty",
+          "revenue": 1441248.07
         },
         {
-          "product_category_name": "watches_gifts",
-          "total_revenue": 1205005.68
+          "product_category_name_english": "watches_gifts",
+          "revenue": 1305541.61
         },
         {
-          "product_category_name": "bed_bath_table",
-          "total_revenue": 1036988.68
+          "product_category_name_english": "bed_bath_table",
+          "revenue": 1241681.72
         },
         {
-          "product_category_name": "sports_leisure",
-          "total_revenue": 988048.97
+          "product_category_name_english": "sports_leisure",
+          "revenue": 1156656.48
         },
         {
-          "product_category_name": "computers_accessories",
-          "total_revenue": 911954.32
+          "product_category_name_english": "computers_accessories",
+          "revenue": 1059272.4
         },
         {
-          "product_category_name": "furniture_decor",
-          "total_revenue": 729762.49
+          "product_category_name_english": "furniture_decor",
+          "revenue": 902511.79
         },
         {
-          "product_category_name": "cool_stuff",
-          "total_revenue": 635290.85
+          "product_category_name_english": "housewares",
+          "revenue": 778397.77
         },
         {
-          "product_category_name": "housewares",
-          "total_revenue": 632248.66
+          "product_category_name_english": "cool_stuff",
+          "revenue": 719329.95
         },
         {
-          "product_category_name": "auto",
-          "total_revenue": 592720.11
+          "product_category_name_english": "auto",
+          "revenue": 685384.32
         },
         {
-          "product_category_name": "garden_tools",
-          "total_revenue": 485256.46
+          "product_category_name_english": "garden_tools",
+          "revenue": 584219.21
         }
       ],
-      "status": "ok"
+      "status": "ok",
+      "attempts": 1
     },
     {
       "name": "Orders by Payment Type",
-      "sql": "SELECT op.payment_type, COUNT(DISTINCT op.order_id) AS total_orders FROM order_payments op GROUP BY op.payment_type ORDER BY total_orders DESC LIMIT 10;",
-      "why_it_matters": "Analyzing orders by payment type reveals customer preferences and can inform payment processing strategies.",
+      "sql": "SELECT op.payment_type, COUNT(*) AS order_count FROM order_payments op JOIN orders o ON op.order_id = o.order_id GROUP BY op.payment_type ORDER BY order_count DESC LIMIT 10;",
+      "why_it_matters": "",
       "rows": [
         {
           "payment_type": "credit_card",
-          "total_orders": 76505
+          "order_count": 76795
         },
         {
           "payment_type": "boleto",
-          "total_orders": 19784
+          "order_count": 19784
         },
         {
           "payment_type": "voucher",
-          "total_orders": 3866
+          "order_count": 5775
         },
         {
           "payment_type": "debit_card",
-          "total_orders": 1528
+          "order_count": 1529
         },
         {
           "payment_type": "not_defined",
-          "total_orders": 3
+          "order_count": 3
         }
       ],
-      "status": "ok"
+      "status": "ok",
+      "attempts": 1
     },
     {
       "name": "Average Review Score",
-      "sql": "SELECT CAST(AVG(review_score) AS REAL) AS average_review_score FROM order_reviews;",
-      "why_it_matters": "Average review score is crucial for assessing customer satisfaction and product quality.",
+      "sql": "SELECT AVG(review_score) AS average_review_score FROM order_reviews;",
+      "why_it_matters": "",
       "rows": [
         {
           "average_review_score": 4.08642062404257
         }
       ],
-      "status": "ok"
+      "status": "ok",
+      "attempts": 1
     },
     {
-      "name": "Top 10 Cities by Customer Count",
-      "sql": "SELECT customer_city, COUNT(DISTINCT customer_id) AS customer_count FROM customers GROUP BY customer_city ORDER BY customer_count DESC LIMIT 10;",
-      "why_it_matters": "Identifying top cities by customer count helps target marketing efforts and optimize logistics.",
+      "name": "Reviews by Score",
+      "sql": "SELECT review_score, COUNT(*) AS review_count FROM order_reviews GROUP BY review_score ORDER BY review_count DESC LIMIT 10;",
+      "why_it_matters": "",
       "rows": [
         {
-          "customer_city": "sao paulo",
-          "customer_count": 15540
+          "review_score": 5,
+          "review_count": 57328
         },
         {
-          "customer_city": "rio de janeiro",
-          "customer_count": 6882
+          "review_score": 4,
+          "review_count": 19142
         },
         {
-          "customer_city": "belo horizonte",
-          "customer_count": 2773
+          "review_score": 1,
+          "review_count": 11424
         },
         {
-          "customer_city": "brasilia",
-          "customer_count": 2131
+          "review_score": 3,
+          "review_count": 8179
         },
         {
-          "customer_city": "curitiba",
-          "customer_count": 1521
-        },
-        {
-          "customer_city": "campinas",
-          "customer_count": 1444
-        },
-        {
-          "customer_city": "porto alegre",
-          "customer_count": 1379
-        },
-        {
-          "customer_city": "salvador",
-          "customer_count": 1245
-        },
-        {
-          "customer_city": "guarulhos",
-          "customer_count": 1189
-        },
-        {
-          "customer_city": "sao bernardo do campo",
-          "customer_count": 938
+          "review_score": 2,
+          "review_count": 3151
         }
       ],
-      "status": "ok"
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Total Orders",
+      "sql": "SELECT COUNT(*) AS total_orders FROM orders;",
+      "why_it_matters": "",
+      "rows": [
+        {
+          "total_orders": 99441
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
     }
   ],
   "insights": [
-    "The total revenue for the period stands at R$13,591,643.70, indicating strong sales performance and overall business health.",
-    "The average order value is R$137.75, which suggests that customers are spending a reasonable amount per transaction; this insight can help in refining pricing strategies.",
-    "The top product category is 'health_beauty' with R$1,258,681.34 in revenue, highlighting a strong market demand that can guide inventory and marketing efforts.",
-    "Credit card payments dominate with 76,505 orders, showing a clear customer preference that can inform payment processing strategies.",
-    "The average review score is 4.09, reflecting a generally positive customer satisfaction level, although the high percentage of null values in review comments (88.34% for titles and 58.7% for messages) raises concerns about the quality of feedback collected, potentially limiting insights into customer experiences.",
-    "The top city for customer count is S\u00e3o Paulo with 15,540 customers, indicating a key market area that may benefit from targeted marketing and logistics optimization."
+    "Total revenue for the period reached R$15,843,553.24, indicating strong overall sales performance, which is crucial for sustaining business growth and profitability.",
+    "The top revenue-generating product category is 'Health & Beauty', contributing R$1,441,248.07. This highlights a key area for potential marketing focus and inventory investment.",
+    "Credit card payments dominate the payment methods, accounting for 76,795 orders. This suggests that optimizing the credit card payment process could enhance customer satisfaction and retention.",
+    "The average review score stands at 4.09, reflecting generally positive customer feedback. However, with a significant number of reviews scoring 1, addressing customer concerns could improve overall satisfaction and brand reputation.",
+    "There are data quality issues, including inconsistent casing in review titles and potential PII in review comments. These issues could undermine trust in customer feedback and require attention to maintain data integrity."
   ]
 }

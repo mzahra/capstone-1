@@ -55,15 +55,34 @@ def summarize_profile(profile: dict, max_tables: int | None = None) -> str:
         tables = tables[:max_tables]
 
     for table, info in tables:
-        lines.append(f"\nTABLE {table} ({info['row_count']} rows, {info['duplicate_rows']} duplicate rows)")
+        size_note = f"{info['row_count']} rows, {info['duplicate_rows']} duplicate rows"
+        if info.get("sampled"):
+            size_note += (
+                f" (column stats below are from a {info['sample_size']:,}-row sample of this "
+                f"table, not an exact scan of all {info['row_count']:,} rows, since it is too "
+                f"large to load whole)"
+            )
+        lines.append(f"\nTABLE {table} ({size_note})")
         if info["pk_candidates"]:
             lines.append(f"  PK candidates: {', '.join(info['pk_candidates'])}")
         for col, stats in info["columns"].items():
-            lines.append(
+            line = (
                 f"  - {col}: {stats['dtype']}, null={stats['null_pct']}%, "
                 f"distinct={stats['distinct_count']}, outliers={stats['outlier_count']}, "
                 f"e.g. {stats['sample_values']}"
             )
+            # Sample values above are already redacted (see text_quality.py), so it is safe
+            # to also tell the model what kind of PII was detected, as counts only.
+            if stats.get("free_text_pii"):
+                pii = stats["free_text_pii"]
+                pii_summary = ", ".join(
+                    f"{entity} in {e['pct']}% of {pii['sample_size']} sampled values"
+                    for entity, e in pii["entities"].items()
+                )
+                line += f" | POSSIBLE PII DETECTED: {pii_summary}"
+            if stats.get("casing_issues"):
+                line += f" | INCONSISTENT CASING/FORMAT: {len(stats['casing_issues'])} value(s) affected"
+            lines.append(line)
 
     lines.append("\nFOREIGN KEY CANDIDATES (confirmed by value overlap):")
     for fk in profile["fk_candidates"]:
@@ -96,6 +115,9 @@ Below is a schema/quality profile of their tables. Based ONLY on this profile:
    (for example a "_translation" table), join it and use the English name column instead of
    the raw code, so results are readable to an English-speaking reader.
 3. List the top 3-5 data quality issues found (plain language, reference the specific table/column).
+   If any column is marked "POSSIBLE PII DETECTED" or "INCONSISTENT CASING/FORMAT" in the
+   profile below, always include it as one of these issues, since it affects whether this data
+   is safe to show a client as-is.
 4. Suggest 2-3 forward-looking data-science opportunities this schema could support (e.g. churn
    prediction, demand forecasting) -- one sentence each, do not build them, just suggest.
 
@@ -140,6 +162,54 @@ def generate_model_and_kpis(profile: dict) -> dict:
         temperature=0.2,
     )
     return json.loads(resp.choices[0].message.content)
+
+
+FIX_SQL_PROMPT = """This SQLite query failed:
+
+{sql}
+
+Error: {error}
+
+Here are the exact column names that exist in this database. A column name with a space or
+punctuation (for example "Timely response?") must be wrapped in double quotes to be used in
+SQL; a name like Timely_response does not exist just because it looks like a cleaned-up version
+of one:
+
+{schema_hint}
+
+Fix the query so it runs successfully, using only these exact column names, and keep the same
+intent as the original query. Respond with ONLY the corrected SQL, no explanation, no markdown
+code fences.
+"""
+
+
+def schema_hint_from_profile(profile: dict) -> str:
+    """A compact table -> exact column names list. Deliberately not the full stats profile
+    used in the original recommendation prompt, since fixing a failed query only needs to know
+    what the real column names are, not their null rates or sample values."""
+    lines = []
+    for table, info in profile["tables"].items():
+        columns = ", ".join(f'"{c}"' for c in info["columns"])
+        lines.append(f"{table}: {columns}")
+    return "\n".join(lines)
+
+
+def fix_kpi_sql(sql: str, error: str, schema_hint: str) -> str:
+    prompt = FIX_SQL_PROMPT.format(sql=sql, error=error, schema_hint=schema_hint)
+    resp = client.chat.completions.create(
+        model=MODEL,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0,
+    )
+    fixed = resp.choices[0].message.content.strip()
+    # Defensive: the prompt asks for no markdown fences, but an LLM cannot be trusted to
+    # always follow that, so any ```sql ... ``` wrapper is stripped if it shows up anyway.
+    if fixed.startswith("```"):
+        fixed = fixed.strip("`")
+        if fixed.lower().startswith("sql"):
+            fixed = fixed[3:]
+        fixed = fixed.strip()
+    return fixed
 
 
 def generate_insights(kpi_results: dict, quality_findings: list[str]) -> dict:

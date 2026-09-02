@@ -3,13 +3,15 @@
     "customers": {
       "table": "customers",
       "row_count": 99441,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
         "customer_id"
       ],
       "columns": {
         "customer_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 99441,
@@ -18,10 +20,12 @@
             "06b8999e2fba1a1fbc88172c00ba8bc7",
             "18955e83d337fd6b2def6b18a428ac77",
             "4e7b3e00288586ebd08712fdd0374a03"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "customer_unique_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 96096,
@@ -30,7 +34,9 @@
             "861eff4711a542e4b93843c6dd7febb0",
             "290c77bc529b7ac935b93aa66c333dc3",
             "060e732b5b29e8181a18229c7b0b2b5e"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "customer_zip_code_prefix": {
           "dtype": "int64",
@@ -42,10 +48,12 @@
             "14409",
             "9790",
             "1151"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "customer_city": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 4119,
@@ -54,10 +62,12 @@
             "franca",
             "sao bernardo do campo",
             "sao paulo"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "customer_state": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 27,
@@ -66,86 +76,102 @@
             "SP",
             "SC",
             "MG"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "geolocation": {
       "table": "geolocation",
       "row_count": 1000163,
-      "duplicate_rows": 261831,
+      "sampled": true,
+      "sample_size": 100017,
+      "duplicate_rows": 6309,
       "pk_candidates": [],
       "columns": {
         "geolocation_zip_code_prefix": {
           "dtype": "int64",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 19015,
+          "distinct_count": 15058,
           "outlier_count": 0,
           "sample_values": [
             "1037",
-            "1046",
-            "1041"
-          ]
+            "1013",
+            "1046"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "geolocation_lat": {
           "dtype": "float64",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 717360,
-          "outlier_count": 168240,
+          "distinct_count": 92849,
+          "outlier_count": 16823,
           "sample_values": [
             "-23.54562128115268",
-            "-23.54608112703553",
-            "-23.54612896641469"
-          ]
+            "-23.547325128224376",
+            "-23.545165891770928"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "geolocation_lng": {
           "dtype": "float64",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 717613,
-          "outlier_count": 42348,
+          "distinct_count": 92865,
+          "outlier_count": 4259,
           "sample_values": [
             "-46.63929204800168",
-            "-46.64482029837157",
-            "-46.64295148361138"
-          ]
+            "-46.63418378613892",
+            "-46.643785796266464"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "geolocation_city": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 8011,
+          "distinct_count": 5150,
           "outlier_count": 0,
           "sample_values": [
             "sao paulo",
             "s\u00e3o paulo",
-            "sao bernardo do campo"
-          ]
+            "sp"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "geolocation_state": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 27,
           "outlier_count": 0,
           "sample_values": [
             "SP",
-            "RN",
-            "AC"
-          ]
+            "RJ",
+            "ES"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "order_items": {
       "table": "order_items",
       "row_count": 112650,
+      "sampled": true,
+      "sample_size": 112650,
       "duplicate_rows": 0,
       "pk_candidates": [],
       "columns": {
         "order_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 98666,
@@ -154,7 +180,9 @@
             "00010242fe8c5a6d1ba2dd792cb16214",
             "00018f77f2f0320c557190d7a144bdd3",
             "000229ec398224ef6ca0657da4fc703e"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_item_id": {
           "dtype": "int64",
@@ -166,10 +194,12 @@
             "1",
             "2",
             "3"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 32951,
@@ -178,10 +208,12 @@
             "4244733e06e7ecb4970a6e2683c13e61",
             "e5f2d52b802189ee658865ca93d83a8f",
             "c777355d18b72b67abbeef9df44fd0fd"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "seller_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 3095,
@@ -190,10 +222,12 @@
             "48436dade18ac8b2bce089ec2a041202",
             "dd7ddc04e1b6c2c614352b383efe2d36",
             "5b51032eddd242adc84c38acab88f23d"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "shipping_limit_date": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 93318,
@@ -202,7 +236,9 @@
             "2017-09-19 09:45:35",
             "2017-05-03 11:05:13",
             "2018-01-18 14:48:30"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "price": {
           "dtype": "float64",
@@ -214,7 +250,9 @@
             "58.9",
             "239.9",
             "199.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "freight_value": {
           "dtype": "float64",
@@ -226,18 +264,22 @@
             "13.29",
             "19.93",
             "17.87"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "order_payments": {
       "table": "order_payments",
       "row_count": 103886,
+      "sampled": true,
+      "sample_size": 103886,
       "duplicate_rows": 0,
       "pk_candidates": [],
       "columns": {
         "order_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 99440,
@@ -246,7 +288,9 @@
             "b81ef226f3fe1789b1e8b2acac839d17",
             "a9810da82917af2d9aefd1278f1dcfa0",
             "25e8ea4e93396b6fa0d3dd708e76c1bd"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "payment_sequential": {
           "dtype": "int64",
@@ -258,10 +302,12 @@
             "1",
             "2",
             "4"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "payment_type": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 5,
@@ -270,7 +316,9 @@
             "credit_card",
             "boleto",
             "voucher"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "payment_installments": {
           "dtype": "int64",
@@ -282,7 +330,9 @@
             "8",
             "1",
             "2"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "payment_value": {
           "dtype": "float64",
@@ -294,18 +344,22 @@
             "99.33",
             "24.39",
             "65.71"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "order_reviews": {
       "table": "order_reviews",
       "row_count": 99224,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [],
       "columns": {
         "review_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 98410,
@@ -314,10 +368,12 @@
             "7bc2406110b926393aa56f80a40eba40",
             "80e641a11e56f04c1ad469d5645fdfde",
             "228ce5500dc1d8e020d8d1322874b6f0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 98673,
@@ -326,7 +382,9 @@
             "73fc7af87114b39712e6da79b0a377eb",
             "a548910a1c6147796b98fdf73dbeba33",
             "f9e4b658b201a9f2ecdecbb34bed034b"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "review_score": {
           "dtype": "int64",
@@ -338,10 +396,12 @@
             "4",
             "5",
             "1"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "review_comment_title": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 87656,
           "null_pct": 88.34,
           "distinct_count": 4527,
@@ -350,22 +410,2375 @@
             "recomendo",
             "Super recomendo",
             "N\u00e3o chegou meu produto "
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "recomendo": {
+              "recomendo": 345,
+              "Recomendo": 423,
+              "RECOMENDO": 55,
+              "Recomendo ": 62,
+              "recomendo ": 13,
+              "RECOMENDO ": 6,
+              "REcomendo": 1,
+              " recomendo": 3,
+              "rECOMENDO": 1,
+              " RECOMENDO": 1
+            },
+            "super recomendo": {
+              "Super recomendo": 217,
+              "super recomendo": 270,
+              "Super Recomendo ": 4,
+              "Super Recomendo": 39,
+              "SUPER RECOMENDO": 51,
+              "super recomendo ": 9,
+              "Super recomendo ": 12,
+              "Super RECOMENDO": 1,
+              " SUPER RECOMENDO": 1,
+              " Super Recomendo": 1
+            },
+            "\u00f3timo": {
+              "\u00d3timo": 240,
+              "\u00d3timo ": 207,
+              "\u00f3timo": 29,
+              "\u00f3timo ": 11,
+              "\u00d3TIMO": 9,
+              "\u00d3TIMO ": 1
+            },
+            "muito bom.": {
+              "Muito bom.": 11,
+              "Muito bom. ": 4,
+              "muito bom.": 3
+            },
+            "bom": {
+              "Bom": 293,
+              "bom": 97,
+              "Bom ": 55,
+              "BOM": 15,
+              "bom ": 8,
+              " Bom": 1,
+              "bOM": 1
+            },
+            "maravilhoso!": {
+              "Maravilhoso!": 1,
+              "maravilhoso!": 1
+            },
+            "entrega perfeita": {
+              "Entrega perfeita": 4,
+              "Entrega perfeita ": 1
+            },
+            "\u00f3timo produto!": {
+              "\u00d3timo Produto! ": 1,
+              "\u00d3timo produto!": 7,
+              "\u00f3timo produto!": 1,
+              "\u00d3timo produto! ": 1,
+              "\u00d3timo Produto!": 1
+            },
+            "n\u00e3o recebi o produto.": {
+              "N\u00e3o recebi o produto.": 6,
+              "N\u00e3o recebi o produto. ": 1,
+              "N\u00e3o Recebi o produto. ": 1
+            },
+            "otimo": {
+              "OTIMO": 11,
+              "otimo": 105,
+              "Otimo": 174,
+              "Otimo ": 4,
+              " Otimo": 1,
+              "OTIMO ": 2,
+              "otimo ": 1
+            },
+            "muito boa": {
+              "muito boa": 10,
+              "Muito boa": 27,
+              "MUITO BOA": 1,
+              "Muito boa ": 4,
+              "Muito Boa": 1,
+              "Muito Boa ": 1
+            },
+            "4": {
+              " 4 ": 1,
+              "4": 9
+            },
+            "m\u00e9dio": {
+              "M\u00e9dio": 3,
+              "M\u00c9DIO": 1,
+              "M\u00e9dio ": 2
+            },
+            "n\u00e3o recebi ainda": {
+              "n\u00e3o recebi ainda": 1,
+              "N\u00e3o recebi ainda": 2,
+              "n\u00e3o recebi ainda ": 1
+            },
+            "top": {
+              "Top": 30,
+              "TOP": 8,
+              "top": 4,
+              "Top ": 1
+            },
+            "\u00f3tima compra": {
+              "\u00d3tima compra": 11,
+              "\u00f3tima compra": 1,
+              "\u00d3tima compra ": 1
+            },
+            "horr\u00edvel": {
+              "Horr\u00edvel": 2,
+              "Horr\u00edvel ": 5
+            },
+            "10": {
+              "10": 158,
+              " 10": 1,
+              "10 ": 2
+            },
+            "muito bom": {
+              "Muito bom ": 87,
+              "muito bom": 54,
+              "Muito bom": 247,
+              "Muito Bom": 22,
+              "MUITO bom ": 1,
+              "muito bom ": 6,
+              "MUITO BOM": 9,
+              "MUITO BOM ": 1,
+              "muito BOM": 1,
+              " Muito bom": 1
+            },
+            "insatisfeito": {
+              "Insatisfeito": 7,
+              "Insatisfeito ": 2
+            },
+            "mega recomendo": {
+              "mega recomendo": 1,
+              "Mega Recomendo": 1,
+              "MEGA RECOMENDO": 1
+            },
+            "excelente produto": {
+              "EXCELENTE PRODUTO": 1,
+              "Excelente produto": 16,
+              "excelente produto": 1,
+              "Excelente produto ": 7,
+              "Excelente Produto": 2
+            },
+            "produto fraco": {
+              "produto fraco ": 1,
+              "Produto fraco": 2
+            },
+            "tudo certo!": {
+              "Tudo certo!": 14,
+              "Tudo Certo!": 1,
+              "Tudo certo! ": 1
+            },
+            "perfeito!!": {
+              "perfeito!!": 1,
+              "Perfeito!!": 2
+            },
+            "excelente": {
+              "Excelente": 248,
+              "Excelente ": 119,
+              "excelente": 44,
+              "EXCELENTE": 12,
+              "excelente ": 7
+            },
+            "produto ok": {
+              "PRODUTO OK": 1,
+              "Produto Ok": 3,
+              "Produto ok": 4,
+              "Produto OK": 3,
+              "Produto ok ": 1
+            },
+            "5": {
+              "5": 33,
+              "5 ": 1
+            },
+            "recomendo a todos.": {
+              "Recomendo a todos. ": 1,
+              "Recomendo a todos.": 1
+            },
+            "super recomendado": {
+              "Super recomendado": 22,
+              "super recomendado": 55,
+              "SUPER RECOMENDADO ": 1,
+              "Super Recomendado": 5,
+              "SUPER RECOMENDADO": 7,
+              "super recomendado ": 2,
+              "Super recomendado ": 1,
+              "super Recomendado": 2,
+              " super recomendado": 1
+            },
+            "excelente loja": {
+              "Excelente Loja": 1,
+              "Excelente loja": 6
+            },
+            "muito bom o produto": {
+              "Muito bom o produto ": 2,
+              "Muito bom o produto": 2,
+              "Muito Bom o produto": 1
+            },
+            "produto incorreto": {
+              "produto incorreto": 2,
+              "Produto incorreto": 6,
+              "PRODUTO INCORRETO": 1,
+              "Produto Incorreto": 1
+            },
+            "gostei": {
+              "Gostei": 24,
+              "Gostei ": 7,
+              "gostei": 5,
+              "GOSTEI": 1,
+              "gostei ": 1
+            },
+            "produto com defeito": {
+              "PRODUTO COM DEFEITO": 3,
+              "Produto com defeito": 34,
+              "Produto com defeito ": 3,
+              "produto com defeito": 2,
+              "Produto com Defeito": 1
+            },
+            "regular": {
+              "Regular ": 4,
+              "Regular": 18,
+              "REGULAR": 2,
+              "regular": 4
+            },
+            "excelente!": {
+              "Excelente!": 29,
+              "Excelente! ": 5,
+              "excelente!": 1,
+              "EXCELENTE!": 2
+            },
+            "recomendo!": {
+              "Recomendo!": 26,
+              "Recomendo! ": 2,
+              "recomendo!": 3,
+              " recomendo!": 1,
+              "RECOMENDO!": 1
+            },
+            "produto p\u00e9ssimo": {
+              "PRODUTO P\u00c9SSIMO": 1,
+              "Produto p\u00e9ssimo": 2,
+              "Produto P\u00e9ssimo": 1
+            },
+            "\u00f3tima": {
+              "\u00d3tima ": 41,
+              "\u00f3tima": 20,
+              "\u00d3tima": 55,
+              "\u00f3tima ": 5,
+              "\u00d3TIMA": 1
+            },
+            "boa": {
+              "Boa": 86,
+              "boa": 26,
+              "BOA": 7,
+              "Boa ": 12,
+              "boa ": 2
+            },
+            "otima": {
+              "Otima": 34,
+              "OTIMA": 2,
+              "OTIMA ": 1,
+              "otima": 21,
+              "Otima ": 2
+            },
+            "entrega atrasada": {
+              "Entrega atrasada": 4,
+              "entrega atrasada": 1
+            },
+            "comprei 2 produtos": {
+              "Comprei 2 produtos ": 1,
+              "Comprei 2 produtos": 1
+            },
+            "\u00f3timo!": {
+              "\u00d3timo! ": 9,
+              "\u00d3timo!": 12,
+              "\u00f3timo!": 1
+            },
+            "produto entregue": {
+              "Produto entregue": 10,
+              "PRODUTO ENTREGUE": 1,
+              "Produto entregue ": 5
+            },
+            "p\u00e9ssima": {
+              "P\u00e9ssima ": 5,
+              "p\u00e9ssima ": 1,
+              "P\u00e9ssima": 3,
+              "P\u00c9SSIMA": 1,
+              "p\u00e9ssima": 1
+            },
+            "mto bom": {
+              "Mto bom": 3,
+              "mto bom": 1
+            },
+            "tudo como prometido": {
+              "Tudo como prometido": 2,
+              "tudo como prometido": 1
+            },
+            "produto bom": {
+              "Produto bom": 19,
+              "Produto bom ": 2,
+              "produto bom ": 1,
+              "Produto Bom": 1,
+              "produto bom": 4
+            },
+            "entregue no prazo": {
+              "Entregue no prazo": 4,
+              "Entregue no prazo ": 1
+            },
+            "aprovado": {
+              "Aprovado": 5,
+              "Aprovado ": 2
+            },
+            "entrega parcial.": {
+              "Entrega Parcial.": 1,
+              "Entrega parcial.": 1
+            },
+            "produto errado": {
+              "Produto errado ": 6,
+              "Produto errado": 38,
+              "produto errado": 7,
+              "produto errado ": 1,
+              "Produto ERRADO": 1,
+              "Produto Errado": 3,
+              "PRODUTO ERRADO ": 1
+            },
+            "satisfeito": {
+              "Satisfeito": 27,
+              "SATISFEITO": 1,
+              "satisfeito": 5,
+              "Satisfeito ": 7
+            },
+            "ok": {
+              "Ok": 37,
+              "ok": 23,
+              "OK": 7,
+              "Ok ": 1
+            },
+            "exelente": {
+              "exelente": 7,
+              "Exelente": 6
+            },
+            "super indico": {
+              "Super indico": 4,
+              "SUPER INDICO ": 1,
+              "super indico": 1,
+              "SUPER INDICO": 1
+            },
+            "defeito": {
+              "Defeito": 3,
+              "Defeito ": 2
+            },
+            "tudo ok": {
+              "Tudo ok": 18,
+              "TUDO OK": 1,
+              "Tudo ok ": 2,
+              "tudo ok": 10,
+              "Tudo Ok": 2,
+              "Tudo OK": 2,
+              "tudo Ok": 1
+            },
+            "recomendo.": {
+              "Recomendo.": 34,
+              "recomendo.": 5,
+              "Recomendo. ": 2,
+              "RECOMENDO.": 1
+            },
+            "entrega antes do prazo": {
+              "Entrega antes do prazo": 5,
+              "Entrega antes do prazo ": 4
+            },
+            "r\u00e1pida entrega": {
+              "r\u00e1pida entrega": 1,
+              "R\u00e1pida entrega": 2
+            },
+            "super satisfeito": {
+              "Super satisfeito ": 1,
+              "Super satisfeito": 1
+            },
+            "perfeito": {
+              "Perfeito": 57,
+              "perfeito": 6,
+              "Perfeito ": 16,
+              "PERFEITO ": 1
+            },
+            "boa loja": {
+              "BOA LOJA ": 1,
+              "Boa loja": 8,
+              "Boa Loja": 2,
+              "boa loja": 2
+            },
+            "mercadoria n\u00e3o entregue": {
+              "Mercadoria n\u00e3o entregue": 1,
+              "Mercadoria n\u00e3o entregue ": 1
+            },
+            "entrega super r\u00e1pida": {
+              "Entrega super r\u00e1pida": 16,
+              "Entrega super r\u00e1pida ": 2,
+              "Entrega Super R\u00e1pida": 1,
+              "Entrega super R\u00e1pida": 1
+            },
+            "produto veio diferente": {
+              "Produto veio diferente ": 1,
+              "Produto veio diferente": 2
+            },
+            "super recomendo.": {
+              "super recomendo.": 1,
+              "Super Recomendo.": 1,
+              "Super recomendo.": 14,
+              "Super recomendo. ": 1
+            },
+            "n\u00e3o recebi": {
+              "N\u00e3o recebi ": 7,
+              "N\u00e3o recebi": 17,
+              "n\u00e3o recebi": 3
+            },
+            "recomendo sim": {
+              "RECOMENDO SIM": 2,
+              "recomendo sim": 6,
+              "Recomendo Sim": 1,
+              "Recomendo sim": 5
+            },
+            "gostei muito do produto": {
+              "Gostei muito do produto ": 1,
+              "gostei muito do produto ": 1
+            },
+            "excelente.": {
+              "Excelente.": 11,
+              "EXCELENTE. ": 1,
+              "Excelente. ": 1,
+              "EXCELENTE.": 1
+            },
+            "bom produto": {
+              "Bom produto": 30,
+              "Bom produto ": 6,
+              "bom produto": 3,
+              "Bom Produto": 1,
+              "BOM PRODUTO": 1
+            },
+            "\u00f3timo atendimento": {
+              "\u00d3timo atendimento ": 3,
+              "\u00d3timo atendimento": 7
+            },
+            "produto diferente": {
+              "PRODUTO DIFERENTE ": 2,
+              "Produto diferente": 7,
+              "Produto Diferente": 2,
+              "PRODUTO DIFERENTE": 1,
+              "Produto diferente ": 2
+            },
+            "\u00f3timo produto": {
+              "\u00d3timo produto": 44,
+              "\u00f3timo produto": 3,
+              "\u00d3timo produto ": 27,
+              "\u00d3TIMO PRODUTO": 1,
+              "\u00f3timo produto ": 3,
+              "\u00d3timo Produto": 2
+            },
+            "p\u00e9ssimo atendimento": {
+              "P\u00e9ssimo atendimento": 2,
+              "P\u00c9SSIMO ATENDIMENTO ": 1
+            },
+            "produto muito bom": {
+              "Produto muito bom": 10,
+              "produto muito bom": 5,
+              "produto muito bom ": 1,
+              "Produto muito bom ": 1,
+              "Produto Muito bom": 1
+            },
+            "parab\u00e9ns": {
+              "Parab\u00e9ns": 8,
+              "Parab\u00e9ns ": 7,
+              "parab\u00e9ns": 1,
+              "parab\u00e9ns ": 1
+            },
+            "produto mal feito": {
+              "Produto Mal feito": 1,
+              "Produto mal feito": 1
+            },
+            "super": {
+              "super": 2,
+              "Super ": 2
+            },
+            "diferente": {
+              "Diferente": 2,
+              "Diferente ": 1
+            },
+            "muito bom!": {
+              "Muito bom!": 33,
+              "muito bom!": 4,
+              "Muito Bom!": 5,
+              "muito bom! ": 1,
+              " Muito bom!": 1,
+              "Muito bom! ": 5
+            },
+            "n\u00e3o chegou": {
+              "N\u00e3o chegou ": 3,
+              "N\u00e3o chegou": 7
+            },
+            "recomend\u00e1vel": {
+              "Recomend\u00e1vel": 2,
+              "RECOMEND\u00c1VEL": 1
+            },
+            "satisfeita": {
+              "Satisfeita": 22,
+              "Satisfeita ": 5,
+              "satisfeita": 2
+            },
+            "7": {
+              "7": 9,
+              "7 ": 1
+            },
+            "muito ruim": {
+              "Muito Ruim": 1,
+              "Muito ruim ": 1,
+              "Muito ruim": 5,
+              "muito ruim": 1
+            },
+            "\u00f3tima loja": {
+              "\u00d3tima loja ": 1,
+              "\u00d3tima loja": 10,
+              "\u00d3TIMA LOJA": 1,
+              "\u00d3tima Loja": 2
+            },
+            "satisfa\u00e7\u00e3o": {
+              "Satisfa\u00e7\u00e3o": 9,
+              "Satisfa\u00e7\u00e3o ": 2,
+              "SATISFA\u00c7\u00c3O": 1,
+              "satisfa\u00e7\u00e3o": 1
+            },
+            "\u00f3timo produto.": {
+              "\u00f3timo produto. ": 1,
+              "\u00d3timo produto.": 5
+            },
+            "nota 10": {
+              "Nota 10": 39,
+              "NOTA 10": 2,
+              "nota 10": 9,
+              "Nota 10 ": 2
+            },
+            "\u00f3tima qualidade": {
+              "\u00d3tima qualidade": 3,
+              "\u00d3tima qualidade ": 1
+            },
+            "entrega muito r\u00e1pida": {
+              "Entrega muito r\u00e1pida": 7,
+              " Entrega muito r\u00e1pida": 1
+            },
+            "n\u00e3o recomendo": {
+              "N\u00e3o recomendo": 54,
+              "N\u00e3o Recomendo": 8,
+              "n\u00e3o recomendo": 44,
+              "N\u00e3o recomendo ": 8,
+              "N\u00c3O RECOMENDO": 13,
+              "n\u00e3o recomendo ": 2
+            },
+            "ainda n\u00e3o recebi o produt": {
+              "Ainda n\u00e3o recebi o produt": 5,
+              "ainda n\u00e3o recebi o produt": 1
+            },
+            "lumin\u00e1rias": {
+              "Lumin\u00e1rias": 4,
+              "Lumin\u00e1rias ": 1
+            },
+            "entrega r\u00e1pida": {
+              "Entrega r\u00e1pida": 38,
+              "Entrega r\u00e1pida ": 15,
+              "Entrega R\u00e1pida": 4,
+              "entrega r\u00e1pida": 1,
+              "entrega r\u00e1pida ": 2,
+              "ENTREGA R\u00c1PIDA": 4
+            },
+            "cobertor": {
+              "cobertor": 1,
+              "Cobertor ": 1
+            },
+            "recomendado": {
+              "recomendado": 35,
+              "Recomendado": 19,
+              "RECOMENDADO": 4
+            },
+            "muito bonito": {
+              "Muito bonito": 2,
+              "Muito bonito ": 1,
+              "muito bonito": 1
+            },
+            "entrega muito r\u00e1pida.": {
+              "Entrega muito r\u00e1pida. ": 1,
+              "Entrega muito r\u00e1pida.": 2
+            },
+            "reclama\u00e7\u00e3o": {
+              "reclama\u00e7\u00e3o": 3,
+              "Reclama\u00e7\u00e3o": 4,
+              "Reclama\u00e7\u00e3o ": 4,
+              "RECLAMA\u00c7\u00c3O": 2
+            },
+            "amei!": {
+              "Amei! ": 1,
+              "Amei!": 5
+            },
+            "superou as expectativas": {
+              "Superou as expectativas": 1,
+              "Superou as expectativas ": 1
+            },
+            "excelente servi\u00e7o": {
+              "excelente servi\u00e7o": 1,
+              "Excelente servi\u00e7o": 1,
+              "Excelente servi\u00e7o ": 1
+            },
+            "tudo certo": {
+              "TUDO CERTO": 2,
+              "Tudo certo ": 7,
+              "tudo certo": 6,
+              "Tudo certo": 22,
+              "tudo certo ": 2
+            },
+            "tudo nos conformes": {
+              "Tudo nos conformes": 2,
+              "Tudo nos conformes ": 1
+            },
+            "entrega rapida": {
+              "Entrega rapida": 15,
+              "entrega rapida": 3,
+              "Entrega Rapida": 2
+            },
+            "p\u00e9ssimo": {
+              "P\u00e9ssimo ": 16,
+              "p\u00e9ssimo ": 1,
+              "P\u00e9ssimo": 15,
+              "p\u00e9ssimo": 4,
+              "P\u00c9SSIMO": 2,
+              " P\u00c9SSIMO ": 1
+            },
+            "gostei muito": {
+              "Gostei muito": 6,
+              "gostei muito": 2,
+              "Gostei muito ": 2
+            },
+            "quantidade errada": {
+              "Quantidade errada": 5,
+              "QUANTIDADE ERRADA": 1
+            },
+            "produto falsificado": {
+              "Produto falsificado": 4,
+              "Produto falsificado ": 3,
+              "produto falsificado": 2,
+              "Produto FALSIFICADO": 1
+            },
+            "produto \u00f3timo!": {
+              "Produto \u00f3timo!": 1,
+              "Produto \u00f3timo! ": 1
+            },
+            "bom recomendo": {
+              "bom recomendo": 1,
+              "Bom recomendo": 1
+            },
+            "eficiencia": {
+              "EFICIENCIA": 1,
+              "Eficiencia": 3
+            },
+            "produto n\u00e3o entregue": {
+              "Produto n\u00e3o entregue": 32,
+              "produto n\u00e3o entregue": 6,
+              "Produto n\u00e3o entregue ": 6,
+              "PRODUTO N\u00c3O ENTREGUE": 2
+            },
+            "n\u00e3o recebimento": {
+              "n\u00e3o recebimento": 1,
+              "N\u00e3o recebimento ": 2
+            },
+            "muito satisfeito": {
+              "Muito satisfeito": 11,
+              "Muito satisfeito ": 3,
+              "MUITO SATISFEITO ": 1
+            },
+            "entrega no prazo": {
+              "Entrega no prazo": 12,
+              "Entrega no prazo ": 3
+            },
+            "n\u00e3o recebi o produto": {
+              "N\u00e3o recebi o produto": 35,
+              "N\u00e3o recebi o produto ": 13,
+              "n\u00e3o recebi o produto": 4,
+              "n\u00e3o recebi o produto ": 3,
+              "N\u00c3O RECEBI O PRODUTO": 1
+            },
+            "otimo produto": {
+              "Otimo Produto": 3,
+              "Otimo produto": 13,
+              "otimo produto": 4,
+              "otimo produto ": 1,
+              "OTIMO PRODUTO": 1
+            },
+            "pedido n\u00e3o entregue": {
+              "Pedido n\u00e3o entregue ": 2,
+              "Pedido n\u00e3o entregue": 1,
+              "PEDIDO N\u00c3O ENTREGUE": 2
+            },
+            "n\u00e3o entregue": {
+              "N\u00c3O entregue": 1,
+              "N\u00e3o entregue": 4,
+              "N\u00e3o entregue ": 1,
+              "N\u00c3O ENTREGUE": 1
+            },
+            "pedido pela metade": {
+              "Pedido pela metade ": 1,
+              "Pedido pela metade": 1
+            },
+            "\u00f3timo servi\u00e7o": {
+              "\u00d3timo servi\u00e7o": 3,
+              "\u00d3timo servi\u00e7o ": 1
+            },
+            "compra tranquila.": {
+              "Compra tranquila.": 1,
+              "compra tranquila.": 1
+            },
+            "propaganda enganosa": {
+              "propaganda enganosa": 2,
+              "PROPAGANDA ENGANOSA": 2,
+              "Propaganda enganosa": 2,
+              "Propaganda enganosa ": 1
+            },
+            "\u00f3tima empresa": {
+              "\u00d3tima Empresa ": 1,
+              "\u00d3tima empresa ": 2,
+              "\u00d3tima empresa": 1
+            },
+            "produto original": {
+              "Produto original": 2,
+              "Produto original ": 1
+            },
+            "positiva": {
+              "Positiva ": 2,
+              "Positiva": 4,
+              "positiva": 4
+            },
+            "cinco estrelas": {
+              "CINCO ESTRELAS": 1,
+              "cinco estrelas": 3,
+              "Cinco estrelas ": 1
+            },
+            "recomendo a todos!": {
+              "Recomendo a todos!": 3,
+              "RECOMENDO A TODOS!": 1
+            },
+            "negativo": {
+              "Negativo": 4,
+              "Negativo ": 2
+            },
+            "bom servi\u00e7o": {
+              "bom servi\u00e7o": 2,
+              "Bom servi\u00e7o": 3,
+              "Bom servi\u00e7o ": 1
+            },
+            "pontual": {
+              "Pontual ": 1,
+              "Pontual": 1
+            },
+            "recomento": {
+              "Recomento": 10,
+              "recomento": 4
+            },
+            "produto mal embalado": {
+              "Produto mal embalado ": 1,
+              "Produto mal embalado": 2
+            },
+            "dez": {
+              "Dez": 14,
+              "dez": 1
+            },
+            "produto de qualidade": {
+              "Produto de Qualidade ": 1,
+              "Produto de qualidade ": 5,
+              "Produto de qualidade": 1,
+              "PRODUTO DE QUALIDADE": 1,
+              "produto de qualidade": 1
+            },
+            "perfeita": {
+              "Perfeita": 4,
+              "Perfeita ": 1
+            },
+            "esperava mais": {
+              "Esperava mais": 1,
+              "Esperava mais ": 1
+            },
+            "pessimo": {
+              "PESSIMO": 3,
+              "Pessimo": 9,
+              "pessimo": 6,
+              "pessimo ": 2,
+              "Pessimo ": 1
+            },
+            "insatisfa\u00e7\u00e3o": {
+              "Insatisfa\u00e7\u00e3o ": 4,
+              "Insatisfa\u00e7\u00e3o": 5
+            },
+            "elogio": {
+              "elogio": 3,
+              "Elogio": 7,
+              "ELOGIO": 2
+            },
+            "produto divergente": {
+              "Produto divergente ": 2,
+              "Produto divergente": 2,
+              "produto divergente": 1
+            },
+            "excelente compra!": {
+              "Excelente compra!": 2,
+              "Excelente compra! ": 1
+            },
+            "entrega errada": {
+              "Entrega errada": 4,
+              "Entrega errada ": 2
+            },
+            "\u00f3timo atendimento.": {
+              "\u00d3TIMO ATENDIMENTO.": 1,
+              "\u00d3timo atendimento. ": 1
+            },
+            "\u00f3timo vendedor": {
+              "\u00d3timo vendedor ": 5,
+              "\u00d3timo vendedor": 3
+            },
+            "n\u00e3o recebi meu produto": {
+              "N\u00e3o recebi meu produto": 6,
+              "N\u00e3o recebi meu produto ": 3,
+              "N\u00c3O RECEBI MEU PRODUTO ": 1
+            },
+            "zero": {
+              "Zero": 9,
+              "zero": 4,
+              "Zero ": 1
+            },
+            "ruim": {
+              "ruim": 13,
+              "Ruim": 47,
+              "Ruim ": 6,
+              "RUIM": 2,
+              "ruim ": 1
+            },
+            "muito r\u00e1pido": {
+              "Muito r\u00e1pido ": 3,
+              "Muito r\u00e1pido": 3,
+              "Muito R\u00e1pido": 1
+            },
+            "muito satisfeita": {
+              "Muito satisfeita ": 2,
+              "Muito satisfeita": 8,
+              "muito satisfeita": 1
+            },
+            "adorei": {
+              "Adorei": 18,
+              "Adorei ": 8,
+              "adorei": 2
+            },
+            "n\u00e3o recebi o que comprei": {
+              "n\u00e3o recebi o que comprei": 1,
+              "N\u00e3o recebi o que comprei": 1
+            },
+            "eu recomendo.": {
+              "Eu recomendo.": 2,
+              "eu recomendo.": 1
+            },
+            "ruin": {
+              "Ruin": 2,
+              "RUIN": 1
+            },
+            "n\u00e3o gostei.": {
+              "N\u00e3o Gostei.": 1,
+              "N\u00e3o gostei.": 1
+            },
+            "produto muito bom!": {
+              "Produto muito bom!": 1,
+              "Produto muito bom! ": 2
+            },
+            "entrega": {
+              "Entrega": 19,
+              "Entrega ": 12,
+              "entrega": 6,
+              "ENTREGA": 6,
+              "entrega ": 1
+            },
+            "n\u00e3o funciona": {
+              "N\u00e3o funciona ": 1,
+              "N\u00e3o funciona": 2,
+              "N\u00e3o Funciona": 1
+            },
+            "produto diferente da foto": {
+              "Produto diferente da foto": 3,
+              "produto diferente da foto": 1,
+              "PRODUTO DIFERENTE DA FOTO": 1
+            },
+            "maravilhoso": {
+              "Maravilhoso ": 4,
+              "Maravilhoso": 10,
+              "maravilhoso": 2
+            },
+            "chegou antes do prazo": {
+              "chegou antes do prazo": 1,
+              "Chegou antes do prazo ": 2,
+              "Chegou antes do prazo": 3,
+              "CHEGOU ANTES DO PRAZO": 1
+            },
+            "n\u00e3o chegou no prazo": {
+              "N\u00e3o chegou no prazo": 2,
+              "N\u00e3o chegou no prazo ": 1
+            },
+            "produto excelente": {
+              "Produto excelente": 8,
+              "produto excelente ": 2,
+              "Produto excelente ": 5,
+              "Produto Excelente": 1
+            },
+            "bom vendedor": {
+              "BOM VENDEDOR": 2,
+              "Bom vendedor": 3,
+              "Bom vendedor ": 1,
+              "bom vendedor": 1
+            },
+            "excelente!!!": {
+              "Excelente!!!": 6,
+              "excelente!!!": 1,
+              "Excelente!!! ": 1
+            },
+            "muito bom, recomendo!": {
+              "Muito bom, recomendo! ": 2,
+              "Muito bom, recomendo!": 1
+            },
+            "faltando produto": {
+              "Faltando produto ": 1,
+              "Faltando produto": 5,
+              "FALTANDO PRODUTO": 1
+            },
+            "tudo ok!": {
+              "Tudo ok!": 4,
+              "Tudo Ok!": 1,
+              "tudo ok!": 1,
+              "TUDO OK!": 1
+            },
+            "nao gostei": {
+              "NAO GOSTEI": 1,
+              "Nao gostei": 2
+            },
+            "excelente compra": {
+              "Excelente compra": 5,
+              "excelente compra": 1,
+              "Excelente Compra": 2,
+              "EXCELENTE COMPRA": 1,
+              "Excelente Compra ": 1
+            },
+            "baixa qualidade": {
+              "Baixa qualidade": 1,
+              "baixa qualidade": 1
+            },
+            "excelente!!": {
+              "Excelente!!": 5,
+              "Excelente!! ": 1
+            },
+            "recebi": {
+              "Recebi ": 1,
+              "Recebi": 1
+            },
+            "satisfat\u00f3rio": {
+              "Satisfat\u00f3rio ": 1,
+              "Satisfat\u00f3rio": 3
+            },
+            "positivo": {
+              "Positivo": 4,
+              "Positivo ": 1
+            },
+            "n\u00e3o recebi o pedido todo": {
+              "n\u00e3o recebi o pedido todo": 1,
+              "N\u00e3o recebi o pedido todo": 1
+            },
+            "5 estrelas": {
+              "5 estrelas": 10,
+              "5 ESTRELAS": 1,
+              " 5 estrelas": 1
+            },
+            "funcional": {
+              "Funcional ": 1,
+              "Funcional": 1
+            },
+            "recomendo \u00e0 todos": {
+              "Recomendo \u00e0 todos ": 1,
+              "recomendo \u00e0 todos": 1
+            },
+            "show": {
+              "Show": 8,
+              "SHOW": 2,
+              "Show ": 1
+            },
+            "atraso de entrega": {
+              "Atraso de entrega": 1,
+              "ATRASO DE ENTREGA": 1
+            },
+            "show de bola": {
+              "Show de bola ": 1,
+              "Show de bola": 2
+            },
+            "produto n\u00e3o chegou": {
+              "Produto n\u00e3o chegou ": 4,
+              "produto n\u00e3o chegou": 1,
+              "Produto n\u00e3o chegou": 3
+            },
+            "acabamento ruim": {
+              "Acabamento Ruim": 1,
+              "Acabamento ruim": 1
+            },
+            "\u00f3tima entrega": {
+              "\u00d3tima entrega": 1,
+              "\u00d3tima entrega ": 2
+            },
+            "tamanho": {
+              "Tamanho": 1,
+              "tamanho": 1,
+              "Tamanho ": 1
+            },
+            "odiei": {
+              "Odiei": 1,
+              "odiei": 1
+            },
+            "p\u00e9ssima qualidade": {
+              "P\u00e9ssima qualidade": 3,
+              "P\u00e9ssima qualidade ": 4,
+              "P\u00e9ssima Qualidade": 1
+            },
+            "recebido": {
+              "Recebido": 1,
+              "Recebido ": 1
+            },
+            "produto n\u00e3o recebido": {
+              "Produto n\u00e3o recebido": 5,
+              "produto n\u00e3o recebido ": 1,
+              "produto n\u00e3o recebido": 1,
+              "Produto n\u00e3o recebido ": 3,
+              "PRODUTO N\u00c3O RECEBIDO ": 1
+            },
+            "confi\u00e1vel": {
+              "Confi\u00e1vel ": 4,
+              "Confi\u00e1vel": 4,
+              "confi\u00e1vel ": 1
+            },
+            "eu recomendo": {
+              "Eu recomendo ": 5,
+              "Eu recomendo": 4,
+              "eu recomendo": 3,
+              "EU RECOMENDO ": 1
+            },
+            "tudo correto": {
+              "Tudo correto": 4,
+              "Tudo correto ": 2
+            },
+            "super recomendo!": {
+              "Super recomendo!": 12,
+              "super recomendo!": 1
+            },
+            "n\u00e3o chegou o produto": {
+              "n\u00e3o chegou o produto": 1,
+              "N\u00e3o chegou o produto": 2
+            },
+            "razo\u00e1vel": {
+              "RAZO\u00c1VEL": 1,
+              "Razo\u00e1vel ": 3,
+              "razo\u00e1vel": 1,
+              "Razo\u00e1vel": 2
+            },
+            "nao recomendo": {
+              "nao recomendo": 13,
+              "Nao recomendo": 2,
+              "Nao recomendo ": 2,
+              "NAO RECOMENDO": 4,
+              "nao recomendo ": 1
+            },
+            "atraso entrega": {
+              "Atraso entrega": 1,
+              "Atraso Entrega ": 1
+            },
+            "demora na entrega": {
+              "Demora na entrega ": 2,
+              "Demora na entrega": 7,
+              "demora na entrega": 2,
+              "demora na entrega ": 1
+            },
+            "produto faltando": {
+              "Produto faltando ": 2,
+              "Produto faltando": 2
+            },
+            "entregue": {
+              "Entregue ": 1,
+              "entregue": 1,
+              "Entregue": 2
+            },
+            "produto": {
+              "PRODUTO": 2,
+              "Produto": 5,
+              "Produto ": 3,
+              "produto": 1
+            },
+            "produto top": {
+              "Produto Top ": 1,
+              "Produto Top": 1,
+              "Produto top": 1
+            },
+            "sim recomendo": {
+              "sim recomendo": 3,
+              "sim recomendO": 1
+            },
+            "amei": {
+              "Amei": 16,
+              "Amei ": 4,
+              "amei": 2
+            },
+            "recomendo muito": {
+              "Recomendo muito": 3,
+              "Recomendo Muito": 1
+            },
+            "\u00f3tima!!": {
+              "\u00d3tima!!": 1,
+              "\u00f3tima!!": 1
+            },
+            "frete": {
+              "Frete": 3,
+              "frete": 3
+            },
+            "poderia ser melhor": {
+              "Poderia ser melhor ": 1,
+              "Poderia ser melhor": 1
+            },
+            "produto perfeito": {
+              "produto perfeito": 1,
+              "Produto perfeito": 2,
+              "Produto Perfeito": 1
+            },
+            "amei o produto": {
+              "Amei o produto": 3,
+              "amei o produto": 2,
+              "Amei o produto ": 1,
+              "amei o produto ": 1
+            },
+            "atendeu as expectativas": {
+              "Atendeu as expectativas": 1,
+              "Atendeu as expectativas ": 1
+            },
+            "nota 1000": {
+              "Nota 1000": 5,
+              "Nota 1000 ": 2
+            },
+            "sim": {
+              "sim": 8,
+              "SIM": 1,
+              "Sim": 3
+            },
+            "arrependimento": {
+              "Arrependimento ": 1,
+              "arrependimento": 1,
+              "Arrependimento": 1
+            },
+            "maravilhosa": {
+              "Maravilhosa": 2,
+              "maravilhosa": 1,
+              "Maravilhosa ": 2
+            },
+            "excelente atendimento": {
+              "Excelente atendimento": 4,
+              "excelente atendimento": 1
+            },
+            "avalia\u00e7\u00e3o": {
+              "Avalia\u00e7\u00e3o": 5,
+              "avalia\u00e7\u00e3o": 1
+            },
+            "entrega ok": {
+              "entrega ok": 2,
+              "Entrega ok": 5
+            },
+            "meu produto": {
+              "Meu produto": 1,
+              "meu produto": 1
+            },
+            "atraso": {
+              "Atraso ": 2,
+              "Atraso": 4,
+              "atraso": 2
+            },
+            "compra": {
+              "compra": 3,
+              "Compra": 4,
+              "Compra ": 1
+            },
+            "aten\u00e7\u00e3o!": {
+              "Aten\u00e7\u00e3o! ": 1,
+              "Aten\u00e7\u00e3o!": 1
+            },
+            "relogio casio": {
+              "Relogio casio ": 1,
+              "Relogio casio": 1
+            },
+            "nota fiscal": {
+              "Nota Fiscal ": 1,
+              "Nota fiscal ": 1,
+              "Nota fiscal": 1
+            },
+            "lindo": {
+              "Lindo": 12,
+              "Lindo ": 1,
+              "LINDO": 1,
+              "lindo": 2,
+              "lindo ": 1
+            },
+            "produto com defeito!": {
+              "Produto com defeito!": 1,
+              "Produto com defeito! ": 2
+            },
+            "recomendo a todos": {
+              "recomendo a todos": 3,
+              "Recomendo a todos": 2
+            },
+            "produto trocado": {
+              "Produto Trocado": 1,
+              "Produto trocado": 3
+            },
+            "pontualidade": {
+              "Pontualidade ": 2,
+              "Pontualidade": 4,
+              "pontualidade": 1
+            },
+            "parabens": {
+              "Parabens": 1,
+              "parabens": 1,
+              "parabens ": 1
+            },
+            "escelente": {
+              "escelente ": 1,
+              "Escelente": 2
+            },
+            "entrega r\u00e1pida!": {
+              "Entrega r\u00e1pida!": 5,
+              "Entrega r\u00e1pida! ": 2
+            },
+            "transformador": {
+              "Transformador ": 1,
+              "TRANSFORMADOR ": 1
+            },
+            "demora": {
+              "Demora": 4,
+              "demora": 1
+            },
+            "entrega super rapida": {
+              "ENTREGA SUPER RAPIDA": 1,
+              "Entrega super rapida": 3,
+              "entrega super rapida": 1
+            },
+            "\u00f3timos produtos": {
+              "\u00f3timos produtos": 1,
+              "\u00d3timos produtos": 1
+            },
+            "entrega demorada": {
+              "entrega demorada": 1,
+              "Entrega demorada": 1
+            },
+            "recomendo a loja": {
+              "Recomendo a loja": 3,
+              "recomendo a loja": 4,
+              "Recomendo a loja ": 1
+            },
+            "insatisfeita": {
+              "insatisfeita": 3,
+              "Insatisfeita": 7,
+              "insatisfeita ": 1
+            },
+            "sensacional": {
+              "sensacional ": 1,
+              "Sensacional ": 1,
+              "sensacional": 1,
+              "Sensacional": 1
+            },
+            "voltagem errada": {
+              " voltagem errada": 1,
+              "voltagem errada": 1
+            },
+            "funciona": {
+              "FUNCIONA": 1,
+              "Funciona": 1
+            },
+            "super recomento": {
+              "Super recomento": 4,
+              "super recomento": 2
+            },
+            "devolu\u00e7\u00e3o": {
+              "Devolu\u00e7\u00e3o ": 3,
+              "Devolu\u00e7\u00e3o": 1
+            },
+            "n\u00e3o recomendaria": {
+              "N\u00c3O RECOMENDARIA": 1,
+              "N\u00e3o recomendaria": 2
+            },
+            "otimo!": {
+              "Otimo!": 2,
+              "otimo!": 4
+            },
+            "entrega incompleta": {
+              "Entrega incompleta": 13,
+              "Entrega incompleta ": 2,
+              "Entrega Incompleta": 2,
+              "entrega incompleta": 1,
+              "ENTREGA INCOMPLETA": 1
+            },
+            "porta temperos": {
+              "Porta temperos ": 1,
+              "Porta temperos": 1
+            },
+            "tapete": {
+              "Tapete": 1,
+              "Tapete ": 1
+            },
+            "excelente trabalho": {
+              "Excelente trabalho ": 1,
+              "Excelente trabalho": 1
+            },
+            "r\u00e1pido": {
+              "R\u00e1pido": 1,
+              "r\u00e1pido": 1
+            },
+            "pessimo atendimento": {
+              "Pessimo atendimento": 1,
+              "pessimo atendimento": 1
+            },
+            "td certo": {
+              "TD certo": 1,
+              "td certo": 1
+            },
+            "muito boa!": {
+              "Muito boa!": 2,
+              "Muito boa! ": 1
+            },
+            "n\u00e3o recomendo!!!": {
+              "N\u00e3o recomendo!!!": 2,
+              "N\u00e3o recomendo!!! ": 1
+            },
+            "perfeito!": {
+              "Perfeito!": 8,
+              "Perfeito! ": 1
+            },
+            "100%": {
+              "100%": 6,
+              "100% ": 1
+            },
+            "gostei bastante": {
+              "Gostei bastante ": 1,
+              "Gostei bastante": 1
+            },
+            "decepcionado": {
+              "Decepcionado ": 1,
+              "Decepcionado": 2
+            },
+            "boa.": {
+              "boa.": 1,
+              "Boa.": 1
+            },
+            "n\u00e3o recomento": {
+              "N\u00e3o recomento": 1,
+              "N\u00c3O RECOMENTO": 1
+            },
+            "mandaram o produto errado": {
+              "MANDARAM O PRODUTO ERRADO": 1,
+              "Mandaram o produto errado": 1
+            },
+            "entrega parcial": {
+              "entrega parcial": 1,
+              "Entrega parcial": 4,
+              "ENTREGA PARCIAL": 1,
+              "Entrega Parcial": 2,
+              " Entrega parcial": 1
+            },
+            "otima compra": {
+              "Otima compra": 2,
+              "otima compra": 3
+            },
+            "super recomendo !": {
+              "Super recomendo ! ": 1,
+              "Super recomendo !": 1
+            },
+            "ainda n\u00e3o recebi": {
+              "ainda n\u00e3o recebi ": 2,
+              "Ainda n\u00e3o recebi ": 6,
+              "ainda n\u00e3o recebi": 1,
+              "Ainda n\u00e3o recebi": 2
+            },
+            "meu pedido": {
+              "Meu pedido": 1,
+              "Meu pedido ": 2
+            },
+            "cancelamento": {
+              "Cancelamento": 3,
+              "cancelamento": 1
+            },
+            "horrivel": {
+              "Horrivel": 2,
+              "Horrivel ": 1
+            },
+            "muito bom produto": {
+              "muito bom produto": 1,
+              "Muito bom produto ": 1,
+              "Muito Bom produto": 1,
+              "Muito bom produto": 1,
+              "muito bom produto ": 1
+            },
+            "muito bom!!": {
+              "Muito bom!!": 6,
+              "MUITO BOM!!": 1,
+              "muito bom!!": 1,
+              "Muito Bom!!": 1
+            },
+            "indico": {
+              "Indico": 3,
+              "Indico ": 3,
+              "indico": 1
+            },
+            "otimo.": {
+              "Otimo.": 1,
+              "Otimo. ": 1,
+              "otimo. ": 1
+            },
+            "rapidez": {
+              "Rapidez": 9,
+              "RAPIDEZ": 1,
+              " Rapidez ": 1
+            },
+            "nota dez": {
+              "Nota Dez": 1,
+              "Nota dez": 6
+            },
+            "atraso na entrega": {
+              "Atraso na entrega ": 4,
+              "Atraso na entrega": 10,
+              "ATRASO NA ENTREGA": 2,
+              "atraso na entrega": 2,
+              "Atraso na Entrega": 1
+            },
+            "relogio": {
+              "Relogio": 2,
+              "Relogio ": 2,
+              "relogio": 1
+            },
+            "n\u00e3o recomendado": {
+              "n\u00e3o recomendado": 2,
+              "N\u00e3o recomendado": 2,
+              "N\u00e3o Recomendado": 1,
+              "N\u00c3O RECOMENDADO": 1,
+              "N\u00e3o recomendado ": 1
+            },
+            "rel\u00f3gio falso": {
+              "Rel\u00f3gio falso": 2,
+              "REL\u00d3GIO FALSO": 1
+            },
+            "n\u00e3o recebi o produto cert": {
+              "N\u00e3o recebi o produto cert": 1,
+              "n\u00e3o recebi o produto cert": 1
+            },
+            "entrega de produtos": {
+              "Entrega de produtos ": 1,
+              "Entrega de produtos": 1
+            },
+            "loja recomend\u00e1vel": {
+              "Loja recomend\u00e1vel": 1,
+              "Loja recomend\u00e1vel ": 1
+            },
+            "decep\u00e7\u00e3o": {
+              "Decep\u00e7\u00e3o": 5,
+              "decep\u00e7\u00e3o": 1,
+              "decep\u00e7\u00e3o ": 1,
+              "Decep\u00e7\u00e3o ": 1
+            },
+            "sombrite": {
+              "Sombrite": 1,
+              "sombrite": 1
+            },
+            "otimo vendedor": {
+              "otimo vendedor": 1,
+              "Otimo vendedor": 2
+            },
+            "chegou rapido": {
+              "Chegou rapido": 1,
+              "chegou rapido": 1
+            },
+            "produto danificado": {
+              "Produto danificado ": 2,
+              "produto danificado": 1
+            },
+            "prazo": {
+              "Prazo": 5,
+              "prazo": 3
+            },
+            "rel\u00f3gio": {
+              "Rel\u00f3gio ": 3,
+              "Rel\u00f3gio": 1
+            },
+            "produto maravilhoso": {
+              "Produto maravilhoso": 2,
+              "Produto maravilhoso ": 1,
+              "produto maravilhoso ": 1
+            },
+            "mt bom": {
+              "MT bom": 4,
+              "Mt bom": 1
+            },
+            "100": {
+              "100": 3,
+              "100 ": 1
+            },
+            "super rapido": {
+              "Super rapido": 1,
+              "super rapido ": 1
+            },
+            "problemas na entrega": {
+              "problemas na entrega": 1,
+              "Problemas na entrega": 1
+            },
+            "cumpre o que promete": {
+              "Cumpre o que promete": 1,
+              "Cumpre o que promete ": 1
+            },
+            "compromisso": {
+              "compromisso": 1,
+              "Compromisso": 2
+            },
+            "nao chegou": {
+              "nao chegou": 1,
+              "Nao chegou": 1
+            },
+            "recomendaria": {
+              "Recomendaria": 2,
+              "recomendaria": 1
+            },
+            "produto n\u00e3o original": {
+              "Produto n\u00e3o original": 1,
+              "Produto n\u00e3o original ": 1
+            },
+            "chegou certinho": {
+              "chegou certinho": 1,
+              "Chegou certinho": 1
+            },
+            "n\u00e3o foi entregue": {
+              "N\u00e3o foi entregue ": 2,
+              "N\u00e3o foi entregue": 2
+            },
+            "\u00f3tima.": {
+              "\u00d3tima.": 3,
+              "\u00d3tima. ": 1,
+              "\u00f3tima.": 1
+            },
+            "pedido incompleto": {
+              "Pedido incompleto ": 5,
+              "Pedido incompleto": 5,
+              "Pedido Incompleto": 2,
+              "PEDIDO INCOMPLETO": 1
+            },
+            "bom.": {
+              "Bom. ": 2,
+              "Bom.": 9,
+              "bom.": 1
+            },
+            "excelente fornecedor": {
+              "Excelente Fornecedor": 1,
+              "excelente fornecedor": 1
+            },
+            "\u00f2timo": {
+              "\u00d2timo": 1,
+              "\u00f2timo": 1
+            },
+            "ainda n\u00e3o montei": {
+              "Ainda n\u00e3o montei ": 1,
+              "ainda n\u00e3o montei": 1
+            },
+            "nao entregue": {
+              "NAO ENTREGUE": 1,
+              "Nao entregue": 1,
+              "nao entregue": 1
+            },
+            "tudo tranquilo": {
+              "tudo tranquilo": 1,
+              "Tudo tranquilo": 1
+            },
+            "recebi produto diferente": {
+              "Recebi produto diferente": 2,
+              "Recebi produto diferente ": 1
+            },
+            "legal": {
+              "Legal": 4,
+              "LEGAL": 2,
+              "legal": 3
+            },
+            "entrega do produto": {
+              "Entrega do produto": 2,
+              "entrega do produto": 1
+            },
+            "falta de comprometimento": {
+              "Falta de comprometimento": 1,
+              "Falta de comprometimento ": 1
+            },
+            "boa entrega": {
+              "BOA ENTREGA": 1,
+              "Boa entrega": 1
+            },
+            "bonito": {
+              "bonito ": 1,
+              "Bonito": 2
+            },
+            "produto inferior": {
+              "Produto inferior ": 1,
+              "Produto inferior": 3
+            },
+            "uma merda": {
+              "Uma merda ": 1,
+              "UMA MERDA": 1
+            },
+            "ainda nao recebi o produt": {
+              "Ainda nao recebi o produt": 1,
+              "Ainda NAO recebi o produt": 1
+            },
+            "mercadoria": {
+              "Mercadoria ": 1,
+              "Mercadoria": 1
+            },
+            "recomendadiss\u00edmo": {
+              "recomendadiss\u00edmo": 1,
+              "Recomendadiss\u00edmo": 1
+            },
+            "recomendo o produto": {
+              "Recomendo o produto": 1,
+              "recomendo o produto": 1
+            },
+            "vale a pena": {
+              "Vale a pena ": 1,
+              "Vale a pena": 2
+            },
+            "o produto \u00e9 bom": {
+              "O produto \u00e9 bom": 2,
+              "O Produto \u00e9 bom ": 1
+            },
+            "produto recusado": {
+              "Produto Recusado": 1,
+              "PRODUTO RECUSADO ": 1
+            },
+            "nao recebi o produto": {
+              "Nao recebi o produto": 2,
+              "nao recebi o produto": 3
+            },
+            "produto de boa qualidade": {
+              "Produto de boa qualidade": 5,
+              "PRODUTO DE BOA QUALIDADE": 1,
+              "Produto de boa qualidade ": 1
+            },
+            "entrega super r\u00e1pida.": {
+              "Entrega SUPER r\u00e1pida.": 1,
+              "Entrega super r\u00e1pida.": 1
+            },
+            "entrega muito rapido": {
+              "ENTREGA MUITO RAPIDO": 1,
+              "Entrega muito rapido": 1
+            },
+            "qualidade": {
+              "qualidade": 2,
+              "Qualidade": 4,
+              "QUALIDADE": 1
+            },
+            "tudo perfeito": {
+              "Tudo perfeito": 5,
+              "Tudo Perfeito": 1,
+              "Tudo perfeito ": 1,
+              "tudo perfeito": 1
+            },
+            "super satisfeita": {
+              "Super satisfeita ": 2,
+              "Super satisfeita": 3
+            },
+            "tudo otimo": {
+              "tudo otimo": 2,
+              "Tudo otimo": 2
+            },
+            "produto otimo": {
+              "produto otimo": 1,
+              "Produto otimo": 1
+            },
+            "entregou antes do prazo": {
+              "Entregou antes do prazo ": 1,
+              "entregou antes do prazo": 1
+            },
+            "n\u00e3o gostei do produto": {
+              "N\u00e3o gostei do produto ": 1,
+              "N\u00e3o gostei do produto": 3
+            },
+            "produto entregue errado": {
+              "Produto entregue errado": 3,
+              "produto entregue errado": 1
+            },
+            "produto de p\u00e9ssima qualid": {
+              "Produto de p\u00e9ssima qualid": 2,
+              "produto de p\u00e9ssima qualid": 1
+            },
+            "incompleto": {
+              "Incompleto": 3,
+              "incompleto": 1
+            },
+            "recomendo com certeza": {
+              "Recomendo com certeza": 2,
+              "recomendo com certeza": 2,
+              "RECOMENDO COM CERTEZA": 1,
+              "RECOMENDO COM CERTEZA ": 1
+            },
+            "produto \u00f3timo": {
+              "Produto \u00f3timo": 2,
+              "Produto \u00f3timo ": 2,
+              "produto \u00f3timo": 2
+            },
+            "entrega dentro do prazo": {
+              "ENTREGA DENTRO DO PRAZO": 1,
+              "Entrega dentro do prazo ": 1,
+              "Entrega dentro do prazo": 1
+            },
+            "produto avariado": {
+              "PRODUTO AVARIADO": 1,
+              "Produto avariado": 3,
+              "Produto Avariado": 1
+            },
+            "excelente!!!!": {
+              "Excelente!!!!": 2,
+              "excelente!!!!": 1
+            },
+            "rapidez e qualidade": {
+              "Rapidez e qualidade": 2,
+              "Rapidez e qualidade ": 1
+            },
+            "produto ruim": {
+              "produto ruim": 1,
+              "Produto ruim": 3,
+              "Produto ruim ": 1,
+              "Produto Ruim": 1,
+              "produto ruim ": 1
+            },
+            "bom neg\u00f3cio": {
+              "Bom neg\u00f3cio": 2,
+              "Bom neg\u00f3cio ": 1
+            },
+            "muito boa a loja": {
+              "Muito boa a loja": 1,
+              "muito boa a loja": 1
+            },
+            "produto incompleto": {
+              "Produto incompleto": 5,
+              "Produto incompleto ": 1,
+              "produto incompleto": 1,
+              "Produto Incompleto": 2
+            },
+            "problema": {
+              "Problema": 3,
+              "problema": 1
+            },
+            "entrega super r\u00e1pida!": {
+              "Entrega super r\u00e1pida! ": 1,
+              "Entrega super r\u00e1pida!": 2
+            },
+            "muito boa.": {
+              "Muito boa.": 2,
+              "muito boa.": 1
+            },
+            "recebimento": {
+              "Recebimento": 1,
+              "Recebimento ": 1
+            },
+            "produto de baixa qualidad": {
+              "produto de baixa qualidad": 2,
+              "Produto de baixa qualidad": 1
+            },
+            "mediana": {
+              "Mediana": 1,
+              "mediana": 1
+            },
+            "bom de mais": {
+              "Bom de mais": 1,
+              "bom de mais": 1
+            },
+            "produto veio com defeito": {
+              "Produto veio com defeito ": 2,
+              "Produto veio com defeito": 3
+            },
+            "produto veio errado": {
+              "Produto veio errado ": 1,
+              "Produto veio errado": 2
+            },
+            "surpreendeu": {
+              "SURPREENDEU": 1,
+              "Surpreendeu ": 1
+            },
+            "boa compra": {
+              "boa compra": 2,
+              "Boa compra": 6,
+              "BOA COMPRA": 1
+            },
+            "satisfeita!": {
+              "Satisfeita!": 2,
+              "Satisfeita! ": 1
+            },
+            "linda": {
+              "Linda": 2,
+              "Linda ": 1
+            },
+            "impressionada": {
+              "Impressionada ": 1,
+              "Impressionada": 1
+            },
+            "tudo certo.": {
+              "Tudo certo. ": 3,
+              "Tudo certo.": 4
+            },
+            "decep\u00e7\u00e3o!": {
+              "Decep\u00e7\u00e3o!": 2,
+              "Decep\u00e7\u00e3o! ": 1
+            },
+            "cumpriu as expectativas": {
+              "Cumpriu as expectativas": 1,
+              "cumpriu as expectativas": 1
+            },
+            "negativa": {
+              "Negativa": 1,
+              "negativa": 1
+            },
+            "indignada": {
+              "Indignada ": 1,
+              "Indignada": 1
+            },
+            "loja muito boa": {
+              "loja muito boa": 1,
+              "Loja muito boa": 1
+            },
+            "nao recebi": {
+              "Nao recebi": 3,
+              "nao recebi": 2
+            },
+            "avalia\u00e7\u00e3o do vendedor": {
+              "Avalia\u00e7\u00e3o do vendedor": 3,
+              "avalia\u00e7\u00e3o do vendedor": 1
+            },
+            "muito bom gostei": {
+              "Muito bom gostei ": 2,
+              " muito bom gostei ": 1
+            },
+            "falta de cabo": {
+              "falta de cabo": 1,
+              "Falta de cabo": 1
+            },
+            "quero meu produto": {
+              "QUERO MEU PRODUTO": 1,
+              "Quero meu produto": 1
+            },
+            "acabamento": {
+              "acabamento": 1,
+              "Acabamento": 3
+            },
+            "cor errada": {
+              "Cor errada ": 1,
+              "cor errada": 1,
+              "Cor errada": 2
+            },
+            "correto": {
+              "Correto": 3,
+              "Correto ": 1
+            },
+            "veio faltando": {
+              "Veio faltando": 2,
+              "Veio faltando ": 1
+            },
+            "aguardando": {
+              "Aguardando": 2,
+              "Aguardando ": 1
+            },
+            "excelente produto!": {
+              "Excelente produto!": 1,
+              "excelente produto!": 1
+            },
+            "entregue pela metade": {
+              "Entregue pela metade": 1,
+              "ENTREGUE PELA METADE": 1
+            },
+            "contente": {
+              "Contente": 1,
+              "CONTENTE": 1
+            },
+            "chegou antes do prazo!!!": {
+              "chegou antes do prazo!!! ": 1,
+              "Chegou antes do prazo!!!": 1
+            },
+            "tudo 100%": {
+              "TUDO 100%": 1,
+              "tudo 100%": 1
+            },
+            "chegou no prazo": {
+              "Chegou no prazo": 1,
+              "chegou no prazo": 1
+            },
+            "bom demais": {
+              "Bom demais": 1,
+              "bom demais": 1
+            },
+            "mais ou menos": {
+              "Mais ou menos ": 2,
+              "mais ou menos ": 1,
+              "mais ou menos": 1,
+              "Mais ou menos": 1,
+              "MAIS OU MENOS ": 1
+            },
+            "falta de respeito": {
+              "Falta de respeito ": 1,
+              "Falta de respeito": 3
+            },
+            "pessima": {
+              "Pessima": 6,
+              "pessima": 2,
+              "PESSIMA": 2
+            },
+            "nao foi entregue": {
+              "nao foi entregue": 1,
+              "Nao foi entregue ": 1,
+              "Nao foi entregue": 1
+            },
+            "super recomendo...": {
+              "super recomendo...": 1,
+              "Super recomendo...": 1
+            },
+            "tranquilo": {
+              "tranquilo": 1,
+              "Tranquilo": 3
+            },
+            "\u00f3timo produto recomendo": {
+              "\u00d3timo produto recomendo ": 1,
+              "\u00d3timo produto recomendo": 1
+            },
+            "ecelente": {
+              "Ecelente ": 1,
+              "Ecelente": 1
+            },
+            "\u00f3timo.": {
+              "\u00d3timo.": 4,
+              "\u00d3timo. ": 3
+            },
+            "rapidez na entrega": {
+              "Rapidez na entrega ": 1,
+              "Rapidez na entrega": 2
+            },
+            "veio com defeito": {
+              "Veio com defeito": 1,
+              "VEIO COM DEFEITO": 1
+            },
+            "aten\u00e7\u00e3o": {
+              "Aten\u00e7\u00e3o ": 1,
+              "Aten\u00e7\u00e3o": 3
+            },
+            "otima super recomendo": {
+              "otima super recomendo": 1,
+              "OTIMA SUPER RECOMENDO": 1
+            },
+            "produto ainda n\u00e3o chegou": {
+              "Produto ainda n\u00e3o chegou": 3,
+              "produto ainda n\u00e3o chegou": 1
+            },
+            "ainda nao recebi": {
+              "Ainda nao recebi": 1,
+              "ainda nao recebi": 1
+            },
+            "produto excelente!": {
+              "Produto excelente!": 3,
+              "Produto Excelente!": 1
+            },
+            "falta de produto": {
+              "Falta de produto ": 1,
+              "Falta de produto": 1,
+              "falta de produto": 1
+            },
+            "sastifeito": {
+              "Sastifeito": 1,
+              "sastifeito": 1
+            },
+            "produto faltante": {
+              "Produto Faltante": 1,
+              "Produto faltante ": 1
+            },
+            "\u00f3timo!!": {
+              "\u00d3timo!!": 2,
+              "\u00d3timo!! ": 1
+            },
+            "super recomendo!!": {
+              "Super Recomendo!!": 1,
+              "Super recomendo!!": 1
+            },
+            "produto veio trocado": {
+              "PRODUTO VEIO TROCADO": 1,
+              "Produto veio trocado": 1
+            },
+            "xxx": {
+              "Xxx": 1,
+              "xxx": 2
+            },
+            "bom atendimento": {
+              "Bom atendimento ": 2,
+              "bom atendimento": 1,
+              "Bom atendimento": 1
+            },
+            "excelente loja.": {
+              "Excelente loja.": 1,
+              "excelente loja.": 1
+            },
+            "produto falso": {
+              "Produto Falso": 1,
+              "PRODUTO FALSO": 1,
+              "Produto falso": 1,
+              "produto falso": 1
+            },
+            "rel\u00f3gio casio": {
+              "rel\u00f3gio casio": 1,
+              "Rel\u00f3gio Casio": 1,
+              "Rel\u00f3gio casio": 1
+            },
+            "rapida entrega": {
+              "Rapida entrega": 2,
+              "rapida entrega ": 1,
+              "RAPIDA ENTREGA ": 1
+            },
+            "recomendo esta loja": {
+              "recomendo esta loja": 1,
+              "Recomendo esta loja ": 1,
+              "Recomendo esta loja": 1
+            },
+            "avalia\u00e7ao": {
+              "Avalia\u00e7ao": 1,
+              "avalia\u00e7ao": 1
+            },
+            "talvez recomendaria": {
+              "talvez recomendaria": 1,
+              "Talvez recomendaria ": 1
+            },
+            "super recomendo!!!": {
+              "Super Recomendo!!!": 2,
+              "super recomendo!!! ": 1,
+              "Super recomendo!!!": 2
+            },
+            "optimo": {
+              "optimo": 1,
+              "Optimo": 1
+            },
+            "super r\u00e1pido": {
+              "Super r\u00e1pido": 3,
+              "Super r\u00e1pido ": 2
+            },
+            "n\u00e3o tenho como avaliar": {
+              "N\u00e3o tenho como avaliar ": 1,
+              "n\u00e3o tenho como avaliar": 1,
+              "N\u00e3o tenho como avaliar": 1
+            },
+            "geral": {
+              "geral": 1,
+              "Geral": 1
+            },
+            "erro na entrega": {
+              "Erro na entrega": 1,
+              "erro na entrega": 1
+            },
+            "produto nao entregue": {
+              "produto nao entregue": 1,
+              "Produto nao entregue": 3,
+              "PRODUTO NAO ENTREGUE": 1
+            },
+            "o produto n\u00e3o funciona": {
+              "o produto n\u00e3o funciona": 1,
+              "O produto n\u00e3o funciona": 1,
+              "O produto n\u00e3o funciona ": 1
+            },
+            "n\u00e3o recebi meu pedido": {
+              "N\u00e3o recebi meu pedido": 1,
+              "N\u00e3o Recebi meu pedido": 1
+            },
+            "boa compra!": {
+              "Boa compra! ": 1,
+              "Boa compra!": 1
+            },
+            "recomendo demais": {
+              "RECOMENDO DEMAIS": 1,
+              "Recomendo demais": 1
+            },
+            "prazo de entrega": {
+              "Prazo de entrega": 2,
+              "Prazo de entrega ": 2
+            },
+            "n\u00e3o recomendo!": {
+              "N\u00c3O RECOMENDO!": 1,
+              "N\u00e3o recomendo!": 2
+            },
+            "n\u00e3o recebi a mercadoria": {
+              "N\u00e3o recebi a mercadoria": 1,
+              "n\u00e3o recebi a mercadoria": 1
+            },
+            "demora entrega": {
+              "Demora entrega": 1,
+              "demora entrega ": 1
+            },
+            "muito confi\u00e1vel": {
+              "Muito confi\u00e1vel ": 1,
+              "Muito confi\u00e1vel": 1
+            },
+            "entrega no prazo.": {
+              "Entrega no prazo. ": 1,
+              "Entrega no Prazo.": 1
+            },
+            "quatro estrelas": {
+              "Quatro estrelas": 1,
+              "quatro estrelas": 1
+            },
+            "recebi parte do produto": {
+              "Recebi parte do produto": 1,
+              "RECEBI PARTE DO PRODUTO": 1
+            },
+            "esperando": {
+              "Esperando ": 1,
+              "Esperando": 1
+            },
+            "muito satisfeito.": {
+              "Muito satisfeito.": 1,
+              "Muito satisfeito. ": 1
+            },
+            "embalagem": {
+              "Embalagem": 2,
+              "Embalagem ": 1
+            },
+            "maravilha": {
+              "Maravilha": 1,
+              "Maravilha ": 1
+            },
+            "\u00f3timo custo beneficio": {
+              "\u00f3timo custo beneficio ": 1,
+              "\u00d3timo custo beneficio ": 1,
+              "\u00d3timo custo beneficio": 1
+            },
+            "nunca recomendaria": {
+              "Nunca recomendaria": 1,
+              "NUNCA RECOMENDARIA": 1
+            },
+            "lannister.com": {
+              "lannister.COM": 1,
+              "lannister.com": 1
+            },
+            "term\u00f4metro de forno": {
+              "Term\u00f4metro de forno": 1,
+              "term\u00f4metro de forno": 1
+            },
+            "super recomendaddo": {
+              "Super recomendaddo": 1,
+              "super recomendaddo": 1
+            },
+            "qualidade do produto": {
+              "Qualidade do produto": 2,
+              "QUALIDADE DO PRODUTO": 1
+            },
+            "muito": {
+              "Muito ": 1,
+              "muito": 1
+            },
+            "antes do prazo": {
+              "Antes do prazo": 1,
+              "Antes do Prazo": 1,
+              "Antes do prazo ": 1
+            },
+            "bom custo benef\u00edcio": {
+              "Bom custo benef\u00edcio": 1,
+              "Bom custo benef\u00edcio ": 1
+            },
+            "entrega pontual": {
+              "entrega pontual ": 1,
+              "entrega pontual": 1
+            },
+            "troca": {
+              "Troca": 1,
+              "Troca ": 1
+            },
+            "n\u00e3o gostei": {
+              "N\u00e3o gostei": 4,
+              "N\u00e3o gostei ": 1
+            },
+            "sensacional.": {
+              "Sensacional.": 1,
+              "sensacional.": 1
+            },
+            "avaliando": {
+              "Avaliando": 1,
+              " Avaliando": 1
+            },
+            "sem problemas": {
+              "Sem problemas ": 1,
+              "Sem problemas": 1,
+              "sem problemas": 1
+            },
+            "uma porcaria": {
+              "Uma porcaria": 1,
+              "UMA PORCARIA ": 1
+            },
+            "n\u00e3o entrega": {
+              "n\u00e3o entrega": 1,
+              "N\u00e3o entrega": 1
+            },
+            "excelente...": {
+              "Excelente...": 1,
+              "EXCELENTE...": 1
+            },
+            "\u00f3tima op\u00e7\u00e3o": {
+              "\u00d3tima op\u00e7\u00e3o ": 1,
+              "\u00d3tima op\u00e7\u00e3o": 1
+            },
+            "lindo rel\u00f3gio": {
+              "Lindo rel\u00f3gio": 1,
+              "Lindo rel\u00f3gio ": 1
+            },
+            "postagem": {
+              "Postagem ": 1,
+              "Postagem": 1
+            },
+            "quantidade incorreta": {
+              "Quantidade incorreta": 1,
+              "Quantidade incorreta ": 1
+            },
+            "recebi antes do prazo": {
+              "Recebi antes do prazo": 2,
+              "Recebi antes do prazo ": 1,
+              "recebi antes do prazo": 1
+            },
+            "excelente !!!": {
+              "Excelente !!!": 1,
+              "EXCELENTE !!!": 1
+            },
+            "engana\u00e7\u00e3o": {
+              "Engana\u00e7\u00e3o": 1,
+              "Engana\u00e7\u00e3o ": 1
+            },
+            "eficiente": {
+              "Eficiente": 1,
+              "EFICIENTE": 1
+            },
+            "boa qualidade": {
+              "Boa Qualidade": 1,
+              "Boa qualidade": 2
+            },
+            "sem coment\u00e1rios": {
+              "Sem coment\u00e1rios ": 1,
+              "Sem coment\u00e1rios": 1
+            },
+            "meu produto nao chegou": {
+              "Meu produto nao chegou": 1,
+              "MEU PRODUTO NAO CHEGOU": 1
+            },
+            "gato por lebre": {
+              "Gato por lebre": 1,
+              "Gato por lebre ": 1
+            },
+            "n\u00e3o cumpriu o prazo": {
+              "N\u00e3o cumpriu o prazo": 1,
+              "N\u00c3O CUMPRIU O PRAZO": 1
+            },
+            "otimo produto.": {
+              "Otimo produto.": 1,
+              "Otimo Produto.": 1
+            },
+            "cad\u00ea o produto?": {
+              "Cad\u00ea o produto? ": 1,
+              "Cad\u00ea o produto?": 1
+            },
+            "n\u00e3o recebi o produto aind": {
+              "N\u00e3o recebi o produto aind": 1,
+              "n\u00e3o recebi o produto aind": 1
+            },
+            "ameiii": {
+              "AMEIII": 1,
+              "Ameiii": 1
+            },
+            "n\u00e3o foi entregue no prazo": {
+              "n\u00e3o foi entregue no prazo": 1,
+              "N\u00e3o foi entregue no prazo": 1
+            },
+            "tudo certinho": {
+              "Tudo certinho ": 1,
+              "Tudo certinho": 1
+            },
+            "muito bom e bonito": {
+              "muito bom e bonito": 1,
+              "Muito bom e bonito": 1
+            },
+            "\u00f3tima!": {
+              "\u00d3tima!": 1,
+              "\u00f3tima!": 1
+            },
+            "\u00f3timo lugar pra comprar": {
+              "\u00d3timo lugar pra comprar": 1,
+              "\u00f3timo lugar pra comprar": 1
+            },
+            "normal": {
+              "Normal": 1,
+              "normal": 1,
+              "NORMAL": 1
+            },
+            "super recomendada": {
+              "super recomendada": 1,
+              "SUPER RECOMENDADA": 1
+            },
+            "rede de dormir": {
+              "Rede de dormir": 1,
+              "Rede de dormir ": 1
+            },
+            "avalia\u00e7\u00e3o de entrega": {
+              "Avalia\u00e7\u00e3o de Entrega": 1,
+              "Avalia\u00e7\u00e3o de entrega": 1
+            },
+            "mercadoria incorreta": {
+              "Mercadoria incorreta": 1,
+              "mercadoria incorreta": 1
+            },
+            "parcialmente entregue": {
+              "Parcialmente entregue ": 1,
+              "Parcialmente entregue": 1
+            },
+            "produto veio quebrado": {
+              "Produto veio quebrado": 1,
+              "Produto veio quebrado ": 1
+            },
+            "bom custo beneficio": {
+              "Bom custo beneficio ": 1,
+              "bom custo beneficio": 1
+            },
+            "loja excelente": {
+              "Loja excelente": 1,
+              "Loja excelente ": 1
+            }
+          }
         },
         "review_comment_message": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 58247,
           "null_pct": 58.7,
           "distinct_count": 36159,
           "outlier_count": 0,
           "sample_values": [
             "Recebi bem antes do prazo estipulado.",
-            "Parab\u00e9ns lojas lannister adorei comprar pela Internet seguro e pr\u00e1tico Parab\u00e9ns a todos feliz P\u00e1scoa",
-            "aparelho eficiente. no site a marca do aparelho esta impresso como 3desinfector e ao chegar esta com outro nome...atualizar com a marca correta uma vez que \u00e9 o mesmo aparelho"
-          ]
+            "Parab\u00e9ns lojas lannister adorei comprar pela Internet seguro e pr\u00e1tico <LOCATION> a todos feliz P\u00e1scoa",
+            "<PERSON>. no site a marca do aparelho esta impresso como 3desinfector e ao chegar esta com outro nome...atualizar com a marca correta uma vez que \u00e9 o mesmo aparelho"
+          ],
+          "free_text_pii": {
+            "sample_size": 200,
+            "entities": {
+              "PERSON": {
+                "count": 88,
+                "pct": 44.0
+              },
+              "LOCATION": {
+                "count": 27,
+                "pct": 13.5
+              }
+            }
+          },
+          "casing_issues": {}
         },
         "review_creation_date": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 636,
@@ -374,10 +2787,12 @@
             "2018-01-18 00:00:00",
             "2018-03-10 00:00:00",
             "2018-02-17 00:00:00"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "review_answer_timestamp": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 98248,
@@ -386,13 +2801,17 @@
             "2018-01-18 21:46:59",
             "2018-03-11 03:05:13",
             "2018-02-18 14:36:24"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "orders": {
       "table": "orders",
       "row_count": 99441,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
         "order_id",
@@ -400,7 +2819,7 @@
       ],
       "columns": {
         "order_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 99441,
@@ -409,10 +2828,12 @@
             "e481f51cbdc54678b7cc49136f2d6af7",
             "53cdb2fc8bc7dce0b6741e2150273451",
             "47770eb9100c2d0c44946d9cf07ec65d"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "customer_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 99441,
@@ -421,10 +2842,12 @@
             "9ef432eb6251297304e76186b10a928d",
             "b0830fb4747a6c6d20dea0b8c802d7ef",
             "41ce2a54c0b03bf3443c3d931a367089"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_status": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 8,
@@ -433,10 +2856,12 @@
             "delivered",
             "invoiced",
             "shipped"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_purchase_timestamp": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 98875,
@@ -445,10 +2870,12 @@
             "2017-10-02 10:56:33",
             "2018-07-24 20:41:37",
             "2018-08-08 08:38:49"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_approved_at": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 160,
           "null_pct": 0.16,
           "distinct_count": 90733,
@@ -457,10 +2884,12 @@
             "2017-10-02 11:07:15",
             "2018-07-26 03:24:27",
             "2018-08-08 08:55:23"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_delivered_carrier_date": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 1783,
           "null_pct": 1.79,
           "distinct_count": 81018,
@@ -469,10 +2898,12 @@
             "2017-10-04 19:55:00",
             "2018-07-26 14:31:00",
             "2018-08-08 13:50:00"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_delivered_customer_date": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 2965,
           "null_pct": 2.98,
           "distinct_count": 95664,
@@ -481,10 +2912,12 @@
             "2017-10-10 21:25:13",
             "2018-08-07 15:27:45",
             "2018-08-17 18:06:29"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "order_estimated_delivery_date": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 459,
@@ -493,20 +2926,24 @@
             "2017-10-18 00:00:00",
             "2018-08-13 00:00:00",
             "2018-09-04 00:00:00"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "products": {
       "table": "products",
       "row_count": 32951,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
         "product_id"
       ],
       "columns": {
         "product_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 32951,
@@ -515,10 +2952,12 @@
             "1e9e8ef04dbcff4541ed26657ea517e5",
             "3aa071139cb16b67ca9e5dea641aaa2f",
             "96bd76ec8810374ed1b65e291975717f"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_category_name": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 610,
           "null_pct": 1.85,
           "distinct_count": 73,
@@ -527,7 +2966,9 @@
             "perfumaria",
             "artes",
             "esporte_lazer"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_name_lenght": {
           "dtype": "float64",
@@ -539,7 +2980,9 @@
             "40.0",
             "44.0",
             "46.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_description_lenght": {
           "dtype": "float64",
@@ -551,7 +2994,9 @@
             "287.0",
             "276.0",
             "250.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_photos_qty": {
           "dtype": "float64",
@@ -563,7 +3008,9 @@
             "1.0",
             "4.0",
             "2.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_weight_g": {
           "dtype": "float64",
@@ -575,7 +3022,9 @@
             "225.0",
             "1000.0",
             "154.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_length_cm": {
           "dtype": "float64",
@@ -587,7 +3036,9 @@
             "16.0",
             "30.0",
             "18.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_height_cm": {
           "dtype": "float64",
@@ -599,7 +3050,9 @@
             "10.0",
             "18.0",
             "9.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_width_cm": {
           "dtype": "float64",
@@ -611,20 +3064,24 @@
             "14.0",
             "20.0",
             "15.0"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "sellers": {
       "table": "sellers",
       "row_count": 3095,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
         "seller_id"
       ],
       "columns": {
         "seller_id": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 3095,
@@ -633,7 +3090,9 @@
             "3442f8959a84dea7ee197c632cb2df15",
             "d1b65fc7debc3361ea86b5f14c68d2e2",
             "ce3ad9de960102d0677a81f5d0bb7b2d"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "seller_zip_code_prefix": {
           "dtype": "int64",
@@ -645,10 +3104,12 @@
             "13023",
             "13844",
             "20031"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "seller_city": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 611,
@@ -657,10 +3118,25 @@
             "campinas",
             "mogi guacu",
             "rio de janeiro"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "sao paulo": {
+              "sao paulo": 694,
+              "sao  paulo": 1
+            },
+            "sao jose dos pinhais": {
+              "sao jose dos pinhais": 10,
+              "sao  jose dos pinhais": 1
+            },
+            "ferraz de vasconcelos": {
+              "ferraz de vasconcelos": 3,
+              "ferraz de  vasconcelos": 1
+            }
+          }
         },
         "seller_state": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 23,
@@ -669,13 +3145,17 @@
             "SP",
             "RJ",
             "PE"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     },
     "product_category_name_translation": {
       "table": "product_category_name_translation",
       "row_count": 71,
+      "sampled": false,
+      "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
         "product_category_name",
@@ -683,7 +3163,7 @@
       ],
       "columns": {
         "product_category_name": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 71,
@@ -692,10 +3172,12 @@
             "beleza_saude",
             "informatica_acessorios",
             "automotivo"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         },
         "product_category_name_english": {
-          "dtype": "str",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
           "distinct_count": 71,
@@ -704,7 +3186,9 @@
             "health_beauty",
             "computers_accessories",
             "auto"
-          ]
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
         }
       }
     }

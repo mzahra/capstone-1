@@ -19,9 +19,23 @@ from pathlib import Path
 
 import pandas as pd
 
+from text_quality import (
+    check_casing_consistency,
+    is_free_text_column,
+    redact_sample,
+    scan_column_for_pii,
+)
+
 DB_PATH = Path(__file__).resolve().parent.parent / "data" / "warehouse.db"
 
 FK_OVERLAP_THRESHOLD = 0.9  # 90%+ of child values found in parent -> treat as real FK
+
+# Tables at or below this size are pulled whole into pandas, same as Round 1. Above it, a
+# table is sampled instead: loading a client's full table straight into a pandas DataFrame
+# does not hold up past a few hundred thousand rows (see pipeline_documentation.md's "Data
+# volume" limit), which matters directly for CFPB's roughly 17.4 million row complaints table.
+# Row counts always come from a full SQL COUNT(*), never the sample, so those stay exact.
+SAMPLE_ROW_THRESHOLD = 100_000
 
 
 def get_tables(conn: sqlite3.Connection) -> list[str]:
@@ -32,8 +46,21 @@ def get_tables(conn: sqlite3.Connection) -> list[str]:
 
 
 def profile_table(conn: sqlite3.Connection, table: str) -> dict:
-    df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
-    n_rows = len(df)
+    n_rows = conn.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+    sampled = n_rows > SAMPLE_ROW_THRESHOLD
+
+    if sampled:
+        # An evenly spaced sample across the table's row order, not just the first N rows,
+        # which would bias toward whatever the source file happened to be sorted by (CFPB's
+        # export is roughly chronological, so "first N rows" would mean "oldest complaints
+        # only"). SQLite's implicit rowid makes this a single cheap table scan, no ORDER BY
+        # RANDOM() sort of the whole table.
+        stride = max(n_rows // SAMPLE_ROW_THRESHOLD, 1)
+        df = pd.read_sql(f'SELECT * FROM "{table}" WHERE (rowid - 1) % {stride} = 0', conn)
+    else:
+        df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
+
+    sample_size = len(df)
     duplicate_rows = int(df.duplicated().sum())
 
     columns = {}
@@ -42,7 +69,9 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
         s = df[col]
         null_count = int(s.isna().sum())
         distinct_count = int(s.nunique(dropna=True))
-        is_unique_nonnull = null_count == 0 and distinct_count == n_rows and n_rows > 0
+        # Uniqueness can only be checked against what was actually loaded. For a sampled
+        # table this means "unique within the sample", not a guarantee across all n_rows.
+        is_unique_nonnull = null_count == 0 and distinct_count == sample_size and sample_size > 0
 
         outlier_count = 0
         if pd.api.types.is_numeric_dtype(s) and s.dropna().shape[0] > 4:
@@ -52,13 +81,29 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
                 lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
                 outlier_count = int(((s < lower) | (s > upper)).sum())
 
+        sample_values = [str(v) for v in s.dropna().unique()[:3].tolist()]
+
+        # Numeric outlier detection above only covers number columns. These two checks cover
+        # what it misses in text columns: private data hidden in free text, and inconsistent
+        # casing/formatting in categorical text. See text_quality.py for why both run locally.
+        free_text_pii = {}
+        casing_issues = {}
+        if pd.api.types.is_object_dtype(s) or pd.api.types.is_string_dtype(s):
+            if is_free_text_column(s):
+                free_text_pii = scan_column_for_pii(s)
+                sample_values = [redact_sample(v) for v in sample_values]
+            else:
+                casing_issues = check_casing_consistency(s)
+
         columns[col] = {
             "dtype": str(s.dtype),
             "null_count": null_count,
-            "null_pct": round(null_count / n_rows * 100, 2) if n_rows else 0,
+            "null_pct": round(null_count / sample_size * 100, 2) if sample_size else 0,
             "distinct_count": distinct_count,
             "outlier_count": outlier_count,
-            "sample_values": [str(v) for v in s.dropna().unique()[:3].tolist()],
+            "sample_values": sample_values,
+            "free_text_pii": free_text_pii,
+            "casing_issues": casing_issues,
         }
         if is_unique_nonnull:
             pk_candidates.append(col)
@@ -66,6 +111,8 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
     return {
         "table": table,
         "row_count": n_rows,
+        "sampled": sampled,
+        "sample_size": sample_size if sampled else None,
         "duplicate_rows": duplicate_rows,
         "pk_candidates": pk_candidates,
         "columns": columns,
@@ -104,8 +151,10 @@ def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) ->
     return fks
 
 
-def profile_database() -> dict:
-    conn = sqlite3.connect(DB_PATH)
+def profile_database(db_path: Path | None = None) -> dict:
+    """db_path lets a second "client" database (for example the CFPB warehouse) be profiled
+    with the same code, without changing the Olist default used by the dashboard."""
+    conn = sqlite3.connect(db_path or DB_PATH)
     tables = get_tables(conn)
     profiles = {t: profile_table(conn, t) for t in tables}
     fk_candidates = detect_fk_candidates(conn, profiles)
@@ -114,12 +163,18 @@ def profile_database() -> dict:
 
 
 if __name__ == "__main__":
+    import argparse
     import json
-    from pathlib import Path
 
-    result = profile_database()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--db", type=Path, default=DB_PATH, help="path to the SQLite database to profile")
+    parser.add_argument("--out", type=Path, default=None, help="path to write profiling.json to")
+    args = parser.parse_args()
 
-    output_path = Path(__file__).resolve().parent.parent / "outputs" / "profiling.json"
+    output_path = args.out or (Path(__file__).resolve().parent.parent / "outputs" / "profiling.json")
+
+    result = profile_database(args.db)
+
     output_path.parent.mkdir(exist_ok=True)
     output_path.write_text(json.dumps(result, indent=2, default=str))
 
