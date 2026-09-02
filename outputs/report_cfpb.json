@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-09-02T13:05:37.506157+00:00",
+  "profile_summary": {
+    "tables": {
+      "complaints": {
+        "row_count": 17456743,
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 100327
+      }
+    },
+    "fk_candidates": []
+  },
+  "recommended_model": {
+    "fact_table": "complaints",
+    "dimensions": [
+      "product",
+      "sub_product",
+      "issue",
+      "company",
+      "state",
+      "submitted_via",
+      "company_response_to_consumer"
+    ],
+    "rationale": "The complaints table serves as the central fact table capturing consumer complaints, while the dimension tables provide context and categorization for analysis, allowing for insights into trends and performance across various dimensions."
+  },
+  "quality_findings": [
+    "Possible PII detected in the 'Consumer complaint narrative' column due to the presence of PERSON, PHONE_NUMBER, and LOCATION.",
+    "Inconsistent casing/format in the 'Company' column, which could lead to data integrity issues."
+  ],
+  "data_science_opportunities": [
+    "Churn prediction models could be developed to identify customers at risk of leaving based on complaint patterns.",
+    "Sentiment analysis on consumer complaint narratives could provide insights into customer satisfaction and areas for improvement.",
+    "Demand forecasting could be enhanced by analyzing trends in complaints over time to predict future issues."
+  ],
+  "kpis": [
+    {
+      "name": "Total Complaints Received",
+      "sql": "SELECT COUNT(*) AS total_complaints FROM complaints;",
+      "why_it_matters": "Understanding the total volume of complaints helps gauge customer dissatisfaction and operational performance.",
+      "rows": [
+        {
+          "total_complaints": 17456743
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Complaints by Product",
+      "sql": "SELECT Product, COUNT(*) AS complaint_count FROM complaints GROUP BY Product ORDER BY complaint_count DESC LIMIT 10;",
+      "why_it_matters": "Identifying which products generate the most complaints can inform product management and improvement efforts.",
+      "rows": [
+        {
+          "Product": "Credit reporting or other personal consumer reports",
+          "complaint_count": 11921763
+        },
+        {
+          "Product": "Credit reporting, credit repair services, or other personal consumer reports",
+          "complaint_count": 2163770
+        },
+        {
+          "Product": "Debt collection",
+          "complaint_count": 1181892
+        },
+        {
+          "Product": "Mortgage",
+          "complaint_count": 458679
+        },
+        {
+          "Product": "Checking or savings account",
+          "complaint_count": 391391
+        },
+        {
+          "Product": "Credit card",
+          "complaint_count": 338761
+        },
+        {
+          "Product": "Credit card or prepaid card",
+          "complaint_count": 206356
+        },
+        {
+          "Product": "Money transfer, virtual currency, or money service",
+          "complaint_count": 189371
+        },
+        {
+          "Product": "Credit reporting",
+          "complaint_count": 140426
+        },
+        {
+          "Product": "Student loan",
+          "complaint_count": 132699
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Average Timely Response Rate",
+      "sql": "SELECT CAST(SUM(CASE WHEN \"Timely response?\" = 'Yes' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) * 100 AS timely_response_rate FROM complaints;",
+      "why_it_matters": "Measuring the timely response rate indicates the effectiveness of customer service operations.",
+      "rows": [
+        {
+          "timely_response_rate": 99.3830063259796
+        }
+      ],
+      "status": "ok",
+      "attempts": 2,
+      "attempt_errors": [
+        "near \"?\": syntax error"
+      ]
+    },
+    {
+      "name": "Complaints by Company",
+      "sql": "SELECT Company, COUNT(*) AS complaint_count FROM complaints GROUP BY Company ORDER BY complaint_count DESC LIMIT 10;",
+      "why_it_matters": "Tracking complaints by company helps identify which companies may need to improve their customer service or product offerings.",
+      "rows": [
+        {
+          "Company": "TRANSUNION INTERMEDIATE HOLDINGS, INC.",
+          "complaint_count": 4799428
+        },
+        {
+          "Company": "EQUIFAX, INC.",
+          "complaint_count": 4624758
+        },
+        {
+          "Company": "Experian Information Solutions Inc.",
+          "complaint_count": 4185400
+        },
+        {
+          "Company": "BANK OF AMERICA, NATIONAL ASSOCIATION",
+          "complaint_count": 185485
+        },
+        {
+          "Company": "JPMORGAN CHASE & CO.",
+          "complaint_count": 174371
+        },
+        {
+          "Company": "WELLS FARGO & COMPANY",
+          "complaint_count": 173821
+        },
+        {
+          "Company": "CAPITAL ONE FINANCIAL CORPORATION",
+          "complaint_count": 170072
+        },
+        {
+          "Company": "CITIBANK, N.A.",
+          "complaint_count": 140408
+        },
+        {
+          "Company": "SYNCHRONY FINANCIAL",
+          "complaint_count": 82865
+        },
+        {
+          "Company": "Resurgent Capital Services L.P.",
+          "complaint_count": 70689
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Complaints by State",
+      "sql": "SELECT State, COUNT(*) AS complaint_count FROM complaints GROUP BY State ORDER BY complaint_count DESC LIMIT 10;",
+      "why_it_matters": "Understanding geographic trends in complaints can help target specific regions for customer service improvements.",
+      "rows": [
+        {
+          "State": "TX",
+          "complaint_count": 2397601
+        },
+        {
+          "State": "FL",
+          "complaint_count": 2389413
+        },
+        {
+          "State": "CA",
+          "complaint_count": 1734127
+        },
+        {
+          "State": "GA",
+          "complaint_count": 1287084
+        },
+        {
+          "State": "NY",
+          "complaint_count": 1012924
+        },
+        {
+          "State": "IL",
+          "complaint_count": 746001
+        },
+        {
+          "State": "PA",
+          "complaint_count": 682871
+        },
+        {
+          "State": "NC",
+          "complaint_count": 598937
+        },
+        {
+          "State": "NJ",
+          "complaint_count": 556892
+        },
+        {
+          "State": "MD",
+          "complaint_count": 427639
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Complaints by Submission Method",
+      "sql": "SELECT \"Submitted via\", COUNT(*) AS complaint_count FROM complaints GROUP BY \"Submitted via\" ORDER BY complaint_count DESC LIMIT 10;",
+      "why_it_matters": "Analyzing the submission methods can reveal preferences and areas for enhancing customer engagement.",
+      "rows": [
+        {
+          "Submitted via": "Web",
+          "complaint_count": 16822073
+        },
+        {
+          "Submitted via": "Referral",
+          "complaint_count": 278118
+        },
+        {
+          "Submitted via": "Phone",
+          "complaint_count": 220179
+        },
+        {
+          "Submitted via": "Postal mail",
+          "complaint_count": 110306
+        },
+        {
+          "Submitted via": "Fax",
+          "complaint_count": 25644
+        },
+        {
+          "Submitted via": "Email",
+          "complaint_count": 423
+        }
+      ],
+      "status": "ok",
+      "attempts": 2,
+      "attempt_errors": [
+        "no such column: Submitted_via"
+      ]
+    }
+  ],
+  "insights": [
+    "The total number of complaints received stands at over 17 million, indicating a significant level of customer dissatisfaction that requires immediate attention to improve operational performance and customer trust.",
+    "The product generating the most complaints is related to credit reporting, with over 11.9 million complaints. This highlights a critical area for product management to focus on improvements and customer satisfaction.",
+    "The average timely response rate is impressively high at 99.38%, suggesting that customer service is generally effective in addressing complaints promptly. Maintaining this level of responsiveness is crucial for customer retention.",
+    "The top three companies with the highest number of complaints are TRANSUNION, EQUIFAX, and Experian, collectively accounting for over 12 million complaints. This indicates a need for these companies to enhance their customer service and product offerings to mitigate dissatisfaction.",
+    "Texas and Florida are the states with the highest complaint volumes, suggesting that targeted customer service improvements in these regions could significantly enhance overall customer satisfaction.",
+    "There are data quality issues present, including possible personally identifiable information (PII) in complaint narratives and inconsistent company names, which could undermine trust in the data and affect decision-making."
+  ]
+}

@@ -119,35 +119,59 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
     }
 
 
+FK_NAME_HINTS = ("id", "code", "key", "ref")
+
+
+def _looks_like_identifier(col: str) -> bool:
+    lowered = col.lower()
+    return any(hint in lowered for hint in FK_NAME_HINTS)
+
+
 def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) -> list[dict]:
-    """Cross-table FK candidates confirmed by value overlap, not just name match."""
+    """
+    Cross-table FK candidates confirmed by value overlap, not just name match. The column name
+    only has to loosely look like an identifier (contains "id", "code", "key", or "ref"
+    anywhere, not just as a suffix), and does not have to exactly match the parent table's
+    primary key column name.
+
+    The exact-name-match version missed real relationships that use a different naming
+    convention on each side. Confirmed with Open Food Facts: its child tables use
+    "product_code" against the parent table's "code" column, a real relationship, 100% value
+    overlap, that the exact-match version found nothing for, since neither the "_id" suffix
+    check nor the same-name requirement matched. The broadened check still only ever reports a
+    relationship based on real value overlap, a loose name hint is just a cheap way to avoid
+    checking every column against every other table's keys.
+    """
     fks = []
     for table, profile in profiles.items():
-        for col in profile["columns"]:
-            if not (col.endswith("_id") or col.endswith("id")):
+        for col, col_stats in profile["columns"].items():
+            if not _looks_like_identifier(col):
                 continue
+            if col_stats.get("free_text_pii"):
+                continue  # a free text column is never a sensible identifier candidate
+
+            child_vals = pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{table}"', conn)[col].dropna()
+            if child_vals.empty:
+                continue
+
             for other_table, other_profile in profiles.items():
                 if other_table == table:
                     continue
-                if col not in other_profile["pk_candidates"]:
-                    continue
-                child_vals = pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{table}"', conn)[col].dropna()
-                if child_vals.empty:
-                    continue
-                parent_vals = set(
-                    pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{other_table}"', conn)[col].dropna()
-                )
-                overlap = child_vals.isin(parent_vals).mean()
-                if overlap >= FK_OVERLAP_THRESHOLD:
-                    fks.append(
-                        {
-                            "child_table": table,
-                            "child_column": col,
-                            "parent_table": other_table,
-                            "parent_column": col,
-                            "value_overlap_pct": round(overlap * 100, 1),
-                        }
+                for parent_col in other_profile["pk_candidates"]:
+                    parent_vals = set(
+                        pd.read_sql(f'SELECT DISTINCT "{parent_col}" FROM "{other_table}"', conn)[parent_col].dropna()
                     )
+                    overlap = child_vals.isin(parent_vals).mean()
+                    if overlap >= FK_OVERLAP_THRESHOLD:
+                        fks.append(
+                            {
+                                "child_table": table,
+                                "child_column": col,
+                                "parent_table": other_table,
+                                "parent_column": parent_col,
+                                "value_overlap_pct": round(overlap * 100, 1),
+                            }
+                        )
     return fks
 
 

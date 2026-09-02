@@ -6,18 +6,27 @@ instead of through a workflow builder UI.
 
 ## What it does
 
-1. **`load_data.py`**: loads every CSV in `data/` into a local SQLite database. This simulates
-   a raw client export landing on a consultant's desk.
+1. **Loaders**, one per "client," each simulating a raw export landing on a consultant's desk:
+   - `load_data.py`: every CSV in `data/` into a local SQLite database (Olist).
+   - `load_cfpb_data.py`: streams the full CFPB bulk export into SQLite in chunks (17.4 million
+     rows), never a small slice.
+   - `load_openfoodfacts_data.py`: streams a bounded slice of Open Food Facts' nested JSON
+     export and flattens each product into relational tables (`products`, `ingredients`,
+     `categories`, `nutriments`), the conversion step Round 1 said this pipeline did not have.
 2. **`profiling.py`**: computes quality stats per table and column (nulls, duplicates,
-   outliers), finds primary key candidates, and finds foreign key candidates across tables,
-   confirmed by checking real value overlap, not just matching column names.
+   outliers, free text PII, casing consistency), finds primary key candidates, and finds foreign
+   key candidates across tables, confirmed by checking real value overlap, not just matching
+   column names. Samples large tables instead of loading them whole, see "Data volume" below.
 3. **`model_kpi_generator.py`**: makes two LLM calls.
    - Given the profile, it proposes a data model plus a KPI list with SQL, the top quality
      issues, and some data science opportunities.
    - Given the KPI results after they are actually run, it writes plain language business
      insights.
-4. **`run_pipeline.py`**: runs all of the above end to end and writes `outputs/report.json`,
-   which `dashboard/app.py` then displays.
+   - Also fixes a failed KPI's SQL on request, see "Limits compared to a production version"
+     below.
+4. **`run_pipeline.py`**: runs all of the above end to end and writes a report JSON file, which
+   `dashboard/app.py` then displays. Takes `--db` and `--out` so the same code runs against any
+   of the three warehouses.
 
 ## Where the AI is actually called
 
@@ -45,10 +54,13 @@ numbers. This is also why the AI step stays cheap and fast regardless of dataset
 before, and produce a reasonable first draft model, KPI set, and quality assessment, with every
 AI decision logged and reviewable in LangSmith.
 
-**It does not prove:** that this works reliably across every possible client schema (Round 1
-only tested one dataset, see the generalization risk in `research/opportunities_risks.md`), or
-that the AI recommended model is always the best one a senior consultant would pick. It is a
-fast first draft for a consultant to review, not a replacement for that review.
+**It does not prove:** that this works reliably across every possible client schema. Round 2
+tested three structurally different datasets (Olist's clean relational tables, CFPB's messy
+single flat table, Open Food Facts' genuinely nested JSON converted into relational tables), see
+the generalization risk in `research/opportunities_risks.md`, but three is not every shape a
+real client's data could take. Nor does this prove the AI recommended model is always the best
+one a senior consultant would pick. It is a fast first draft for a consultant to review, not a
+replacement for that review.
 
 ## Limits compared to a production version
 
@@ -81,10 +93,8 @@ The AI step stays cheap and fast no matter how big the data is, since it only ev
 compact schema summary (column names, types, null percentages, a few redacted sample values),
 never raw rows.
 
-**Round 2 status: partly fixed, tested at real scale.** The original plan was to keep the CFPB
-test to a small, date-filtered slice, the same way Round 1 stayed within Olist's roughly 1.5
-million rows. That plan changed: the full CFPB export was loaded instead, about 17.4 million
-rows, about 30 GB as CSV, to genuinely test this limit rather than avoid it.
+**Round 2 status: partly fixed, tested at real scale.** The CFPB test uses the full export: about 17.4 million rows, about 30 GB as CSV, well past Olist's roughly 1.5
+million rows. This tests the volume limit directly, instead of staying inside it.
 
 - **Loading:** `load_cfpb_data.py` streams the CSV out of the zip in 100,000-row chunks straight
   into SQLite, never holding more than one chunk in memory. This part scales fine, since SQLite
@@ -108,24 +118,38 @@ rows, about 30 GB as CSV, to genuinely test this limit rather than avoid it.
 
 ### Data structure
 
-The pipeline assumes tabular data (CSV-shaped tables in a SQL database). A few structural
-assumptions worth being upfront about, updated after testing against a second, messier dataset
-in Round 2 (CFPB Consumer Complaints):
+The pipeline itself only ever reads tabular data (tables in a SQL database). What changed in
+Round 2 is what can get a client's data into that shape in the first place, tested against two
+more datasets on top of Olist: CFPB Consumer Complaints (messy, mostly one flat table, free text
+heavy) and Open Food Facts (genuinely semi-structured JSON, converted into relational tables).
 
-- **Free text inside a structured export is now handled, fully unstructured sources are not.**
-  Round 1 said "unstructured data does not work as-is" for both cases together. Round 2 splits
-  this claim. A comment or narrative column inside an otherwise tabular export (like the CFPB
-  complaint narrative, or Olist's review text) is now profiled for quality and scanned for PII,
-  see `text_quality.py`. Fully unstructured sources, PDFs, scanned documents, images, or deeply
-  nested JSON, are still out of scope, and still need a separate conversion step first.
-- **The data model recommendation still needs real multi-table data to be useful.** Unchanged.
-  A client handing over one flat table still gets quality checks and KPIs, but there is nothing
-  to model, since there are no relationships between tables to find. The CFPB slice tested in
-  Round 2 is close to a single flat table, so its data model recommendation is expected to be
-  thin. That is the expected result of testing on this shape of data, not a bug.
-- **Foreign key detection relies on naming conventions** (columns ending in `id`), confirmed by
-  checking real value overlap. Unchanged. A schema using very different key naming could have
-  real relationships the pipeline does not notice.
+- **Free text inside a structured export is handled. Genuinely nested JSON now has a working
+  conversion path too, for one real case. Fully unstructured sources still do not.** Round 1
+  said "unstructured data does not work as-is" for all three of these together. Round 2 splits
+  the claim in two ways. First, a comment or narrative column inside an otherwise tabular export
+  (the CFPB complaint narrative, or Olist's review text) is profiled for quality and scanned for
+  PII, see `text_quality.py`. Second, `load_openfoodfacts_data.py` takes Open Food Facts' deeply
+  nested JSON, where even the top-level fields are not consistent record to record, and flattens
+  each product into a `products` row plus child rows in `ingredients`, `categories`, and
+  `nutriments` tables. That is a real, working conversion step for that one source's shape, not
+  a general JSON importer. Fully unstructured sources (PDFs, scanned documents, images) are
+  still out of scope, and still need a separate conversion step written for them too.
+- **The data model recommendation needs real multi-table data to be useful, and now has some to
+  work with beyond Olist.** CFPB's single flat table produced a thin recommendation, as expected
+  for that shape of data, not a bug. Open Food Facts, converted into four real related tables,
+  produced a genuine star schema recommendation instead (`nutriments` as the fact table,
+  `products`/`categories`/`ingredients` as dimensions), grounded in real, confirmed foreign keys,
+  see below.
+- **Foreign key detection no longer requires an exact column name match.** Fixed in Round 2.
+  It used to require the child and parent column to share the exact same name (for example both
+  sides named `customer_id`), and only consider names ending in `id`. Confirmed as a real gap
+  using Open Food Facts: its child tables use `product_code` against the parent's `code` column,
+  a real relationship, 100% value overlap, that the old version found nothing for. Fixed by
+  broadening the name hint to any column containing "id", "code", "key", or "ref", and matching
+  against any of the other table's primary key candidates, not just an identically named one.
+  The actual relationship is still only ever confirmed by real value overlap, the name hint is
+  just a cheap way to avoid checking every column against every other table's keys. Regression
+  checked against Olist: same 7 relationships found, before and after.
 - **Outlier detection only applies to number columns.** Still true for the numeric check
   specifically. But this is now narrowed by Round 2's two new text checks (PII detection and
   casing consistency, see above), rather than text quality being uncovered entirely.

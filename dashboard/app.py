@@ -23,17 +23,20 @@ import streamlit.components.v1 as components
 
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
 
-# One entry per "client" the pipeline has been run against. Each is a (report, profile)
-# filename pair written by pipeline/run_pipeline.py --out ... and pipeline/profiling.py --out ...
+# One entry per "client" the pipeline has been run against: (report filename, profile
+# filename, db path for the --db flag, or None for the default Olist warehouse).
 DATASETS = {
-    "Olist (Brazilian e-commerce)": ("report.json", "profiling.json"),
-    "CFPB (US consumer complaints)": ("report_cfpb.json", "profiling_cfpb.json"),
+    "Olist (Brazilian e-commerce)": ("report.json", "profiling.json", None),
+    "CFPB (US consumer complaints)": ("report_cfpb.json", "profiling_cfpb.json", "data/warehouse_cfpb.db"),
+    "Open Food Facts (products, JSON)": (
+        "report_openfoodfacts.json", "profiling_openfoodfacts.json", "data/warehouse_openfoodfacts.db"
+    ),
 }
 
 st.set_page_config(page_title="Data Copilot: Client Onboarding Report", layout="wide")
 
 dataset_label = st.sidebar.selectbox("Client dataset", list(DATASETS.keys()))
-report_file, profile_file = DATASETS[dataset_label]
+report_file, profile_file, db_path = DATASETS[dataset_label]
 REPORT_PATH = OUTPUTS_DIR / report_file
 PROFILE_PATH = OUTPUTS_DIR / profile_file
 
@@ -86,8 +89,11 @@ def section_header(text: str, color: str, level: str = "h2") -> None:
 
 
 if not REPORT_PATH.exists():
-    run_cmd = "python pipeline/run_pipeline.py" if report_file == "report.json" else \
-        f"python pipeline/run_pipeline.py --db data/warehouse_cfpb.db --out outputs/{report_file}"
+    run_cmd = (
+        "python pipeline/run_pipeline.py"
+        if db_path is None
+        else f"python pipeline/run_pipeline.py --db {db_path} --out outputs/{report_file}"
+    )
     st.error(f"No report found for {dataset_label}. Run `{run_cmd}` first.")
     st.stop()
 

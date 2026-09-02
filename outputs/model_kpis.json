@@ -1,0 +1,50 @@
+{
+  "recommended_model": {
+    "fact_table": "order_items",
+    "dimensions": [
+      "customers",
+      "products",
+      "sellers",
+      "order_payments",
+      "order_reviews"
+    ],
+    "rationale": "The fact table 'order_items' captures transactional data related to individual items sold in orders, making it central for analyzing sales performance. The dimension tables provide context for the transactions, including customer details, product information, seller data, payment methods, and customer reviews."
+  },
+  "kpis": [
+    {
+      "name": "Total Revenue",
+      "sql": "SELECT SUM(price + freight_value) AS total_revenue FROM order_items;",
+      "why_it_matters": "Total revenue is a key indicator of business performance, reflecting the overall sales generated."
+    },
+    {
+      "name": "Revenue by Product Category",
+      "sql": "SELECT pc.product_category_name_english, SUM(oi.price + oi.freight_value) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN product_category_name_translation pc ON p.product_category_name = pc.product_category_name GROUP BY pc.product_category_name_english ORDER BY revenue DESC LIMIT 10;",
+      "why_it_matters": "Understanding revenue by product category helps identify which categories are driving sales and where to focus marketing efforts."
+    },
+    {
+      "name": "Average Order Value",
+      "sql": "SELECT CAST(SUM(oi.price + oi.freight_value) AS REAL) / COUNT(DISTINCT o.order_id) AS average_order_value FROM order_items oi JOIN orders o ON oi.order_id = o.order_id;",
+      "why_it_matters": "Average order value provides insights into customer spending behavior and can inform pricing and promotional strategies."
+    },
+    {
+      "name": "Orders by Payment Type",
+      "sql": "SELECT op.payment_type, COUNT(DISTINCT o.order_id) AS order_count FROM order_payments op JOIN orders o ON op.order_id = o.order_id GROUP BY op.payment_type ORDER BY order_count DESC LIMIT 10;",
+      "why_it_matters": "Analyzing orders by payment type helps understand customer preferences and can guide payment processing strategies."
+    },
+    {
+      "name": "Customer Reviews by Score",
+      "sql": "SELECT review_score, COUNT(*) AS review_count FROM order_reviews GROUP BY review_score ORDER BY review_count DESC LIMIT 10;",
+      "why_it_matters": "Customer reviews by score provide insights into customer satisfaction and product performance, which are critical for quality improvement."
+    }
+  ],
+  "quality_findings": [
+    "The 'review_comment_title' column in the 'order_reviews' table has inconsistent casing/format affecting 496 values.",
+    "The 'review_comment_message' column in the 'order_reviews' table has possible PII detected, with PERSON in 44.0% of sampled values and LOCATION in 13.5% of sampled values.",
+    "The 'seller_city' column in the 'sellers' table has inconsistent casing/format affecting 3 values."
+  ],
+  "data_science_opportunities": [
+    "Churn prediction could be implemented by analyzing customer purchase patterns and review sentiments.",
+    "Demand forecasting can be enhanced by leveraging historical sales data to predict future product demand.",
+    "Customer segmentation analysis could be performed to tailor marketing strategies based on purchasing behavior and demographics."
+  ]
+}
