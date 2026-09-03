@@ -19,7 +19,7 @@ what shipped versus what did not, rather than only documenting the finished tech
 | 5 | Chleo (owner) | to know whether this tool is legally usable before real client data touches it | I don't create liability for my firm | Done |
 | 6 | Future client | to know upfront that part of my onboarding is AI-assisted and human-reviewed | I can trust the report I receive | Addressed in `strategic_plan.md`'s stakeholder communication plan |
 | 7 | Teaching evaluator | a working MVP I can actually try, not just documentation | the capstone claim is verifiable | Done, `mvp_documentation.md` |
-| 8 | Teaching evaluator | a low-code POC alongside the production pipeline | I can see the same capability built a second, more accessible way | Deferred, see Definition of done below |
+| 8 | Teaching evaluator | a low-code POC alongside the production pipeline | I can see the same capability built a second, more accessible way | Descoped, see Definition of done below |
 | 9 | Chleo (owner) | proof the pipeline can ingest a client's data even when it is not a clean flat table, genuinely nested JSON with an inconsistent schema | I know this isn't limited to whatever format one client happens to use | Done, Open Food Facts converted into 4 relational tables, real foreign keys confirmed between all of them |
 | 10 | Chleo (owner) | a future client's nested JSON to not require writing new loader code every single time | onboarding a new client doesn't always mean an engineering task first | Done, and in actual use, `pipeline/load_generic_json.py` is the real loader behind the Open Food Facts report, not a side demo. Found a real reliability gap along the way (not fully reproducible run to run, even at temperature 0), mitigated with a 3-run consensus, not eliminated, see `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section |
 
@@ -36,11 +36,20 @@ what shipped versus what did not, rather than only documenting the finished tech
 - [x] `mvp_documentation.md` written.
 - [x] At least one genuinely semi-structured (not just messy-but-flat) dataset ingested and
       converted into relational tables, per `feedback/round1_decision.md`'s original commitment.
-- [ ] No-code/low-code POC, workflow export, and demo recording. Deferred: the user chose to
-      prioritize the production pipeline's scope over the POC this sprint. Still required for
-      final submission, moved to day 4. Per the teacher's guidance, this can be built in plain
-      Python, no n8n or other no-code tool required.
-- [ ] Final presentation. Day 4.
+- [x] No-code/low-code POC: descoped by decision on day 4, not built as a separate artifact.
+      Reasoning: the working MVP (`pipeline/` + `dashboard/`) already is a real, running proof of
+      concept, tested against three datasets, not a mockup. Building a second, throwaway version
+      in a no-code tool would demonstrate the same capability with less rigor, not more. The
+      final presentation's live demo of the real MVP is the POC evidence instead, satisfying the
+      checklist's intent (a working, demonstrable capability walked through live) without a
+      duplicate build. No `poc/` folder, no separate `poc_documentation.md`.
+- [x] Final presentation: `additional/presentation.pptx` rebuilt for Round 2 (9 slides, via
+      `additional/build_pptx_round2.py`, with the live demo split into two slides: the dashboard,
+      then the pipeline and LangSmith), timed to the real 9-minute slot (about 7:00 of scripted
+      content, leaving buffer for the demo to run long). Speaker
+      notes rebuilt to match (`additional/speaker_notes.docx`, via
+      `additional/build_speaker_notes_round2.py`). The Round 1 deck and notes are kept as
+      `presentation_round1.pptx` / `speaker_notes_round1.docx`, not deleted.
 - [x] Round 1 materials still present in the repo, nothing was removed, only extended.
 
 ## Acceptance criteria
@@ -110,7 +119,7 @@ day, not build time.
 | 1, Mon Aug 31 | `feedback/round1_decision.md`, `use_case_definition.md`, start the PII check | All done, plus `pipeline_documentation.md`'s limits section and the README's setup step, pulled forward from day 2 |
 | 2, Tue Sep 1 | Finish the PII integration, load the full CFPB dataset, `roi_risk_assessment.md` | All done: loaded the full 17.4 million row CFPB dataset, reworked `profiling.py` to sample large tables safely so profiling stays fast at that size, rebuilt the dashboard's ERD, and added a 5-attempt KPI SQL retry loop. `roi_risk_assessment.md` shipped the same day |
 | 3, Wed Sep 2 (today) | `compliance/eu_ai_act_compliance.md`, `compliance/gdpr_documentation.md`, `strategic_plan.md`, `delivery_plan.md` | All done, plus `mvp_documentation.md` and `README.md`'s Round 2 update pulled forward from day 4, and a third dataset, Open Food Facts, streamed and converted from nested JSON into relational tables, which found and fixed a real gap in foreign key detection (required an exact column name match, missed real relationships that used a different naming convention on each side). Started day 4's items early, same day |
-| 4, Thu Sep 3 | No-code POC, presentation content, full checklist review | Started ahead of schedule, on day 3 |
+| 4, Thu Sep 3 (today) | No-code POC, presentation content, full checklist review | Descoped the no-code POC by decision, see Definition of done above. Added real per-run LLM cost tracking to the pipeline itself (`model_kpi_generator.py`'s `cost_summary()`), replacing the earlier one-off `tiktoken` estimate, plus a running `outputs/llm_costs.jsonl` log across all runs. Fixed a real bug found during review: the identifier-detection safety net (`IDENTIFIER_NAME_HINTS`) had silently dropped `"key"` while the prompt and docs still assumed it was checked. Full checklist review against `additional/Capstone-Round-2.docx` done. Presentation content written and timed to the real 9-minute slot |
 | Fri Sep 4 | Presentation prep and delivery | Not build time |
 
 The "What actually happened" column is kept alongside "Planned" on purpose, rather than
