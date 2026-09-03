@@ -1,0 +1,65 @@
+{
+  "plan": {
+    "main_table": {
+      "name": "products",
+      "primary_key_field": "_id",
+      "fields": [
+        "code",
+        "brands",
+        "product_name",
+        "product_type",
+        "quantity",
+        "popularity_key",
+        "states",
+        "nutrition_grades",
+        "product_quantity",
+        "nutriscore",
+        "creator"
+      ]
+    },
+    "child_tables": [
+      {
+        "name": "ingredients",
+        "source_field": "ingredients",
+        "kind": "objects",
+        "fields": [
+          "is_in_taxonomy",
+          "ecobalyse_code",
+          "percent_estimate",
+          "ciqual_food_code",
+          "vegan",
+          "vegetarian",
+          "text",
+          "quantity_estimate",
+          "id",
+          "percent",
+          "ingredients",
+          "ciqual_proxy_food_code",
+          "percent_min",
+          "percent_max",
+          "from_palm_oil",
+          "processing",
+          "ecobalyse_proxy_code",
+          "labels",
+          "origins"
+        ]
+      },
+      {
+        "name": "categories",
+        "source_field": "categories_tags",
+        "kind": "values"
+      },
+      {
+        "name": "nutritional_info",
+        "source_field": "nutriments",
+        "kind": "keyvalue"
+      }
+    ]
+  },
+  "row_counts": {
+    "products": 25000,
+    "ingredients": 228100,
+    "categories": 57405,
+    "nutritional_info": 1798569
+  }
+}

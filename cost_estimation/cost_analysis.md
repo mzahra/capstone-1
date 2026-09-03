@@ -6,8 +6,11 @@
   small-consultancy data engineering rate in Germany
 - Build scope: the pipeline as demoed (quality and schema profiling, model and KPI generation,
   insight generation, LangSmith monitoring, one client dataset), not a full multi client product
-- LLM cost: OpenAI `gpt-4o-mini`, about 2 calls per client onboarding run, roughly 0.01 to
-  0.05 EUR per run at this schema size. Small compared to labor cost.
+- LLM cost: OpenAI `gpt-4o-mini`, about 2 calls per client onboarding run. This was a rough
+  guess at the time; Round 2 added real cost tracking to the pipeline itself
+  (`pipeline/model_kpi_generator.py`'s `cost_summary()`, logging OpenAI's own token usage on
+  every call) and found about 0.001 EUR per run, see `roi_risk_assessment.md`'s Ongoing costs
+  section. Small compared to labor cost either way.
 - LangSmith: the free tier is enough at pilot volume (under 5,000 traces per month)
 
 Note: the 32 hours below is not the same as the roughly 8 hours the Round 1 demo itself took
@@ -31,7 +34,7 @@ human review workflow before a report ever reaches a client.
 
 | Item | Cost |
 |---|---|
-| LLM API calls | about 0.05 EUR |
+| LLM API calls | about 0.001 EUR (see `roi_risk_assessment.md` for the real measured figure) |
 | Consultant review time (30 minutes, a quick check of the AI's draft before it reaches the client) | 48 EUR |
 | **Total per onboarding** | **about 48 EUR** |
 

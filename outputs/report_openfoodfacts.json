@@ -1,0 +1,349 @@
+{
+  "generated_at": "2026-09-03T11:44:08.321272+00:00",
+  "profile_summary": {
+    "tables": {
+      "products": {
+        "row_count": 25000,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "ingredients": {
+        "row_count": 228100,
+        "duplicate_rows": 43,
+        "sampled": true,
+        "sample_size": 114050
+      },
+      "categories": {
+        "row_count": 57405,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "nutritional_info": {
+        "row_count": 1798569,
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 105799
+      }
+    },
+    "fk_candidates": [
+      {
+        "child_table": "ingredients",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "ingredients",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "code",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "categories",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "categories",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "code",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "nutritional_info",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "nutritional_info",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "code",
+        "value_overlap_pct": 100.0
+      }
+    ]
+  },
+  "recommended_model": {
+    "fact_table": "nutritional_info",
+    "dimensions": [
+      "products",
+      "categories",
+      "ingredients"
+    ],
+    "rationale": "The nutritional_info table serves as the fact table because it contains detailed measurements related to the products, such as nutritional values, which are essential for analysis. The products, categories, and ingredients tables provide descriptive attributes that allow for richer insights into the nutritional data."
+  },
+  "quality_findings": [
+    "Inconsistent casing/format in brands column of products table affects data uniformity.",
+    "Inconsistent casing/format in product_name column of products table affects data readability.",
+    "Possible PII detected in ingredients table: PERSON in 1.5% of sampled values, PHONE_NUMBER in 23.0% of sampled values, CREDIT_CARD in 13.5% of sampled values."
+  ],
+  "data_science_opportunities": [
+    "Churn prediction models could be developed to identify products that are losing popularity over time.",
+    "Demand forecasting could be implemented to optimize inventory based on historical sales data.",
+    "Nutritional analysis and recommendations could be generated using machine learning to suggest healthier alternatives to consumers."
+  ],
+  "kpis": [
+    {
+      "name": "Average Nutritional Value by Product Category",
+      "sql": "SELECT c.value AS category, AVG(CAST(n.value AS REAL)) AS average_nutritional_value FROM nutritional_info n JOIN products p ON n._id = p._id JOIN categories c ON p._id = c._id GROUP BY c.value ORDER BY average_nutritional_value DESC LIMIT 10;",
+      "why_it_matters": "Understanding average nutritional values by category helps in assessing product offerings and guiding marketing strategies.",
+      "rows": [
+        {
+          "category": "en:pink-himalayan-salt",
+          "average_nutritional_value": 1027.3799777083334
+        },
+        {
+          "category": "en:himalaya-salts",
+          "average_nutritional_value": 1027.3799777083334
+        },
+        {
+          "category": "en:dehydrated-broths",
+          "average_nutritional_value": 728.9426061871408
+        },
+        {
+          "category": "en:bouillon-cubes",
+          "average_nutritional_value": 728.9426061871408
+        },
+        {
+          "category": "en:peanut-oils",
+          "average_nutritional_value": 707.6417910447761
+        },
+        {
+          "category": "en:nut-oils",
+          "average_nutritional_value": 707.6417910447761
+        },
+        {
+          "category": "en:legume-oils",
+          "average_nutritional_value": 402.41258503401355
+        },
+        {
+          "category": "en:sugar-free-chewing-gum",
+          "average_nutritional_value": 355.4425033747874
+        },
+        {
+          "category": "en:sweet-pies",
+          "average_nutritional_value": 293.3374384236458
+        },
+        {
+          "category": "en:pies",
+          "average_nutritional_value": 293.3374384236458
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Total Ingredients Count by Product",
+      "sql": "SELECT p.product_name, COUNT(i._id) AS total_ingredients FROM products p JOIN ingredients i ON p._id = i._id GROUP BY p.product_name ORDER BY total_ingredients DESC LIMIT 10;",
+      "why_it_matters": "Identifying products with the highest ingredient counts can inform product development and consumer preferences.",
+      "rows": [
+        {
+          "product_name": "Ice Cream",
+          "total_ingredients": 935
+        },
+        {
+          "product_name": "Ice cream",
+          "total_ingredients": 581
+        },
+        {
+          "product_name": "Greek Nonfat Yogurt",
+          "total_ingredients": 448
+        },
+        {
+          "product_name": "Cottage Cheese",
+          "total_ingredients": 375
+        },
+        {
+          "product_name": "Soda",
+          "total_ingredients": 372
+        },
+        {
+          "product_name": "Condensed Soup",
+          "total_ingredients": 349
+        },
+        {
+          "product_name": "Potato Chips",
+          "total_ingredients": 297
+        },
+        {
+          "product_name": "Popcorn",
+          "total_ingredients": 272
+        },
+        {
+          "product_name": "Beef Jerky",
+          "total_ingredients": 252
+        },
+        {
+          "product_name": "Candy",
+          "total_ingredients": 250
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Most Popular Product Brands",
+      "sql": "SELECT p.brands, COUNT(p._id) AS product_count FROM products p GROUP BY p.brands ORDER BY product_count DESC LIMIT 10;",
+      "why_it_matters": "This KPI helps in understanding brand performance and market presence, which is crucial for strategic partnerships.",
+      "rows": [
+        {
+          "brands": "Kroger",
+          "product_count": 1645
+        },
+        {
+          "brands": "Roundy's",
+          "product_count": 1273
+        },
+        {
+          "brands": "Spartan",
+          "product_count": 1207
+        },
+        {
+          "brands": "Big Y",
+          "product_count": 326
+        },
+        {
+          "brands": "Western Family",
+          "product_count": 307
+        },
+        {
+          "brands": null,
+          "product_count": 273
+        },
+        {
+          "brands": "Kroger,  The Kroger Co.",
+          "product_count": 272
+        },
+        {
+          "brands": "Marks & Spencer",
+          "product_count": 266
+        },
+        {
+          "brands": "Del Monte",
+          "product_count": 255
+        },
+        {
+          "brands": "Private Selection",
+          "product_count": 241
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Nutritional Value Breakdown by Key",
+      "sql": "SELECT n.key, AVG(CAST(n.value AS REAL)) AS average_value FROM nutritional_info n GROUP BY n.key ORDER BY average_value DESC LIMIT 10;",
+      "why_it_matters": "This provides insights into which nutritional aspects are most prevalent across products, guiding health-focused marketing.",
+      "rows": [
+        {
+          "key": "folates_value",
+          "average_value": 365801.70231729053
+        },
+        {
+          "key": "energy_100g",
+          "average_value": 2564.404177593277
+        },
+        {
+          "key": "iodine_value",
+          "average_value": 1626.2
+        },
+        {
+          "key": "carbon-footprint-from-meat-or-fish_serving",
+          "average_value": 1120.0
+        },
+        {
+          "key": "carbon-footprint-from-meat-or-fish_product",
+          "average_value": 1120.0
+        },
+        {
+          "key": "energy",
+          "average_value": 1051.1227354563935
+        },
+        {
+          "key": "energy-kj_100g",
+          "average_value": 954.7611111111112
+        },
+        {
+          "key": "carbon-footprint-from-meat-or-fish_100g",
+          "average_value": 859.1999999999999
+        },
+        {
+          "key": "energy_serving",
+          "average_value": 820.9424344619869
+        },
+        {
+          "key": "energy-kcal_100g",
+          "average_value": 613.0017462527933
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Ingredient Types Breakdown",
+      "sql": "SELECT i.text, COUNT(i._id) AS ingredient_count FROM ingredients i GROUP BY i.text ORDER BY ingredient_count DESC LIMIT 10;",
+      "why_it_matters": "Understanding the most common ingredients can help in product formulation and compliance with health regulations.",
+      "rows": [
+        {
+          "text": "SALT",
+          "ingredient_count": 6311
+        },
+        {
+          "text": "WATER",
+          "ingredient_count": 5263
+        },
+        {
+          "text": "SUGAR",
+          "ingredient_count": 5046
+        },
+        {
+          "text": "salt",
+          "ingredient_count": 3936
+        },
+        {
+          "text": "sugar",
+          "ingredient_count": 3057
+        },
+        {
+          "text": "CITRIC ACID",
+          "ingredient_count": 2165
+        },
+        {
+          "text": "water",
+          "ingredient_count": 2105
+        },
+        {
+          "text": "citric acid",
+          "ingredient_count": 1943
+        },
+        {
+          "text": "CORN SYRUP",
+          "ingredient_count": 1696
+        },
+        {
+          "text": "GARLIC",
+          "ingredient_count": 1437
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    }
+  ],
+  "insights": [
+    "The highest average nutritional values are found in pink Himalayan salt and dehydrated broths, indicating a potential market opportunity to promote these products as healthier options, which can enhance brand reputation.",
+    "Ice Cream leads with the highest total ingredient count, suggesting a complex formulation that may appeal to consumers looking for indulgent treats; however, this could also raise concerns about healthiness, impacting marketing strategies.",
+    "Kroger is the most popular brand with 1,645 products, highlighting its strong market presence; leveraging this brand in partnerships could enhance sales and customer loyalty.",
+    "The nutritional value breakdown shows that energy content is a significant focus, which can guide marketing strategies towards health-conscious consumers, but the presence of possible personal identifiable information (PII) in the ingredients data may undermine trust and requires immediate attention.",
+    "Common ingredients like salt and sugar dominate the ingredient types, indicating consumer familiarity, but also potential health concerns that could affect product perception and compliance with health regulations.",
+    "Inconsistent casing in the brands and product names may lead to confusion and affect data reliability, suggesting a need for standardization to improve data quality and consumer trust."
+  ]
+}

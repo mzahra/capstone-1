@@ -1,7 +1,8 @@
 """
-Round 1 dashboard. Reads outputs/report.json (produced by pipeline/run_pipeline.py)
-and outputs/profiling.json (produced by pipeline/profiling.py), and presents them as
-a client facing onboarding report.
+Client onboarding report dashboard. Reads a report.json (produced by pipeline/run_pipeline.py)
+and a profiling.json (produced by pipeline/profiling.py), and presents them as a client facing
+onboarding report. A sidebar dropdown switches between the "clients" the pipeline has been run
+against so far (Olist and, new in Round 2, CFPB), see the DATASETS dict below.
 
 Business content (KPIs, charts, insights) comes first. Technical content (the data
 model diagram, the full quality check breakdown) is collapsed at the end, since a
@@ -12,6 +13,7 @@ Usage:
     streamlit run dashboard/app.py
 """
 import json
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -19,10 +21,28 @@ import plotly.express as px
 import streamlit as st
 import streamlit.components.v1 as components
 
-REPORT_PATH = Path(__file__).resolve().parent.parent / "outputs" / "report.json"
-PROFILE_PATH = Path(__file__).resolve().parent.parent / "outputs" / "profiling.json"
+OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
+
+# One entry per "client" the pipeline has been run against: (report filename, profile
+# filename, db path for the --db flag or None for the default Olist warehouse, and an optional
+# AI-proposed schema plan filename, see pipeline/load_generic_json.py, only set for a dataset
+# whose tables were proposed by the AI rather than hand-written).
+DATASETS = {
+    "Olist (Brazilian e-commerce)": ("report_olist.json", "profiling_olist.json", None, None),
+    "CFPB (US consumer complaints)": ("report_cfpb.json", "profiling_cfpb.json", "data/warehouse_cfpb.db", None),
+    "Open Food Facts (products, JSON)": (
+        "report_openfoodfacts.json", "profiling_openfoodfacts.json", "data/warehouse_openfoodfacts.db",
+        "schema_plan_openfoodfacts_generic.json",
+    ),
+}
 
 st.set_page_config(page_title="Data Copilot: Client Onboarding Report", layout="wide")
+
+dataset_label = st.sidebar.selectbox("Client dataset", list(DATASETS.keys()))
+report_file, profile_file, db_path, generic_plan_file = DATASETS[dataset_label]
+REPORT_PATH = OUTPUTS_DIR / report_file
+GENERIC_PLAN_PATH = OUTPUTS_DIR / generic_plan_file if generic_plan_file else None
+PROFILE_PATH = OUTPUTS_DIR / profile_file
 
 # --- Color palette, one accent color per section ---------------------------
 COLORS = {
@@ -73,7 +93,12 @@ def section_header(text: str, color: str, level: str = "h2") -> None:
 
 
 if not REPORT_PATH.exists():
-    st.error("No report found. Run `python pipeline/run_pipeline.py` first.")
+    run_cmd = (
+        f"python pipeline/run_pipeline.py --out outputs/{report_file}"
+        if db_path is None
+        else f"python pipeline/run_pipeline.py --db {db_path} --out outputs/{report_file}"
+    )
+    st.error(f"No report found for {dataset_label}. Run `{run_cmd}` first.")
     st.stop()
 
 report = json.loads(REPORT_PATH.read_text())
@@ -83,27 +108,27 @@ st.markdown(f"<h1 style='color:{COLORS['title']}'>Data Copilot: Client Onboardin
 st.caption(f"Generated {report['generated_at']}")
 
 
-def build_mermaid_erd(profile: dict) -> str:
+def _mermaid_id(name: str) -> str:
+    """Mermaid entity names can't contain spaces or most punctuation. A dimension name coming
+    straight from the AI (or a raw column name) might, so this makes a safe identifier while
+    the original name is still shown as the edge label."""
+    return re.sub(r"\W+", "_", name).strip("_") or "unnamed"
+
+
+def build_recommended_model_erd(model: dict) -> str:
     """
-    Turns the confirmed foreign keys into a Mermaid ER diagram, relationships only
-    (no per-column attribute boxes). The full column and key detail is already shown
-    right next to this diagram in the "Checks performed" table, so nothing is lost by
-    keeping the diagram simple, and a relationships-only diagram is much less likely
-    to hit a Mermaid parsing edge case than one listing every column of every table.
-    A table with no confirmed relationship to any other table (for example a lookup
-    table nothing else joins to) will not appear as a box here.
+    Diagrams the AI's recommended fact/dimension model directly, not the confirmed foreign
+    keys. This is deliberate: it shows what the AI is proposing to build, which is what this
+    section of the report is about. It always renders something, one fact table connected to
+    each named dimension, even for a client export that is close to one flat table (no
+    confirmed relationships at all), where the "dimensions" are groupings of columns within
+    that same table rather than separate physical tables. See the "Checks performed"
+    relationships list for what is actually confirmed between real tables.
     """
+    fact = _mermaid_id(model.get("fact_table") or "fact")
     lines = ["erDiagram"]
-    seen = set()
-    for fk in profile["fk_candidates"]:
-        pair = tuple(sorted([fk["parent_table"], fk["child_table"]]))
-        key = (pair, fk["child_column"])
-        if key in seen:
-            continue
-        seen.add(key)
-        lines.append(
-            f'    {fk["parent_table"]} ||--o{{ {fk["child_table"]} : "{fk["child_column"]}"'
-        )
+    for dimension in model.get("dimensions", []):
+        lines.append(f'    {fact} ||--o{{ {_mermaid_id(dimension)} : "{dimension}"')
     return "\n".join(lines)
 
 
@@ -135,8 +160,15 @@ for i, kpi in enumerate(chart_kpis):
     df = pd.DataFrame(kpi["rows"])
     label_col, value_col = df.columns[0], df.columns[-1]
     df[value_col] = df[value_col].apply(round_value)
+    # A label column can be an all-digit string, e.g. a product barcode like "0020735990148".
+    # Plotly Express silently reads that as the number 20,735,990,148 and switches to a
+    # continuous numeric axis instead of one bar per category. Forcing the column to string
+    # dtype, and the axis to category type, keeps every label column categorical regardless of
+    # whether its values happen to look numeric.
+    df[label_col] = df[label_col].astype(str)
     chart_color = CHART_PALETTE[i % len(CHART_PALETTE)]
     fig = px.bar(df, x=label_col, y=value_col, color_discrete_sequence=[chart_color])
+    fig.update_xaxes(type="category")
     fig = style_chart(fig)
     st.plotly_chart(fig, use_container_width=True, theme=None)
     st.caption(kpi["why_it_matters"])
@@ -153,6 +185,66 @@ for opp in report["data_science_opportunities"]:
 
 # --- Technical details, collapsed ---------------------------------------
 with st.expander("Technical details (data model, quality checks)"):
+    cost = report.get("cost")
+    if cost:
+        section_header("Real LLM Cost, This Run", COLORS["technical"], level="h3")
+        st.caption(
+            "Actual token usage OpenAI returned for every call this pipeline run made, priced "
+            "at gpt-4o-mini's real published rate (see `pipeline/model_kpi_generator.py`), not "
+            "an estimate. An older report generated before this tracking was added has no cost "
+            "section and shows nothing here."
+        )
+        st.write(
+            f"**{cost['calls']} calls, {cost['total_tokens']:,} tokens** "
+            f"({cost['cost_usd']:.6f} USD, about {cost['cost_eur']:.6f} EUR)"
+        )
+        st.caption(
+            ", ".join(
+                f"`{c['label']}`: {c['prompt_tokens'] + c['completion_tokens']:,} tok, "
+                f"{c['cost_usd']:.6f} USD"
+                for c in cost["by_call"]
+            )
+        )
+
+    if GENERIC_PLAN_PATH and GENERIC_PLAN_PATH.exists():
+        section_header("AI-Proposed Table Structure", COLORS["technical"], level="h3")
+        st.caption(
+            "This client's raw JSON was genuinely nested, not just messy tables (see "
+            "`pipeline/pipeline_documentation.md`'s \"AI-proposed schema\" section). Instead of "
+            "a human hand-writing which fields matter, the AI (`pipeline/load_generic_json.py`) "
+            "was shown only field names, types, and how often each appears, never a value, and "
+            "proposed this structure itself. This is the actual schema behind the report below, "
+            "not a separate demo. Known limit: the proposal is not fully reproducible run to "
+            "run, mitigated by asking 3 times and taking the union, not eliminated."
+        )
+        generic_plan = json.loads(GENERIC_PLAN_PATH.read_text())
+        plan = generic_plan["plan"]
+        row_counts = generic_plan.get("row_counts", {})
+        main = plan["main_table"]
+
+        main_rows_note = f" ({row_counts[main['name']]:,} rows)" if main["name"] in row_counts else ""
+        st.write(f"**Main table:** `{main['name']}`{main_rows_note}, primary key `{main['primary_key_field']}`")
+        st.caption(", ".join(f"`{f}`" for f in (main.get("fields") or [])))
+
+        for child in plan.get("child_tables", []):
+            child_rows_note = f" ({row_counts[child['name']]:,} rows)" if child["name"] in row_counts else ""
+            st.write(
+                f"**Child table:** `{child['name']}`{child_rows_note}, from `{child['source_field']}`, "
+                f"foreign key `{main['primary_key_field']}`"
+            )
+            # "fields" is only ever set by the AI for an "objects" table (a list of dicts, e.g.
+            # ingredients), a "values" table (a plain list) just holds one "value" column per
+            # item, and a "keyvalue" table (a nested object) holds "key" and "value" columns,
+            # neither of those kinds asks the AI for "fields" at all, see load_generic_json.py.
+            kind = child.get("kind", "objects")
+            if kind == "values":
+                columns = ["value"]
+            elif kind == "keyvalue":
+                columns = ["key", "value"]
+            else:
+                columns = child.get("fields") or []
+            st.caption(", ".join(f"`{f}`" for f in columns) if columns else "(no columns found)")
+
     section_header("Data Quality Findings", COLORS["quality"], level="h3")
     st.markdown("\n".join(f"- {f}" for f in report["quality_findings"]))
 
@@ -164,15 +256,23 @@ with st.expander("Technical details (data model, quality checks)"):
             null_cols = {c: s["null_pct"] for c, s in cols.items() if s["null_pct"] > 0}
             worst_null_col = max(null_cols, key=null_cols.get) if null_cols else None
             outlier_total = sum(s["outlier_count"] for s in cols.values())
+            pii_cols = [c for c, s in cols.items() if s.get("free_text_pii")]
+            casing_cols = [c for c, s in cols.items() if s.get("casing_issues")]
+            stats_based_on = (
+                f"{info['sample_size']:,}-row sample" if info.get("sampled") else "full table"
+            )
             rows.append({
                 "Table": table,
                 "Rows": info["row_count"],
+                "Stats based on": stats_based_on,
                 "Columns checked": len(cols),
                 "Duplicate rows": info["duplicate_rows"],
                 "Columns with missing values": len(null_cols),
                 "Worst missing value column": f"{worst_null_col} ({null_cols[worst_null_col]}%)" if worst_null_col else "none",
                 "Outlier values found": outlier_total,
                 "Primary key found": ", ".join(info["pk_candidates"]) if info["pk_candidates"] else "none",
+                "Free text PII flags": ", ".join(pii_cols) if pii_cols else "none",
+                "Casing issues": ", ".join(casing_cols) if casing_cols else "none",
             })
         st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
@@ -194,25 +294,35 @@ with st.expander("Technical details (data model, quality checks)"):
     st.write(f"**Dimensions:** {', '.join(model['dimensions'])}")
     st.info(model["rationale"])
 
-    if profile:
-        st.caption("Entity-relationship diagram, generated from the actual confirmed keys:")
-        mermaid_code = build_mermaid_erd(profile)
+    if model.get("dimensions"):
+        st.caption("Diagram of the AI's recommended model: the fact table and its dimensions.")
+        mermaid_code = build_recommended_model_erd(model)
         components.html(
             f"""
             <pre class="mermaid">{mermaid_code}</pre>
             <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-            <script>mermaid.initialize({{startOnLoad: true}});</script>
+            <script>
+            mermaid.initialize({{startOnLoad: false}});
+            mermaid.run();
+            </script>
             """,
-            height=550,
+            height=450,
             scrolling=True,
         )
-        st.caption(
-            f"More than one table can look central in this diagram, since it draws every "
-            f"confirmed relationship, not only the one recommended as the fact table. That is "
-            f"normal when data has more than one level of detail (for example an order header "
-            f"and its order items). The AI recommends **{model['fact_table']}** as the fact "
-            f"table, see above."
-        )
+        if profile and not profile["fk_candidates"]:
+            st.caption(
+                "This client's export has no confirmed relationships between real tables "
+                "(see \"Checks performed\" above), so the dimensions here are groupings of "
+                "columns within the single fact table, not separate physical tables. See "
+                "`pipeline/pipeline_documentation.md`'s data structure limits for why this "
+                "happens."
+            )
+        else:
+            st.caption(
+                "This shows what the AI recommends building, not the full set of confirmed "
+                "relationships between every table (see the list under \"Checks performed\" "
+                "above for that)."
+            )
 
     error_kpis = [k for k in failed_kpis if k["status"] == "failed"]
     skipped_kpis = [k for k in failed_kpis if k["status"] == "skipped"]
@@ -220,8 +330,14 @@ with st.expander("Technical details (data model, quality checks)"):
     if error_kpis:
         st.subheader(f"{len(error_kpis)} KPI(s) failed to compute")
         for k in error_kpis:
-            st.write(f"**{k['name']}**: {k.get('error', 'unknown error')}")
+            attempts = k.get("attempts", 1)
+            attempt_note = f" (failed after {attempts} attempts, error retried against the AI each time)" if attempts > 1 else ""
+            st.write(f"**{k['name']}**: {k.get('error', 'unknown error')}{attempt_note}")
             st.code(k["sql"], language="sql")
+            if k.get("attempt_errors") and len(k["attempt_errors"]) > 1:
+                with st.expander(f"See all {len(k['attempt_errors'])} attempts for {k['name']}"):
+                    for i, err in enumerate(k["attempt_errors"], start=1):
+                        st.write(f"Attempt {i}: {err}")
 
     if skipped_kpis:
         st.subheader(f"{len(skipped_kpis)} KPI(s) computed but not shown")

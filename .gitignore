@@ -1,6 +1,8 @@
 .env
 data/*.csv
 data/*.db
+data/cfpb/
+data/openfoodfacts/
 __pycache__/
 *.pyc
 .venv/

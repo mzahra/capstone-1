@@ -1,0 +1,269 @@
+{
+  "tables": {
+    "complaints": {
+      "table": "complaints",
+      "row_count": 17456743,
+      "sampled": true,
+      "sample_size": 100327,
+      "duplicate_rows": 0,
+      "pk_candidates": [
+        "Complaint ID"
+      ],
+      "columns": {
+        "Date received": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 4953,
+          "outlier_count": 0,
+          "sample_values": [
+            "2023-07-18",
+            "2026-06-22",
+            "2026-07-02"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Product": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 20,
+          "outlier_count": 0,
+          "sample_values": [
+            "Credit reporting, credit repair services, or other personal consumer reports",
+            "Checking or savings account",
+            "Credit reporting or other personal consumer reports"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Sub-product": {
+          "dtype": "object",
+          "null_count": 1347,
+          "null_pct": 1.34,
+          "distinct_count": 77,
+          "outlier_count": 0,
+          "sample_values": [
+            "Credit reporting",
+            "Checking account",
+            "General-purpose credit card or charge card"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Issue": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 161,
+          "outlier_count": 0,
+          "sample_values": [
+            "Improper use of your report",
+            "Managing an account",
+            "Incorrect information on your report"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Sub-issue": {
+          "dtype": "object",
+          "null_count": 5343,
+          "null_pct": 5.33,
+          "distinct_count": 243,
+          "outlier_count": 0,
+          "sample_values": [
+            "Reporting company used your report improperly",
+            "Deposits and withdrawals",
+            "Funds not handled or disbursed as instructed"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Consumer complaint narrative": {
+          "dtype": "object",
+          "null_count": 78309,
+          "null_pct": 78.05,
+          "distinct_count": 18842,
+          "outlier_count": 0,
+          "sample_values": [
+            "I have tried for a year to get my funds that <PERSON> willingly accepted from the normal check cashing site I used for almost a year. Like normal, I cash my funds send them to a friend and we go get it from the atm.. I work XXXX XXXX XXXX <PERSON> this was the easiest way to get my work check cashed. I've followed everything and even tried to add a back account plus debit card to access my funds.. but to no avail, I'm literally left going in circles.. Their policies state that they will not accept funds onto a non verified account .. so I'm just curious to know why they accepted it for so long then? Why they limited my account after funds were deposited? And yet after a year, I just want my darn money..",
+            "I have paid off the account and it is now in collections",
+            "citi closed by credit card, <LOCATION>/XXXX XXXX XXXX <PERSON> due to payment processing problems between themselves and my bankXXXX XXXX <PERSON> citi refuses to provide any avenue to re-open this card or re-issue such that I can use card and privileges that come with the {$590.00} membership fee. since with payment prob was vendor prob at my XXXX XXXX citi has closed the card and refused to refund that fee. I need to have the fee returned or card re-opened, both of which citi has refused to do, because of some policy they cant ' reveal. I have been a customer for XXXX years, never a late payment. never a ding on my credit score of over XXXX. they are being inflexible and are hurting me as a customer even though I keep trying over and over to work it out with them. please have them open the card or return the membership fee. the fee was paid for a YEAR of privileges, <LOCATION> has not kept up their end of the membership agreement and refuse to make good on it. the fine print does not support their position."
+          ],
+          "free_text_pii": {
+            "sample_size": 200,
+            "entities": {
+              "PERSON": {
+                "count": 112,
+                "pct": 56.0
+              },
+              "PHONE_NUMBER": {
+                "count": 19,
+                "pct": 9.5
+              },
+              "LOCATION": {
+                "count": 66,
+                "pct": 33.0
+              }
+            }
+          },
+          "casing_issues": {}
+        },
+        "Company public response": {
+          "dtype": "object",
+          "null_count": 45419,
+          "null_pct": 45.27,
+          "distinct_count": 11,
+          "outlier_count": 0,
+          "sample_values": [
+            "Company has responded to the consumer and the CFPB and chooses not to provide a public response",
+            "Company disputes the facts presented in the complaint",
+            "Company believes it acted appropriately as authorized by contract or law"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Company": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1607,
+          "outlier_count": 0,
+          "sample_values": [
+            "ENCORE CAPITAL GROUP INC.",
+            "JPMORGAN CHASE & CO.",
+            "Paypal Holdings, Inc"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "onemain finance corporation": {
+              "OneMain Finance Corporation": 86,
+              "ONEMAIN FINANCE CORPORATION": 3
+            },
+            "first technology federal credit union": {
+              "FIRST TECHNOLOGY FEDERAL CREDIT UNION": 6,
+              "First Technology Federal Credit Union": 3
+            },
+            "global credit union": {
+              "GLOBAL CREDIT UNION": 1,
+              "Global Credit Union": 1
+            }
+          }
+        },
+        "State": {
+          "dtype": "object",
+          "null_count": 379,
+          "null_pct": 0.38,
+          "distinct_count": 60,
+          "outlier_count": 0,
+          "sample_values": [
+            "NJ",
+            "TX",
+            "ND"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "ZIP code": {
+          "dtype": "object",
+          "null_count": 21,
+          "null_pct": 0.02,
+          "distinct_count": 12230,
+          "outlier_count": 0,
+          "sample_values": [
+            "08079",
+            "75241",
+            "58201"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Tags": {
+          "dtype": "object",
+          "null_count": 95709,
+          "null_pct": 95.4,
+          "distinct_count": 3,
+          "outlier_count": 0,
+          "sample_values": [
+            "Servicemember",
+            "Older American",
+            "Older American, Servicemember"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Submitted via": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 6,
+          "outlier_count": 0,
+          "sample_values": [
+            "Web",
+            "Postal mail",
+            "Phone"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Date sent to company": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 4872,
+          "outlier_count": 0,
+          "sample_values": [
+            "2023-07-18",
+            "2026-07-31",
+            "2026-07-02"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Company response to consumer": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 8,
+          "outlier_count": 0,
+          "sample_values": [
+            "Closed with explanation",
+            "Closed with non-monetary relief",
+            "Closed with monetary relief"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Timely response?": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 2,
+          "outlier_count": 0,
+          "sample_values": [
+            "Yes",
+            "No"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "Complaint ID": {
+          "dtype": "int64",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 100327,
+          "outlier_count": 0,
+          "sample_values": [
+            "7268561",
+            "23544327",
+            "23790898"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        }
+      }
+    }
+  },
+  "fk_candidates": []
+}

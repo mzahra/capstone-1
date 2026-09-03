@@ -1,0 +1,255 @@
+{
+  "generated_at": "2026-09-03T11:51:39.166943+00:00",
+  "profile_summary": {
+    "tables": {
+      "complaints": {
+        "row_count": 17456743,
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 100327
+      }
+    },
+    "fk_candidates": []
+  },
+  "recommended_model": {
+    "fact_table": "complaints",
+    "dimensions": [
+      "Product",
+      "Sub-product",
+      "Issue",
+      "Company",
+      "State"
+    ],
+    "rationale": "The complaints table serves as the fact table as it contains quantitative data about consumer complaints, which can be analyzed in relation to various dimensions such as product type, issue type, and company involved. This structure allows for detailed analysis of complaints across different categories."
+  },
+  "quality_findings": [
+    "Possible PII detected in the 'Consumer complaint narrative' column, which contains PERSON, PHONE_NUMBER, and LOCATION data.",
+    "Inconsistent casing/format in the 'Company' column, affecting 3 values."
+  ],
+  "data_science_opportunities": [
+    "Churn prediction based on complaint patterns and response effectiveness.",
+    "Sentiment analysis on consumer complaint narratives to gauge customer satisfaction.",
+    "Demand forecasting for products based on complaint trends and seasonal variations."
+  ],
+  "kpis": [
+    {
+      "name": "Total Complaints by Product",
+      "sql": "SELECT Product, COUNT(*) AS TotalComplaints FROM complaints GROUP BY Product ORDER BY TotalComplaints DESC LIMIT 10;",
+      "why_it_matters": "Understanding which products generate the most complaints can help prioritize quality improvements and customer service efforts.",
+      "rows": [
+        {
+          "Product": "Credit reporting or other personal consumer reports",
+          "TotalComplaints": 11921763
+        },
+        {
+          "Product": "Credit reporting, credit repair services, or other personal consumer reports",
+          "TotalComplaints": 2163770
+        },
+        {
+          "Product": "Debt collection",
+          "TotalComplaints": 1181892
+        },
+        {
+          "Product": "Mortgage",
+          "TotalComplaints": 458679
+        },
+        {
+          "Product": "Checking or savings account",
+          "TotalComplaints": 391391
+        },
+        {
+          "Product": "Credit card",
+          "TotalComplaints": 338761
+        },
+        {
+          "Product": "Credit card or prepaid card",
+          "TotalComplaints": 206356
+        },
+        {
+          "Product": "Money transfer, virtual currency, or money service",
+          "TotalComplaints": 189371
+        },
+        {
+          "Product": "Credit reporting",
+          "TotalComplaints": 140426
+        },
+        {
+          "Product": "Student loan",
+          "TotalComplaints": 132699
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Average Timely Response Rate",
+      "sql": "SELECT CAST(SUM(CASE WHEN \"Timely response?\" = 'Yes' THEN 1 ELSE 0 END) AS REAL) / COUNT(*) * 100 AS AverageTimelyResponseRate FROM complaints;",
+      "why_it_matters": "This KPI indicates how effectively the company is responding to complaints, which is crucial for customer satisfaction and retention.",
+      "rows": [
+        {
+          "AverageTimelyResponseRate": 99.3830063259796
+        }
+      ],
+      "status": "ok",
+      "attempts": 2,
+      "attempt_errors": [
+        "near \"response\": syntax error"
+      ]
+    },
+    {
+      "name": "Complaints by Company",
+      "sql": "SELECT Company, COUNT(*) AS TotalComplaints FROM complaints GROUP BY Company ORDER BY TotalComplaints DESC LIMIT 10;",
+      "why_it_matters": "Identifying which companies receive the most complaints can highlight areas for improvement and accountability.",
+      "rows": [
+        {
+          "Company": "TRANSUNION INTERMEDIATE HOLDINGS, INC.",
+          "TotalComplaints": 4799428
+        },
+        {
+          "Company": "EQUIFAX, INC.",
+          "TotalComplaints": 4624758
+        },
+        {
+          "Company": "Experian Information Solutions Inc.",
+          "TotalComplaints": 4185400
+        },
+        {
+          "Company": "BANK OF AMERICA, NATIONAL ASSOCIATION",
+          "TotalComplaints": 185485
+        },
+        {
+          "Company": "JPMORGAN CHASE & CO.",
+          "TotalComplaints": 174371
+        },
+        {
+          "Company": "WELLS FARGO & COMPANY",
+          "TotalComplaints": 173821
+        },
+        {
+          "Company": "CAPITAL ONE FINANCIAL CORPORATION",
+          "TotalComplaints": 170072
+        },
+        {
+          "Company": "CITIBANK, N.A.",
+          "TotalComplaints": 140408
+        },
+        {
+          "Company": "SYNCHRONY FINANCIAL",
+          "TotalComplaints": 82865
+        },
+        {
+          "Company": "Resurgent Capital Services L.P.",
+          "TotalComplaints": 70689
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Complaints by Issue Type",
+      "sql": "SELECT Issue, COUNT(*) AS TotalComplaints FROM complaints GROUP BY Issue ORDER BY TotalComplaints DESC LIMIT 10;",
+      "why_it_matters": "",
+      "rows": [
+        {
+          "Issue": "Incorrect information on your report",
+          "TotalComplaints": 7846017
+        },
+        {
+          "Issue": "Improper use of your report",
+          "TotalComplaints": 3341315
+        },
+        {
+          "Issue": "Problem with a company's investigation into an existing problem",
+          "TotalComplaints": 2255976
+        },
+        {
+          "Issue": "Problem with a credit reporting company's investigation into an existing problem",
+          "TotalComplaints": 589318
+        },
+        {
+          "Issue": "Attempts to collect debt not owed",
+          "TotalComplaints": 476271
+        },
+        {
+          "Issue": "Written notification about debt",
+          "TotalComplaints": 228906
+        },
+        {
+          "Issue": "Managing an account",
+          "TotalComplaints": 228758
+        },
+        {
+          "Issue": "Took or threatened to take negative or legal action",
+          "TotalComplaints": 145745
+        },
+        {
+          "Issue": "False statements or representation",
+          "TotalComplaints": 120014
+        },
+        {
+          "Issue": "Loan modification,collection,foreclosure",
+          "TotalComplaints": 112294
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Complaints by State",
+      "sql": "SELECT State, COUNT(*) AS TotalComplaints FROM complaints GROUP BY State ORDER BY TotalComplaints DESC LIMIT 10;",
+      "why_it_matters": "",
+      "rows": [
+        {
+          "State": "TX",
+          "TotalComplaints": 2397601
+        },
+        {
+          "State": "FL",
+          "TotalComplaints": 2389413
+        },
+        {
+          "State": "CA",
+          "TotalComplaints": 1734127
+        },
+        {
+          "State": "GA",
+          "TotalComplaints": 1287084
+        },
+        {
+          "State": "NY",
+          "TotalComplaints": 1012924
+        },
+        {
+          "State": "IL",
+          "TotalComplaints": 746001
+        },
+        {
+          "State": "PA",
+          "TotalComplaints": 682871
+        },
+        {
+          "State": "NC",
+          "TotalComplaints": 598937
+        },
+        {
+          "State": "NJ",
+          "TotalComplaints": 556892
+        },
+        {
+          "State": "MD",
+          "TotalComplaints": 427639
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    }
+  ],
+  "insights": [
+    "The product with the highest number of complaints is 'Credit reporting or other personal consumer reports', with over 11.9 million complaints. This indicates a significant area for improvement in product quality and customer service, which could enhance customer satisfaction and loyalty.",
+    "The average timely response rate to complaints is an impressive 99.38%. This high rate reflects the company's commitment to addressing customer issues promptly, which is crucial for maintaining customer trust and retention.",
+    "The top three companies receiving the most complaints are TransUnion, Equifax, and Experian, with complaints totaling nearly 13 million. This highlights the need for these companies to address customer concerns effectively and improve their service quality.",
+    "The most common complaint issue is 'Incorrect information on your report', accounting for over 7.8 million complaints. This suggests a critical need for better data accuracy and verification processes to prevent customer dissatisfaction.",
+    "Texas and Florida are the states with the highest number of complaints, each exceeding 2.3 million. This geographic concentration may warrant targeted customer service initiatives in these regions to better address local concerns.",
+    "There are data quality issues present, including possible personally identifiable information (PII) in complaint narratives and inconsistent casing in company names. These issues could undermine trust in the data and should be addressed to ensure compliance and data integrity."
+  ]
+}

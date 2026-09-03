@@ -19,9 +19,23 @@ from pathlib import Path
 
 import pandas as pd
 
+from text_quality import (
+    check_casing_consistency,
+    is_free_text_column,
+    redact_sample,
+    scan_column_for_pii,
+)
+
 DB_PATH = Path(__file__).resolve().parent.parent / "data" / "warehouse.db"
 
 FK_OVERLAP_THRESHOLD = 0.9  # 90%+ of child values found in parent -> treat as real FK
+
+# Tables at or below this size are pulled whole into pandas, same as Round 1. Above it, a
+# table is sampled instead: loading a client's full table straight into a pandas DataFrame
+# does not hold up past a few hundred thousand rows (see pipeline_documentation.md's "Data
+# volume" limit), which matters directly for CFPB's roughly 17.4 million row complaints table.
+# Row counts always come from a full SQL COUNT(*), never the sample, so those stay exact.
+SAMPLE_ROW_THRESHOLD = 100_000
 
 
 def get_tables(conn: sqlite3.Connection) -> list[str]:
@@ -32,8 +46,21 @@ def get_tables(conn: sqlite3.Connection) -> list[str]:
 
 
 def profile_table(conn: sqlite3.Connection, table: str) -> dict:
-    df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
-    n_rows = len(df)
+    n_rows = conn.execute(f'SELECT COUNT(*) FROM "{table}"').fetchone()[0]
+    sampled = n_rows > SAMPLE_ROW_THRESHOLD
+
+    if sampled:
+        # An evenly spaced sample across the table's row order, not just the first N rows,
+        # which would bias toward whatever the source file happened to be sorted by (CFPB's
+        # export is roughly chronological, so "first N rows" would mean "oldest complaints
+        # only"). SQLite's implicit rowid makes this a single cheap table scan, no ORDER BY
+        # RANDOM() sort of the whole table.
+        stride = max(n_rows // SAMPLE_ROW_THRESHOLD, 1)
+        df = pd.read_sql(f'SELECT * FROM "{table}" WHERE (rowid - 1) % {stride} = 0', conn)
+    else:
+        df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
+
+    sample_size = len(df)
     duplicate_rows = int(df.duplicated().sum())
 
     columns = {}
@@ -42,7 +69,9 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
         s = df[col]
         null_count = int(s.isna().sum())
         distinct_count = int(s.nunique(dropna=True))
-        is_unique_nonnull = null_count == 0 and distinct_count == n_rows and n_rows > 0
+        # Uniqueness can only be checked against what was actually loaded. For a sampled
+        # table this means "unique within the sample", not a guarantee across all n_rows.
+        is_unique_nonnull = null_count == 0 and distinct_count == sample_size and sample_size > 0
 
         outlier_count = 0
         if pd.api.types.is_numeric_dtype(s) and s.dropna().shape[0] > 4:
@@ -52,13 +81,29 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
                 lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
                 outlier_count = int(((s < lower) | (s > upper)).sum())
 
+        sample_values = [str(v) for v in s.dropna().unique()[:3].tolist()]
+
+        # Numeric outlier detection above only covers number columns. These two checks cover
+        # what it misses in text columns: private data hidden in free text, and inconsistent
+        # casing/formatting in categorical text. See text_quality.py for why both run locally.
+        free_text_pii = {}
+        casing_issues = {}
+        if pd.api.types.is_object_dtype(s) or pd.api.types.is_string_dtype(s):
+            if is_free_text_column(s):
+                free_text_pii = scan_column_for_pii(s)
+                sample_values = [redact_sample(v) for v in sample_values]
+            else:
+                casing_issues = check_casing_consistency(s)
+
         columns[col] = {
             "dtype": str(s.dtype),
             "null_count": null_count,
-            "null_pct": round(null_count / n_rows * 100, 2) if n_rows else 0,
+            "null_pct": round(null_count / sample_size * 100, 2) if sample_size else 0,
             "distinct_count": distinct_count,
             "outlier_count": outlier_count,
-            "sample_values": [str(v) for v in s.dropna().unique()[:3].tolist()],
+            "sample_values": sample_values,
+            "free_text_pii": free_text_pii,
+            "casing_issues": casing_issues,
         }
         if is_unique_nonnull:
             pk_candidates.append(col)
@@ -66,46 +111,139 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
     return {
         "table": table,
         "row_count": n_rows,
+        "sampled": sampled,
+        "sample_size": sample_size if sampled else None,
         "duplicate_rows": duplicate_rows,
         "pk_candidates": pk_candidates,
         "columns": columns,
     }
 
 
+# Shared with run_pipeline.py too, not just used here: any column whose name loosely looks
+# like an identifier, not just ones ending in "_id". Confirmed as a real gap in more than one
+# place with Open Food Facts, which names its identifiers "code"/"product_code", not "_id":
+# both FK detection below and the raw-id chart skip in run_pipeline.py used to check only for
+# an "_id" suffix, and both missed it.
+IDENTIFIER_NAME_HINTS = ("id", "code", "key", "ref")
+
+
+def looks_like_identifier(col: str) -> bool:
+    lowered = col.lower()
+    return any(hint in lowered for hint in IDENTIFIER_NAME_HINTS)
+
+
 def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) -> list[dict]:
-    """Cross-table FK candidates confirmed by value overlap, not just name match."""
+    """
+    Cross-table FK candidates confirmed by value overlap, not just name match. The column name
+    only has to loosely look like an identifier (contains "id", "code", "key", or "ref"
+    anywhere, not just as a suffix), and does not have to exactly match the parent table's
+    primary key column name.
+
+    The exact-name-match version missed real relationships that use a different naming
+    convention on each side. Confirmed with Open Food Facts: its child tables use
+    "product_code" against the parent table's "code" column, a real relationship, 100% value
+    overlap, that the exact-match version found nothing for, since neither the "_id" suffix
+    check nor the same-name requirement matched. The broadened check still only ever reports a
+    relationship based on real value overlap, a loose name hint is just a cheap way to avoid
+    checking every column against every other table's keys.
+    """
     fks = []
     for table, profile in profiles.items():
-        for col in profile["columns"]:
-            if not (col.endswith("_id") or col.endswith("id")):
+        for col, col_stats in profile["columns"].items():
+            if not looks_like_identifier(col):
                 continue
+            if col_stats.get("free_text_pii"):
+                continue  # a free text column is never a sensible identifier candidate
+
+            child_vals = pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{table}"', conn)[col].dropna()
+            if child_vals.empty:
+                continue
+
             for other_table, other_profile in profiles.items():
                 if other_table == table:
                     continue
-                if col not in other_profile["pk_candidates"]:
-                    continue
-                child_vals = pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{table}"', conn)[col].dropna()
-                if child_vals.empty:
-                    continue
-                parent_vals = set(
-                    pd.read_sql(f'SELECT DISTINCT "{col}" FROM "{other_table}"', conn)[col].dropna()
-                )
-                overlap = child_vals.isin(parent_vals).mean()
-                if overlap >= FK_OVERLAP_THRESHOLD:
-                    fks.append(
-                        {
-                            "child_table": table,
-                            "child_column": col,
-                            "parent_table": other_table,
-                            "parent_column": col,
-                            "value_overlap_pct": round(overlap * 100, 1),
-                        }
+                for parent_col in other_profile["pk_candidates"]:
+                    parent_vals = set(
+                        pd.read_sql(f'SELECT DISTINCT "{parent_col}" FROM "{other_table}"', conn)[parent_col].dropna()
                     )
+                    overlap = child_vals.isin(parent_vals).mean()
+                    if overlap >= FK_OVERLAP_THRESHOLD:
+                        fks.append(
+                            {
+                                "child_table": table,
+                                "child_column": col,
+                                "parent_table": other_table,
+                                "parent_column": parent_col,
+                                "value_overlap_pct": round(overlap * 100, 1),
+                            }
+                        )
     return fks
 
 
-def profile_database() -> dict:
-    conn = sqlite3.connect(DB_PATH)
+IDENTIFIER_CARDINALITY_THRESHOLD = 0.9  # 90%+ distinct values -> behaves like an identifier
+# Below this many rows, "every value is unique" is not a meaningful identifier signal: a small
+# lookup or dimension table (Olist's 71-row product_category_name_translation, for example) is
+# expected to have a unique, human-readable name per row, that is the whole point of a lookup
+# table, not a sign the column is an opaque key. Confirmed as a real false positive:
+# "product_category_name_english" is a pk_candidate of that table (every English name is
+# unique among 71 rows) and had cardinality 1.0, both wrongly flagged it as an identifier.
+MIN_ROWS_FOR_CARDINALITY_SIGNAL = 100
+
+
+def column_cardinality_ratio(column_name: str, profile: dict) -> float | None:
+    """The highest distinct-value ratio found for a column of this name, among tables with at
+    least MIN_ROWS_FOR_CARDINALITY_SIGNAL rows, or None if no such table has a column by that
+    name. A column whose values are almost all distinct behaves like an identifier regardless
+    of what it is named, this is a value-based signal, on top of looks_like_identifier's
+    name-based one. Catches a naming convention this project has not seen yet (a future
+    client's "sku", "uuid", or "hash" column), not just ones already known to look like
+    "id"/"code"/"key"/"ref". Small tables are excluded, see MIN_ROWS_FOR_CARDINALITY_SIGNAL.
+
+    Uses each table's sample_size when it was sampled, not its true row_count, since
+    distinct_count itself was only ever computed from that sample (see SAMPLE_ROW_THRESHOLD
+    above), comparing it against the true row_count would make a real identifier column in a
+    large table look artificially low cardinality.
+    """
+    best = None
+    for table_info in profile["tables"].values():
+        stats = table_info["columns"].get(column_name)
+        if not stats:
+            continue
+        denominator = table_info.get("sample_size") or table_info["row_count"]
+        if not denominator or denominator < MIN_ROWS_FOR_CARDINALITY_SIGNAL:
+            continue
+        ratio = stats["distinct_count"] / denominator
+        if best is None or ratio > best:
+            best = ratio
+    return best
+
+
+def column_is_known_key(column_name: str, profile: dict) -> bool:
+    """True if this column is confirmed to be one side of a foreign key relationship
+    (profile["fk_candidates"]), the child or the parent.
+
+    Deliberately does not also check bare pk_candidates membership: a column being unique
+    within its own table is not, by itself, a sign it is an unreadable identifier, a small
+    lookup table's readable name column is unique too (see MIN_ROWS_FOR_CARDINALITY_SIGNAL for
+    the same reasoning applied to cardinality), that was a confirmed false positive against
+    Olist's "product_category_name_english". A confirmed foreign key relationship is a
+    stronger signal: it means the column's actual job is to reference another table's identity,
+    not to be read by a person, whether or not it happens to repeat a lot in the table being
+    queried right now. Confirmed with Open Food Facts: "ingredients.product_code" is only about
+    11% distinct within the ingredients table itself (many ingredient rows per product), so
+    column_cardinality_ratio alone would have missed it, but it is the child_column in a
+    confirmed foreign key relationship to products.code, so this check catches it directly.
+    """
+    for fk in profile["fk_candidates"]:
+        if column_name in (fk["child_column"], fk["parent_column"]):
+            return True
+    return False
+
+
+def profile_database(db_path: Path | None = None) -> dict:
+    """db_path lets a second "client" database (for example the CFPB warehouse) be profiled
+    with the same code, without changing the Olist default used by the dashboard."""
+    conn = sqlite3.connect(db_path or DB_PATH)
     tables = get_tables(conn)
     profiles = {t: profile_table(conn, t) for t in tables}
     fk_candidates = detect_fk_candidates(conn, profiles)
@@ -114,12 +252,18 @@ def profile_database() -> dict:
 
 
 if __name__ == "__main__":
+    import argparse
     import json
-    from pathlib import Path
 
-    result = profile_database()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--db", type=Path, default=DB_PATH, help="path to the SQLite database to profile")
+    parser.add_argument("--out", type=Path, default=None, help="path to write profiling.json to")
+    args = parser.parse_args()
 
-    output_path = Path(__file__).resolve().parent.parent / "outputs" / "profiling.json"
+    output_path = args.out or (Path(__file__).resolve().parent.parent / "outputs" / "profiling.json")
+
+    result = profile_database(args.db)
+
     output_path.parent.mkdir(exist_ok=True)
     output_path.write_text(json.dumps(result, indent=2, default=str))
 

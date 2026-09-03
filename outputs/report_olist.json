@@ -1,0 +1,295 @@
+{
+  "generated_at": "2026-09-03T16:35:28.539219+00:00",
+  "cost": {
+    "calls": 2,
+    "prompt_tokens": 5505,
+    "completion_tokens": 844,
+    "total_tokens": 6349,
+    "cost_usd": 0.001332,
+    "cost_eur": 0.001146,
+    "by_call": [
+      {
+        "label": "generate_model_and_kpis",
+        "prompt_tokens": 4240,
+        "completion_tokens": 666,
+        "cost_usd": 0.0010356
+      },
+      {
+        "label": "generate_insights",
+        "prompt_tokens": 1265,
+        "completion_tokens": 178,
+        "cost_usd": 0.00029655
+      }
+    ]
+  },
+  "profile_summary": {
+    "tables": {
+      "customers": {
+        "row_count": 99441,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "geolocation": {
+        "row_count": 1000163,
+        "duplicate_rows": 6309,
+        "sampled": true,
+        "sample_size": 100017
+      },
+      "order_items": {
+        "row_count": 112650,
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 112650
+      },
+      "order_payments": {
+        "row_count": 103886,
+        "duplicate_rows": 0,
+        "sampled": true,
+        "sample_size": 103886
+      },
+      "order_reviews": {
+        "row_count": 99224,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "orders": {
+        "row_count": 99441,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "products": {
+        "row_count": 32951,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "sellers": {
+        "row_count": 3095,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      },
+      "product_category_name_translation": {
+        "row_count": 71,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "sample_size": null
+      }
+    },
+    "fk_candidates": [
+      {
+        "child_table": "customers",
+        "child_column": "customer_id",
+        "parent_table": "orders",
+        "parent_column": "customer_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "order_items",
+        "child_column": "order_id",
+        "parent_table": "orders",
+        "parent_column": "order_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "order_items",
+        "child_column": "product_id",
+        "parent_table": "products",
+        "parent_column": "product_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "order_items",
+        "child_column": "seller_id",
+        "parent_table": "sellers",
+        "parent_column": "seller_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "order_payments",
+        "child_column": "order_id",
+        "parent_table": "orders",
+        "parent_column": "order_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "order_reviews",
+        "child_column": "order_id",
+        "parent_table": "orders",
+        "parent_column": "order_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "orders",
+        "child_column": "customer_id",
+        "parent_table": "customers",
+        "parent_column": "customer_id",
+        "value_overlap_pct": 100.0
+      }
+    ]
+  },
+  "recommended_model": {
+    "fact_table": "order_items",
+    "dimensions": [
+      "customers",
+      "products",
+      "sellers",
+      "order_payments",
+      "order_reviews"
+    ],
+    "rationale": "The fact table 'order_items' captures transactional data related to each order, including product details and pricing. The dimensions provide context such as customer information, product categories, seller details, payment methods, and reviews, enabling comprehensive analysis of sales performance."
+  },
+  "quality_findings": [
+    "Inconsistent casing/format detected in 'review_comment_title' of the 'order_reviews' table, affecting readability.",
+    "Possible PII detected in 'review_comment_message' of the 'order_reviews' table, raising privacy concerns.",
+    "Inconsistent casing/format detected in 'seller_city' of the 'sellers' table, affecting data uniformity."
+  ],
+  "data_science_opportunities": [
+    "Churn prediction to identify customers likely to stop purchasing based on their order history and review scores.",
+    "Demand forecasting using historical sales data to predict future product demand and optimize inventory.",
+    "Sentiment analysis on review comments to gauge customer satisfaction and identify areas for product improvement."
+  ],
+  "kpis": [
+    {
+      "name": "Total Revenue",
+      "sql": "SELECT SUM(price + freight_value) AS total_revenue FROM order_items;",
+      "why_it_matters": "Total revenue is a key indicator of business performance, reflecting the overall sales generated.",
+      "rows": [
+        {
+          "total_revenue": 15843553.24
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Revenue by Product Category",
+      "sql": "SELECT pc.product_category_name_english, SUM(oi.price + oi.freight_value) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN product_category_name_translation pc ON p.product_category_name = pc.product_category_name GROUP BY pc.product_category_name_english ORDER BY revenue DESC LIMIT 10;",
+      "why_it_matters": "Understanding revenue by product category helps identify which categories are driving sales and where to focus marketing efforts.",
+      "rows": [
+        {
+          "product_category_name_english": "health_beauty",
+          "revenue": 1441248.07
+        },
+        {
+          "product_category_name_english": "watches_gifts",
+          "revenue": 1305541.61
+        },
+        {
+          "product_category_name_english": "bed_bath_table",
+          "revenue": 1241681.72
+        },
+        {
+          "product_category_name_english": "sports_leisure",
+          "revenue": 1156656.48
+        },
+        {
+          "product_category_name_english": "computers_accessories",
+          "revenue": 1059272.4
+        },
+        {
+          "product_category_name_english": "furniture_decor",
+          "revenue": 902511.79
+        },
+        {
+          "product_category_name_english": "housewares",
+          "revenue": 778397.77
+        },
+        {
+          "product_category_name_english": "cool_stuff",
+          "revenue": 719329.95
+        },
+        {
+          "product_category_name_english": "auto",
+          "revenue": 685384.32
+        },
+        {
+          "product_category_name_english": "garden_tools",
+          "revenue": 584219.21
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Average Order Value",
+      "sql": "SELECT CAST(SUM(price + freight_value) AS REAL) / COUNT(DISTINCT order_id) AS average_order_value FROM order_items;",
+      "why_it_matters": "Average order value indicates how much customers are spending per transaction, which is crucial for pricing strategies.",
+      "rows": [
+        {
+          "average_order_value": 160.57763809214927
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Orders by Payment Type",
+      "sql": "SELECT op.payment_type, COUNT(DISTINCT o.order_id) AS order_count FROM order_payments op JOIN orders o ON op.order_id = o.order_id GROUP BY op.payment_type ORDER BY order_count DESC LIMIT 10;",
+      "why_it_matters": "Analyzing orders by payment type reveals customer preferences and can inform payment processing strategies.",
+      "rows": [
+        {
+          "payment_type": "credit_card",
+          "order_count": 76505
+        },
+        {
+          "payment_type": "boleto",
+          "order_count": 19784
+        },
+        {
+          "payment_type": "voucher",
+          "order_count": 3866
+        },
+        {
+          "payment_type": "debit_card",
+          "order_count": 1528
+        },
+        {
+          "payment_type": "not_defined",
+          "order_count": 3
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Customer Reviews by Score",
+      "sql": "SELECT review_score, COUNT(*) AS review_count FROM order_reviews GROUP BY review_score ORDER BY review_count DESC LIMIT 10;",
+      "why_it_matters": "Customer reviews by score provide insights into customer satisfaction and product quality, which can guide improvements.",
+      "rows": [
+        {
+          "review_score": 5,
+          "review_count": 57328
+        },
+        {
+          "review_score": 4,
+          "review_count": 19142
+        },
+        {
+          "review_score": 1,
+          "review_count": 11424
+        },
+        {
+          "review_score": 3,
+          "review_count": 8179
+        },
+        {
+          "review_score": 2,
+          "review_count": 3151
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    }
+  ],
+  "insights": [
+    "Total revenue for the period stands at R$15,843,553.24, indicating strong sales performance and overall business health.",
+    "The top revenue-generating product category is 'health_beauty' with R$1,441,248.07, suggesting a potential focus area for marketing and inventory strategies.",
+    "The average order value is R$160.58, which is crucial for understanding customer spending habits and can inform pricing strategies.",
+    "The majority of orders (76,505) are made using credit cards, highlighting a clear customer preference that can guide payment processing decisions.",
+    "Customer satisfaction appears high, with 57,328 reviews rated 5 stars, but there are data quality issues in the reviews that could affect trust in these ratings. Inconsistent casing in review titles and potential privacy concerns in comments should be addressed to enhance data reliability."
+  ]
+}
