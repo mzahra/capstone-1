@@ -21,6 +21,7 @@ what shipped versus what did not, rather than only documenting the finished tech
 | 7 | Teaching evaluator | a working MVP I can actually try, not just documentation | the capstone claim is verifiable | Done, `mvp_documentation.md` |
 | 8 | Teaching evaluator | a low-code POC alongside the production pipeline | I can see the same capability built a second, more accessible way | Deferred, see Definition of done below |
 | 9 | Chleo (owner) | proof the pipeline can ingest a client's data even when it is not a clean flat table, genuinely nested JSON with an inconsistent schema | I know this isn't limited to whatever format one client happens to use | Done, Open Food Facts converted into 4 relational tables, real foreign keys confirmed between all of them |
+| 10 | Chleo (owner) | a future client's nested JSON to not require writing new loader code every single time | onboarding a new client doesn't always mean an engineering task first | Done, and in actual use, `pipeline/load_generic_json.py` is the real loader behind the Open Food Facts report, not a side demo. Found a real reliability gap along the way (not fully reproducible run to run, even at temperature 0), mitigated with a 3-run consensus, not eliminated, see `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section |
 
 ## Definition of done
 
@@ -74,7 +75,7 @@ Given the existing Round 1 cost estimate,
 when Round 2's incremental build cost is added and a 24-onboarding-per-year volume assumption is
 applied,
 then ROI is calculated at 12 and 36 months using the required formula, with a break-even note.
-Verified: 119% (12 months), 381% (36 months), about 5 months to break even, all shown with
+Verified: 113% (12 months), 370% (36 months), about 5 months to break even, all shown with
 their assumptions, not just as bare numbers.
 
 **Story 9, ingesting genuinely semi-structured data:**

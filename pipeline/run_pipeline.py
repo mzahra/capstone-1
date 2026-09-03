@@ -13,8 +13,23 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-from profiling import DB_PATH, profile_database
-from model_kpi_generator import fix_kpi_sql, generate_insights, generate_model_and_kpis, schema_hint_from_profile
+from profiling import (
+    DB_PATH,
+    IDENTIFIER_CARDINALITY_THRESHOLD,
+    column_cardinality_ratio,
+    column_is_known_key,
+    looks_like_identifier,
+    profile_database,
+)
+from model_kpi_generator import (
+    append_cost_log,
+    cost_summary,
+    fix_kpi_sql,
+    generate_insights,
+    generate_model_and_kpis,
+    reset_cost_log,
+    schema_hint_from_profile,
+)
 
 DEFAULT_OUTPUT_PATH = Path(__file__).resolve().parent.parent / "outputs" / "report.json"
 
@@ -23,7 +38,7 @@ MAX_ROWS_PER_KPI = 50  # a KPI is meant to be a summary, not a full table dump
 MAX_KPI_ATTEMPTS = 5  # the first try plus up to 4 retries, each feeding the SQL error back to the model
 
 
-def execute_kpi_sql(conn: sqlite3.Connection, kpis: list[dict], schema_hint: str) -> list[dict]:
+def execute_kpi_sql(conn: sqlite3.Connection, kpis: list[dict], schema_hint: str, profile: dict) -> list[dict]:
     """
     The AI is asked for structured JSON, but an LLM response is never 100% guaranteed to
     match the exact schema every time, so every field is read defensively with .get()
@@ -64,14 +79,39 @@ def execute_kpi_sql(conn: sqlite3.Connection, kpis: list[dict], schema_hint: str
                 if attempt_errors:
                     entry["attempt_errors"] = attempt_errors
 
-                # The prompt tells the AI not to group a breakdown by a raw id column, but an
-                # LLM cannot be trusted to always follow an instruction, so this is enforced
-                # here too: a breakdown whose label column is a raw id is not useful to a
-                # business reader (it is a hash or a number, not a name), so it is dropped
-                # rather than shown as a chart with unreadable labels.
-                if len(entry["rows"]) > 1 and cols[0].endswith("_id"):
+                # The prompt tells the AI not to group a breakdown by a raw identifier column,
+                # but an LLM cannot be trusted to always follow an instruction, so this is
+                # enforced here too: a breakdown whose label column is a raw identifier is not
+                # useful to a business reader (it is a hash, code, or number, not a name), so it
+                # is dropped rather than shown as a chart with unreadable labels.
+                #
+                # Three independent checks, since no single one catches everything:
+                #  - looks_like_identifier: name-based, catches "_id"/"code"/"key"/"ref". Misses a
+                #    naming convention it has not seen yet.
+                #  - column_is_known_key: confirmed by FK/PK detection elsewhere in the profile.
+                #    Catches a foreign key even when it legitimately repeats many times in a
+                #    child table, so its own cardinality there looks low. This is what actually
+                #    catches Open Food Facts' "ingredients.product_code": only about 11%
+                #    distinct within that table (many ingredients per product), so the
+                #    cardinality check alone would have missed it, but it is a confirmed foreign
+                #    key to products.code.
+                #  - column_cardinality_ratio: a column whose values are almost all distinct
+                #    behaves like an identifier regardless of name, catches a genuine primary
+                #    key that FK/PK detection missed for some other reason.
+                cardinality_ratio = column_cardinality_ratio(cols[0], profile)
+                is_high_cardinality = (
+                    cardinality_ratio is not None and cardinality_ratio >= IDENTIFIER_CARDINALITY_THRESHOLD
+                )
+                is_known_key = column_is_known_key(cols[0], profile)
+                if len(entry["rows"]) > 1 and (looks_like_identifier(cols[0]) or is_known_key or is_high_cardinality):
                     entry["status"] = "skipped"
-                    entry["error"] = f"grouped by raw id column '{cols[0]}', not useful to show as a chart"
+                    if looks_like_identifier(cols[0]):
+                        reason = "name looks like an identifier"
+                    elif is_known_key:
+                        reason = "confirmed as a key elsewhere in the schema"
+                    else:
+                        reason = f"{cardinality_ratio:.0%} of its values are distinct"
+                    entry["error"] = f"grouped by raw identifier column '{cols[0]}' ({reason}), not useful to show as a chart"
                     entry["rows"] = []
                 break
             except Exception as e:
@@ -119,6 +159,7 @@ def translate_category_values(conn: sqlite3.Connection, kpi_results: list[dict])
 def main(db_path=None, output_path=None):
     db_path = db_path or DB_PATH
     output_path = output_path or DEFAULT_OUTPUT_PATH
+    reset_cost_log()  # this run's cost only, not a previous run's if main() is called twice in one process
 
     print("1/4 Profiling database...")
     profile = profile_database(db_path)
@@ -129,7 +170,7 @@ def main(db_path=None, output_path=None):
     print("3/4 Executing generated KPI SQL against the database...")
     schema_hint = schema_hint_from_profile(profile)
     conn = sqlite3.connect(db_path)
-    kpi_results = execute_kpi_sql(conn, model_kpis.get("kpis", []), schema_hint)
+    kpi_results = execute_kpi_sql(conn, model_kpis.get("kpis", []), schema_hint, profile)
     translate_category_values(conn, kpi_results)
     conn.close()
 
@@ -141,8 +182,12 @@ def main(db_path=None, output_path=None):
     print("4/4 Generating plain-language business insights...")
     insights = generate_insights(kpi_results, quality_findings)
 
+    cost = cost_summary()
+    append_cost_log(f"run_pipeline:{Path(db_path).stem}", db_path=str(db_path), output_path=str(output_path))
+
     report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "cost": cost,
         "profile_summary": {
             "tables": {
                 t: {
@@ -167,6 +212,10 @@ def main(db_path=None, output_path=None):
     output_path.parent.mkdir(exist_ok=True)
     output_path.write_text(json.dumps(report, indent=2, default=str))
     print(f"\nDone. Report written to {output_path}")
+    print(
+        f"LLM cost this run: {cost['calls']} calls, {cost['total_tokens']:,} tokens, "
+        f"${cost['cost_usd']:.6f} (~€{cost['cost_eur']:.6f}), logged to outputs/llm_costs.jsonl"
+    )
     print("Run the dashboard with: streamlit run dashboard/app.py")
 
 

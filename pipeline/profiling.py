@@ -119,12 +119,17 @@ def profile_table(conn: sqlite3.Connection, table: str) -> dict:
     }
 
 
-FK_NAME_HINTS = ("id", "code", "key", "ref")
+# Shared with run_pipeline.py too, not just used here: any column whose name loosely looks
+# like an identifier, not just ones ending in "_id". Confirmed as a real gap in more than one
+# place with Open Food Facts, which names its identifiers "code"/"product_code", not "_id":
+# both FK detection below and the raw-id chart skip in run_pipeline.py used to check only for
+# an "_id" suffix, and both missed it.
+IDENTIFIER_NAME_HINTS = ("id", "code", "key", "ref")
 
 
-def _looks_like_identifier(col: str) -> bool:
+def looks_like_identifier(col: str) -> bool:
     lowered = col.lower()
-    return any(hint in lowered for hint in FK_NAME_HINTS)
+    return any(hint in lowered for hint in IDENTIFIER_NAME_HINTS)
 
 
 def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) -> list[dict]:
@@ -145,7 +150,7 @@ def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) ->
     fks = []
     for table, profile in profiles.items():
         for col, col_stats in profile["columns"].items():
-            if not _looks_like_identifier(col):
+            if not looks_like_identifier(col):
                 continue
             if col_stats.get("free_text_pii"):
                 continue  # a free text column is never a sensible identifier candidate
@@ -173,6 +178,66 @@ def detect_fk_candidates(conn: sqlite3.Connection, profiles: dict[str, dict]) ->
                             }
                         )
     return fks
+
+
+IDENTIFIER_CARDINALITY_THRESHOLD = 0.9  # 90%+ distinct values -> behaves like an identifier
+# Below this many rows, "every value is unique" is not a meaningful identifier signal: a small
+# lookup or dimension table (Olist's 71-row product_category_name_translation, for example) is
+# expected to have a unique, human-readable name per row, that is the whole point of a lookup
+# table, not a sign the column is an opaque key. Confirmed as a real false positive:
+# "product_category_name_english" is a pk_candidate of that table (every English name is
+# unique among 71 rows) and had cardinality 1.0, both wrongly flagged it as an identifier.
+MIN_ROWS_FOR_CARDINALITY_SIGNAL = 100
+
+
+def column_cardinality_ratio(column_name: str, profile: dict) -> float | None:
+    """The highest distinct-value ratio found for a column of this name, among tables with at
+    least MIN_ROWS_FOR_CARDINALITY_SIGNAL rows, or None if no such table has a column by that
+    name. A column whose values are almost all distinct behaves like an identifier regardless
+    of what it is named, this is a value-based signal, on top of looks_like_identifier's
+    name-based one. Catches a naming convention this project has not seen yet (a future
+    client's "sku", "uuid", or "hash" column), not just ones already known to look like
+    "id"/"code"/"key"/"ref". Small tables are excluded, see MIN_ROWS_FOR_CARDINALITY_SIGNAL.
+
+    Uses each table's sample_size when it was sampled, not its true row_count, since
+    distinct_count itself was only ever computed from that sample (see SAMPLE_ROW_THRESHOLD
+    above), comparing it against the true row_count would make a real identifier column in a
+    large table look artificially low cardinality.
+    """
+    best = None
+    for table_info in profile["tables"].values():
+        stats = table_info["columns"].get(column_name)
+        if not stats:
+            continue
+        denominator = table_info.get("sample_size") or table_info["row_count"]
+        if not denominator or denominator < MIN_ROWS_FOR_CARDINALITY_SIGNAL:
+            continue
+        ratio = stats["distinct_count"] / denominator
+        if best is None or ratio > best:
+            best = ratio
+    return best
+
+
+def column_is_known_key(column_name: str, profile: dict) -> bool:
+    """True if this column is confirmed to be one side of a foreign key relationship
+    (profile["fk_candidates"]), the child or the parent.
+
+    Deliberately does not also check bare pk_candidates membership: a column being unique
+    within its own table is not, by itself, a sign it is an unreadable identifier, a small
+    lookup table's readable name column is unique too (see MIN_ROWS_FOR_CARDINALITY_SIGNAL for
+    the same reasoning applied to cardinality), that was a confirmed false positive against
+    Olist's "product_category_name_english". A confirmed foreign key relationship is a
+    stronger signal: it means the column's actual job is to reference another table's identity,
+    not to be read by a person, whether or not it happens to repeat a lot in the table being
+    queried right now. Confirmed with Open Food Facts: "ingredients.product_code" is only about
+    11% distinct within the ingredients table itself (many ingredient rows per product), so
+    column_cardinality_ratio alone would have missed it, but it is the child_column in a
+    confirmed foreign key relationship to products.code, so this check catches it directly.
+    """
+    for fk in profile["fk_candidates"]:
+        if column_name in (fk["child_column"], fk["parent_column"]):
+            return True
+    return False
 
 
 def profile_database(db_path: Path | None = None) -> dict:

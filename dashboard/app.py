@@ -24,20 +24,24 @@ import streamlit.components.v1 as components
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / "outputs"
 
 # One entry per "client" the pipeline has been run against: (report filename, profile
-# filename, db path for the --db flag, or None for the default Olist warehouse).
+# filename, db path for the --db flag or None for the default Olist warehouse, and an optional
+# AI-proposed schema plan filename, see pipeline/load_generic_json.py, only set for a dataset
+# whose tables were proposed by the AI rather than hand-written).
 DATASETS = {
-    "Olist (Brazilian e-commerce)": ("report.json", "profiling.json", None),
-    "CFPB (US consumer complaints)": ("report_cfpb.json", "profiling_cfpb.json", "data/warehouse_cfpb.db"),
+    "Olist (Brazilian e-commerce)": ("report_olist.json", "profiling_olist.json", None, None),
+    "CFPB (US consumer complaints)": ("report_cfpb.json", "profiling_cfpb.json", "data/warehouse_cfpb.db", None),
     "Open Food Facts (products, JSON)": (
-        "report_openfoodfacts.json", "profiling_openfoodfacts.json", "data/warehouse_openfoodfacts.db"
+        "report_openfoodfacts.json", "profiling_openfoodfacts.json", "data/warehouse_openfoodfacts.db",
+        "schema_plan_openfoodfacts_generic.json",
     ),
 }
 
 st.set_page_config(page_title="Data Copilot: Client Onboarding Report", layout="wide")
 
 dataset_label = st.sidebar.selectbox("Client dataset", list(DATASETS.keys()))
-report_file, profile_file, db_path = DATASETS[dataset_label]
+report_file, profile_file, db_path, generic_plan_file = DATASETS[dataset_label]
 REPORT_PATH = OUTPUTS_DIR / report_file
+GENERIC_PLAN_PATH = OUTPUTS_DIR / generic_plan_file if generic_plan_file else None
 PROFILE_PATH = OUTPUTS_DIR / profile_file
 
 # --- Color palette, one accent color per section ---------------------------
@@ -90,7 +94,7 @@ def section_header(text: str, color: str, level: str = "h2") -> None:
 
 if not REPORT_PATH.exists():
     run_cmd = (
-        "python pipeline/run_pipeline.py"
+        f"python pipeline/run_pipeline.py --out outputs/{report_file}"
         if db_path is None
         else f"python pipeline/run_pipeline.py --db {db_path} --out outputs/{report_file}"
     )
@@ -156,8 +160,15 @@ for i, kpi in enumerate(chart_kpis):
     df = pd.DataFrame(kpi["rows"])
     label_col, value_col = df.columns[0], df.columns[-1]
     df[value_col] = df[value_col].apply(round_value)
+    # A label column can be an all-digit string, e.g. a product barcode like "0020735990148".
+    # Plotly Express silently reads that as the number 20,735,990,148 and switches to a
+    # continuous numeric axis instead of one bar per category. Forcing the column to string
+    # dtype, and the axis to category type, keeps every label column categorical regardless of
+    # whether its values happen to look numeric.
+    df[label_col] = df[label_col].astype(str)
     chart_color = CHART_PALETTE[i % len(CHART_PALETTE)]
     fig = px.bar(df, x=label_col, y=value_col, color_discrete_sequence=[chart_color])
+    fig.update_xaxes(type="category")
     fig = style_chart(fig)
     st.plotly_chart(fig, use_container_width=True, theme=None)
     st.caption(kpi["why_it_matters"])
@@ -174,6 +185,66 @@ for opp in report["data_science_opportunities"]:
 
 # --- Technical details, collapsed ---------------------------------------
 with st.expander("Technical details (data model, quality checks)"):
+    cost = report.get("cost")
+    if cost:
+        section_header("Real LLM Cost, This Run", COLORS["technical"], level="h3")
+        st.caption(
+            "Actual token usage OpenAI returned for every call this pipeline run made, priced "
+            "at gpt-4o-mini's real published rate (see `pipeline/model_kpi_generator.py`), not "
+            "an estimate. An older report generated before this tracking was added has no cost "
+            "section and shows nothing here."
+        )
+        st.write(
+            f"**{cost['calls']} calls, {cost['total_tokens']:,} tokens** "
+            f"({cost['cost_usd']:.6f} USD, about {cost['cost_eur']:.6f} EUR)"
+        )
+        st.caption(
+            ", ".join(
+                f"`{c['label']}`: {c['prompt_tokens'] + c['completion_tokens']:,} tok, "
+                f"{c['cost_usd']:.6f} USD"
+                for c in cost["by_call"]
+            )
+        )
+
+    if GENERIC_PLAN_PATH and GENERIC_PLAN_PATH.exists():
+        section_header("AI-Proposed Table Structure", COLORS["technical"], level="h3")
+        st.caption(
+            "This client's raw JSON was genuinely nested, not just messy tables (see "
+            "`pipeline/pipeline_documentation.md`'s \"AI-proposed schema\" section). Instead of "
+            "a human hand-writing which fields matter, the AI (`pipeline/load_generic_json.py`) "
+            "was shown only field names, types, and how often each appears, never a value, and "
+            "proposed this structure itself. This is the actual schema behind the report below, "
+            "not a separate demo. Known limit: the proposal is not fully reproducible run to "
+            "run, mitigated by asking 3 times and taking the union, not eliminated."
+        )
+        generic_plan = json.loads(GENERIC_PLAN_PATH.read_text())
+        plan = generic_plan["plan"]
+        row_counts = generic_plan.get("row_counts", {})
+        main = plan["main_table"]
+
+        main_rows_note = f" ({row_counts[main['name']]:,} rows)" if main["name"] in row_counts else ""
+        st.write(f"**Main table:** `{main['name']}`{main_rows_note}, primary key `{main['primary_key_field']}`")
+        st.caption(", ".join(f"`{f}`" for f in (main.get("fields") or [])))
+
+        for child in plan.get("child_tables", []):
+            child_rows_note = f" ({row_counts[child['name']]:,} rows)" if child["name"] in row_counts else ""
+            st.write(
+                f"**Child table:** `{child['name']}`{child_rows_note}, from `{child['source_field']}`, "
+                f"foreign key `{main['primary_key_field']}`"
+            )
+            # "fields" is only ever set by the AI for an "objects" table (a list of dicts, e.g.
+            # ingredients), a "values" table (a plain list) just holds one "value" column per
+            # item, and a "keyvalue" table (a nested object) holds "key" and "value" columns,
+            # neither of those kinds asks the AI for "fields" at all, see load_generic_json.py.
+            kind = child.get("kind", "objects")
+            if kind == "values":
+                columns = ["value"]
+            elif kind == "keyvalue":
+                columns = ["key", "value"]
+            else:
+                columns = child.get("fields") or []
+            st.caption(", ".join(f"`{f}`" for f in columns) if columns else "(no columns found)")
+
     section_header("Data Quality Findings", COLORS["quality"], level="h3")
     st.markdown("\n".join(f"- {f}" for f in report["quality_findings"]))
 
@@ -230,7 +301,10 @@ with st.expander("Technical details (data model, quality checks)"):
             f"""
             <pre class="mermaid">{mermaid_code}</pre>
             <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-            <script>mermaid.initialize({{startOnLoad: true}});</script>
+            <script>
+            mermaid.initialize({{startOnLoad: false}});
+            mermaid.run();
+            </script>
             """,
             height=450,
             scrolling=True,

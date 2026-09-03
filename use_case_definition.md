@@ -60,8 +60,8 @@ KPI numbers for the insight-writing step.
   reaches a client.
 - No support for fully unstructured sources (PDFs, scanned documents, images) as-is. Those need
   a separate conversion step before this pipeline can run on them, the same kind of step
-  `load_openfoodfacts_data.py` now writes for genuinely nested JSON, but not yet written for
-  these other formats.
+  `load_generic_json.py` now handles for genuinely nested JSON, but not yet written for these
+  other formats.
 - No fallback to a second LLM provider. Documented as a hardening item for a later
   full-deployment phase, see `pipeline/pipeline_documentation.md` and `strategic_plan.md`.
   (Failed KPI SQL is retried, up to 5 attempts, against the model itself, this is no longer
@@ -69,21 +69,34 @@ KPI numbers for the insight-writing step.
 - No true production-scale data volume handling everywhere. The pipeline was tested successfully
   against the full CFPB dataset (17.4 million rows), which works because `profiling.py` samples
   large tables instead of loading them whole into pandas. But this fix is not everywhere:
-  foreign key detection between large related tables still is not sampled, since CFPB is one
-  table and never exercised that code path. See `pipeline/pipeline_documentation.md`'s "Data
-  volume" section for exactly what was and was not tested at this scale.
+  foreign key detection between large related tables still loads full columns into Python to
+  check value overlap. CFPB never exercised that code path, since it is one table, but Open Food
+  Facts did, at a smaller scale (25,000 products across 4 tables), and worked. See
+  `pipeline/pipeline_documentation.md`'s "Data volume" section for exactly what was and was not
+  tested at what scale.
+- No fully reliable AI-proposed schema yet. `load_generic_json.py` converts nested JSON to
+  relational tables by having the AI propose the structure, used for Open Food Facts in this
+  round instead of a hand-written loader. Testing found it is not fully reproducible run to
+  run, even at temperature 0, mitigated by asking 3 times and taking the union
+  (`propose_flattening_plan_consensus`), not eliminated. See
+  `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section.
 
 ## How this evolved from Round 1
 
 The sector and use case are unchanged: a boutique data and analytics consultancy, automating new
 client onboarding. See `feedback/round1_decision.md` for the full decision record.
 
-Round 2 adds two things on top of Round 1's working pipeline:
+Round 2 adds three things on top of Round 1's working pipeline:
 
-1. A second, messier dataset (CFPB Consumer Complaints) to test whether the pipeline
-   generalizes past one clean, relational schema shape.
+1. A second dataset, CFPB Consumer Complaints, messy and mostly a single flat table, tested at
+   its full real size (17.4 million rows), to test whether the pipeline generalizes past one
+   clean, relational schema shape, and holds up past Olist's scale.
 2. A free text quality and PII check. Round 1's profiler only checked structured columns
    (nulls, duplicates, outliers). It did not look inside free text at all, and it actually sent
    raw free text sample values into the OpenAI prompt as part of the schema summary. Round 2
    fixes this: PII detection runs locally first, and any sample value shown to the LLM, or saved
    to `outputs/profiling.json`, is redacted first.
+3. A third dataset, Open Food Facts, genuinely semi-structured JSON, not just messy tables with
+   free text, converted into 4 relational tables by a new loader. This closed the gap named in
+   `feedback/round1_decision.md`: Round 1's pipeline only ever read tabular data, and nested JSON
+   was explicitly out of scope.

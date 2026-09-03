@@ -7,9 +7,25 @@
       "sample_size": null,
       "duplicate_rows": 0,
       "pk_candidates": [
-        "code"
+        "_id",
+        "code",
+        "nutriscore"
       ],
       "columns": {
+        "_id": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 25000,
+          "outlier_count": 0,
+          "sample_values": [
+            "0000101209159",
+            "0000105000011",
+            "0000105000042"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
         "code": {
           "dtype": "object",
           "null_count": 0,
@@ -23,6 +39,952 @@
           ],
           "free_text_pii": {},
           "casing_issues": {}
+        },
+        "brands": {
+          "dtype": "object",
+          "null_count": 273,
+          "null_pct": 1.09,
+          "distinct_count": 3431,
+          "outlier_count": 0,
+          "sample_values": [
+            "Bovetti",
+            "Lagg's",
+            "Canola Harvest"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "candy crush": {
+              "Candy Crush": 3,
+              "Candy crush": 1
+            },
+            "lu": {
+              "LU": 1,
+              "lu": 1,
+              "Lu": 1
+            },
+            "bofrost": {
+              "Bofrost": 16,
+              "bofrost": 1
+            },
+            "meiji, meiji seika (s) pte. ltd.": {
+              "Meiji,  Meiji Seika (S) Pte. Ltd.": 6,
+              "meiji, Meiji Seika (S) Pte. Ltd.": 1
+            },
+            "de nigris": {
+              "De Nigris": 2,
+              "DE NIGRIS": 1
+            },
+            "vitamalt": {
+              "VitaMalt": 1,
+              "Vitamalt": 1
+            },
+            "lindt lindor": {
+              "Lindt Lindor": 3,
+              "Lindt LINDOR": 1
+            },
+            "tic tac": {
+              "Tic Tac": 9,
+              "tic tac": 1
+            },
+            "tic tac, ferrero": {
+              "Tic Tac,  Ferrero": 3,
+              "Tic Tac, Ferrero": 1
+            },
+            "nutella": {
+              "Nutella": 6,
+              "nutella": 2
+            },
+            "sainsbury's,by sainsbury's": {
+              "Sainsbury's,by sainsbury's": 8,
+              "Sainsbury's,By Sainsbury's": 1
+            },
+            "trader joe's": {
+              "Trader Joe's": 67,
+              "TRADER JOE'S": 2,
+              "trader joe's": 1
+            },
+            "marks & spencer": {
+              "Marks & Spencer": 266,
+              "MARKS & SPENCER": 1,
+              "Marks & spencer": 1
+            },
+            "m&s": {
+              "M&S": 78,
+              "M&s": 2
+            },
+            "marks and spencer": {
+              "Marks And Spencer": 24,
+              "Marks and Spencer": 8,
+              "marks and Spencer": 1,
+              "Marks and spencer": 1
+            },
+            "m&s food": {
+              "M&S FOOD": 4,
+              "M&S Food": 19
+            },
+            "marks & spencer, marks and spencer": {
+              "Marks & Spencer, Marks And Spencer": 4,
+              "Marks & Spencer, Marks and Spencer": 3
+            },
+            "m&s collection": {
+              "M&S Collection": 1,
+              "M&S COLLECTION": 1
+            },
+            "by sainsbury's": {
+              "by sainsbury's": 4,
+              "by Sainsbury's": 1,
+              "By Sainsbury's": 1
+            },
+            "marks &spencer": {
+              "Marks &spencer": 1,
+              "Marks &Spencer": 1
+            },
+            "emerald": {
+              "Emerald": 46,
+              "EMERALD": 2
+            },
+            "diamond, diamond of california": {
+              "Diamond,  Diamond Of California": 1,
+              "Diamond,  Diamond of California": 1
+            },
+            "the father's table l.l.c.": {
+              "The Father's Table  L.L.C.": 10,
+              "The Father's Table L.L.C.": 1
+            },
+            "the father's table llc": {
+              "The Father's Table Llc": 22,
+              "The Father's Table  Llc": 1
+            },
+            "los pericos": {
+              "Los Pericos": 2,
+              "LOS PERICOS": 1
+            },
+            "jolly rancher": {
+              "Jolly rancher": 1,
+              "Jolly Rancher": 1,
+              "JOLLY RANCHER": 1
+            },
+            "indianola pecan house inc.": {
+              "Indianola Pecan House Inc.": 1,
+              "Indianola Pecan House  Inc.": 1
+            },
+            "dynasty": {
+              "Dynasty": 36,
+              "DYNASTY": 3
+            },
+            "private selection": {
+              "Private Selection": 241,
+              "PRIVATE SELECTION": 2
+            },
+            "private selection, the kroger co.": {
+              "Private Selection,  The Kroger Co.": 50,
+              "Private Selection, The Kroger Co.": 1
+            },
+            "kroger": {
+              "Kroger": 1645,
+              "kroger": 1
+            },
+            "big k, the kroger co.": {
+              "Big K, The Kroger Co.": 1,
+              "Big K,  The Kroger Co.": 20
+            },
+            "psst": {
+              "Psst": 18,
+              "psst": 1
+            },
+            "kroger, the kroger co.": {
+              "Kroger,  The Kroger Co.": 272,
+              "Kroger, The Kroger Co.": 5
+            },
+            "simple truth": {
+              "Simple Truth": 77,
+              "simple truth": 32,
+              "Simple truth": 1,
+              "Simple truth ": 1,
+              "Simple Truth ": 1
+            },
+            "king soopers city market": {
+              "King Soopers City Market": 1,
+              "King Soopers  City Market": 1
+            },
+            "simple truth organic": {
+              "Simple Truth Organic": 116,
+              "simple truth organic": 11
+            },
+            "van de kamp's": {
+              "Van De Kamp's": 17,
+              "Van de Kamp's": 3
+            },
+            "lipton": {
+              "Lipton": 6,
+              "lipton": 1
+            },
+            "roundy's": {
+              "Roundy's": 1273,
+              "ROUNDY'S": 1
+            },
+            "roundy's, roundy's supermarkets inc": {
+              "Roundy's,  Roundy's Supermarkets  Inc": 1,
+              "Roundy's,  Roundy's Supermarkets Inc": 1
+            },
+            "wel pac": {
+              "Wel pac": 2,
+              "Wel Pac": 3
+            },
+            "myojo": {
+              "Myojo": 7,
+              "MYOJO": 1
+            },
+            "yama moto yama": {
+              "Yama Moto Yama": 2,
+              "YAMA MOTO YAMA": 1
+            },
+            "jfc": {
+              "Jfc": 18,
+              "JFC": 1
+            },
+            "hapi": {
+              "Hapi": 8,
+              "hapi": 1
+            },
+            "botan": {
+              "Botan": 1,
+              "BOTAN": 1
+            },
+            "j-basket": {
+              "J-Basket": 3,
+              "J-BASKET": 1
+            },
+            "nishiki": {
+              "Nishiki": 6,
+              "NISHIKI": 1
+            },
+            "imperial dragon": {
+              "IMPERIAL DRAGON": 1,
+              "Imperial Dragon": 1
+            },
+            "hapi snacks": {
+              "Hapi Snacks": 1,
+              "hapi snacks": 1,
+              "HAPI SNACKS": 1
+            },
+            "s&w, s&w fine foods inc.": {
+              "S&W,  S&W Fine Foods  Inc.": 2,
+              "S&W, S&W Fine Foods  Inc.": 1
+            },
+            "mcilhenny company, tabasco": {
+              "McIlhenny Company, Tabasco": 5,
+              "Mcilhenny Company, Tabasco": 1,
+              "McIlhenny Company, TABASCO": 1
+            },
+            "tabasco": {
+              "Tabasco": 26,
+              "TABASCO": 3
+            },
+            "mcilhenny, tabasco": {
+              "McIlhenny, TABASCO": 1,
+              "McIlhenny, Tabasco": 1
+            },
+            "brachs": {
+              "BRACHS": 1,
+              "Brachs": 3
+            },
+            "zoi": {
+              "Zoi": 16,
+              "ZOI": 2
+            },
+            "deep foods inc.": {
+              "Deep Foods Inc.": 12,
+              "Deep Foods  Inc.": 1
+            },
+            "deep indian kitchen": {
+              "deep Indian Kitchen": 1,
+              "Deep Indian Kitchen": 2,
+              "deep indian kitchen": 1
+            },
+            "deep, deep foods inc.": {
+              "Deep,  Deep Foods Inc.": 19,
+              "Deep, Deep Foods Inc.": 1
+            },
+            "wild harvest": {
+              "Wild Harvest": 64,
+              "wild harvest": 1
+            },
+            "orientex": {
+              "ORIENTEX": 1,
+              "Orientex": 1
+            },
+            "vermont creamery": {
+              "VERMONT CREAMERY": 2,
+              "Vermont Creamery": 7
+            },
+            "la anita": {
+              "La Anita": 3,
+              "La anita": 1
+            },
+            "sartori": {
+              "Sartori": 14,
+              "SARTORI": 1
+            },
+            "sartori, sartori co.": {
+              "Sartori, Sartori Co.": 1,
+              "Sartori,  Sartori Co.": 1
+            },
+            "lipton, unilever": {
+              "Lipton,  Unilever": 21,
+              "Lipton, Unilever": 2
+            },
+            "starbucks": {
+              "Starbucks": 21,
+              "STARBUCKS": 1
+            },
+            "mountain dew": {
+              "Mountain Dew": 3,
+              "Mountain dew": 1
+            },
+            "pure leaf": {
+              "Pure Leaf": 4,
+              "Pure leaf": 1,
+              "PURE LEAF": 1
+            },
+            "sierra mist": {
+              "Sierra Mist": 4,
+              "Sierra mist": 1
+            },
+            "heinz": {
+              "Heinz": 10,
+              "heinz": 1
+            },
+            "crown": {
+              "CROWN": 2,
+              "Crown": 3,
+              "crown": 1
+            },
+            "kadoya": {
+              "Kadoya": 5,
+              "KADOYA": 1
+            },
+            "la croix, winter brook corporation": {
+              "La Croix,  Winter Brook Corporation": 4,
+              "La Croix, Winter Brook Corporation": 1
+            },
+            "cream of wheat": {
+              "Cream Of Wheat": 2,
+              "Cream of Wheat": 4
+            },
+            "sweet baby ray's": {
+              "Sweet Baby Ray's": 43,
+              "Sweet baby ray's": 2
+            },
+            "truvia": {
+              "Truvia": 6,
+              "truvia": 1
+            },
+            "dave's killer bread": {
+              "Dave's Killer Bread": 15,
+              "DAVE'S KILLER BREAD": 1
+            },
+            "bare": {
+              "Bare": 8,
+              "bare": 6
+            },
+            "odwalla": {
+              "odwalla": 3,
+              "Odwalla": 1
+            },
+            "pepperidge farm": {
+              "Pepperidge farm": 5,
+              "Pepperidge Farm": 49,
+              "PEPPERIDGE FARM": 1
+            },
+            "milano, pepperidge farm": {
+              "MILANO, PEPPERIDGE FARM": 1,
+              "Milano, Pepperidge Farm": 1
+            },
+            "wonderful": {
+              "Wonderful": 59,
+              "wonderful": 1
+            },
+            "mackie international inc.": {
+              "Mackie International  Inc.": 1,
+              "Mackie International Inc.": 2
+            },
+            "ufc": {
+              "UFC": 1,
+              "Ufc": 1
+            },
+            "birds eye": {
+              "Birds Eye": 145,
+              "BIRDS EYE": 9,
+              "Birds eye": 1
+            },
+            "birds eye, birds eye foods inc.": {
+              "Birds Eye,  Birds Eye Foods  Inc.": 4,
+              "Birds Eye,  Birds Eye Foods  Inc. ": 1
+            },
+            "pinnacle foods group llc.": {
+              "Pinnacle  Foods Group Llc.": 1,
+              "Pinnacle Foods Group Llc.": 1
+            },
+            "gerber": {
+              "Gerber": 10,
+              "Gerber ": 1
+            },
+            "creamette, new world pasta company": {
+              "Creamette,  New World Pasta Company": 23,
+              "Creamette, New World Pasta Company": 1
+            },
+            "creamette, nwpc": {
+              "Creamette,  Nwpc": 11,
+              "Creamette, Nwpc": 11
+            },
+            "parker house": {
+              "Parker House": 4,
+              "PARKER HOUSE": 1
+            },
+            "rice a roni": {
+              "Rice A Roni": 16,
+              "RICE A RONI": 1
+            },
+            "garden of eatin'": {
+              "Garden Of Eatin'": 17,
+              "Garden of Eatin'": 2
+            },
+            "bar s": {
+              "Bar S": 10,
+              "BAR S": 3
+            },
+            "bars": {
+              "Bars": 1,
+              "BARS": 1
+            },
+            "gold medal": {
+              "GOLD Medal": 2,
+              "Gold Medal": 1
+            },
+            "nature valley": {
+              "Nature Valley": 39,
+              "Nature valley": 4
+            },
+            "general mills": {
+              "General Mills": 29,
+              "General mills": 4,
+              "general mills": 1
+            },
+            "betty crocker": {
+              "Betty Crocker": 19,
+              "Betty crocker": 5
+            },
+            "nestle": {
+              "nestle": 1,
+              "Nestle": 3
+            },
+            "betty lou's inc.": {
+              "Betty Lou's  Inc.": 1,
+              "Betty Lou's Inc.": 7
+            },
+            "aroy-d": {
+              "Aroy-D": 21,
+              "AROY-D": 7
+            },
+            "foco, thai agri foods co. ltd.": {
+              "Foco,  Thai Agri Foods Co.  Ltd.": 10,
+              "Foco, Thai Agri Foods Co.  Ltd.": 9
+            },
+            "foco": {
+              "Foco": 20,
+              "FOCO": 3
+            },
+            "cock brand": {
+              "Cock brand": 3,
+              "Cock Brand": 2
+            },
+            "sparkling ice": {
+              "SPARKLING ICE": 2,
+              "Sparkling Ice": 23,
+              "Sparkling ICE": 1
+            },
+            "lifeway, lifeway foods inc.": {
+              "Lifeway,  Lifeway Foods Inc.": 23,
+              "Lifeway, Lifeway Foods Inc.": 3
+            },
+            "lifeway foods inc.": {
+              "Lifeway Foods Inc.": 9,
+              "Lifeway Foods  Inc.": 1
+            },
+            "jack link's": {
+              "Jack Link's": 82,
+              "JACK LINK'S": 7
+            },
+            "jack links": {
+              "Jack Links": 4,
+              "Jack links": 1,
+              "JACK LINKS": 1
+            },
+            "fiorucci foods inc.": {
+              "Fiorucci Foods  Inc.": 3,
+              "Fiorucci Foods  Inc. ": 1
+            },
+            "blake's": {
+              "Blake's": 27,
+              "BLAKE'S": 1
+            },
+            "seneca": {
+              "Seneca": 4,
+              "SENECA": 1
+            },
+            "hills bros.": {
+              "Hills Bros.": 10,
+              "HILLS BROS.": 1
+            },
+            "jemm burger": {
+              "Jemm Burger": 2,
+              "JEMM burger": 1
+            },
+            "bigy": {
+              "BigY": 1,
+              "Bigy": 1
+            },
+            "life savers": {
+              "LIFE SAVERS": 2,
+              "Life Savers": 2
+            },
+            "fruit2o, sunny delight beverages company": {
+              "Fruit2o,  Sunny Delight Beverages Company": 31,
+              "Fruit2o, Sunny Delight Beverages Company": 1
+            },
+            "toft's, toft dairy inc.": {
+              "Toft's,  Toft Dairy Inc.": 17,
+              "Toft's,  Toft Dairy  Inc.": 27
+            },
+            "musclepharm": {
+              "MusclePharm": 2,
+              "Musclepharm": 1
+            },
+            "sainsbury's, by sainsbury's": {
+              "Sainsbury's, By Sainsbury's": 1,
+              "Sainsbury's, by sainsbury's": 1
+            },
+            "sainsbury's,sainsbury's taste the difference, taste the difference": {
+              "Sainsbury's,sainsbury's taste the difference, Taste the difference": 1,
+              "Sainsbury's,Sainsbury's Taste the difference, Taste the difference": 1
+            },
+            "sainsbury's taste the difference,sainsbury's, taste the difference": {
+              "sainsbury's taste the difference,sainsbury's, Taste the difference": 1,
+              "sainsbury's taste the difference,Sainsbury's, Taste the difference": 1
+            },
+            "by sainsbury's,sainsbury's": {
+              "By Sainsbury's,Sainsbury's": 1,
+              "by sainsbury's,Sainsbury's": 1
+            },
+            "\u9678\u7fbd,luk yu": {
+              "\u9678\u7fbd,Luk Yu": 1,
+              "\u9678\u7fbd,Luk yu": 1
+            },
+            "simply potatoes": {
+              "Simply Potatoes": 7,
+              "SIMPLY POTATOES": 1
+            },
+            "simply, simply potatoes": {
+              "Simply, Simply Potatoes": 1,
+              "Simply,  Simply Potatoes": 1
+            },
+            "tofutti brands inc.": {
+              "Tofutti Brands  Inc.": 1,
+              "Tofutti Brands Inc.": 1
+            },
+            "tofutti": {
+              "Tofutti": 9,
+              "tofutti": 1
+            },
+            "girl scouts": {
+              "Girl Scouts": 1,
+              "girl scouts": 1
+            },
+            "butterball": {
+              "Butterball": 27,
+              "BUTTERBALL": 4
+            },
+            "seltzers": {
+              "Seltzers": 1,
+              "SELTZERS": 1
+            },
+            "heinens": {
+              "Heinens": 1,
+              "heinens": 1
+            },
+            "cedar crest": {
+              "Cedar Crest": 4,
+              "CEDAR CREST": 1
+            },
+            "newman's own, newman's own inc.": {
+              "Newman's Own,  Newman's Own  Inc.": 22,
+              "Newman's Own, Newman's Own  Inc.": 1
+            },
+            "cape cod": {
+              "Cape Cod": 52,
+              "CAPE COD": 2
+            },
+            "cape cod, cape cod potato chips inc.": {
+              "Cape Cod,  Cape Cod Potato Chips Inc.": 27,
+              "Cape Cod, Cape Cod Potato Chips Inc.": 1
+            },
+            "kettle, cape cod": {
+              "Kettle, Cape Cod": 1,
+              "Kettle,  Cape Cod": 4
+            },
+            "koon chun": {
+              "Koon Chun": 3,
+              "Koon chun": 2
+            },
+            "philadelphia": {
+              "Philadelphia": 44,
+              "PHILADELPHIA": 5
+            },
+            "kraft": {
+              "Kraft": 49,
+              "KRAFT": 1
+            },
+            "temp tee": {
+              "TEMP TEE": 1,
+              "Temp Tee": 1
+            },
+            "signature kitchens": {
+              "signature kitchens": 2,
+              "Signature Kitchens": 190,
+              "Signature kitchens": 1
+            },
+            "lucerne, safeway inc.": {
+              "Lucerne,  Safeway  Inc.": 65,
+              "Lucerne, Safeway  Inc.": 2
+            },
+            "signature select": {
+              "Signature Select": 154,
+              "Signature SELECT": 7,
+              "Signature select": 2
+            },
+            "safeway kitchens": {
+              "Safeway Kitchens": 30,
+              "Safeway kitchens": 1
+            },
+            "safeway kitchens,safeway, signature kitchens": {
+              "Safeway Kitchens,Safeway, Signature Kitchens": 1,
+              "Safeway kitchens,Safeway, Signature Kitchens": 1
+            },
+            "pantry essentials": {
+              "Pantry Essentials": 10,
+              "pantry essentials": 1
+            },
+            "signature cafe": {
+              "Signature Cafe": 50,
+              "Signature cafe": 1
+            },
+            "lucerne, lucerne dairy farms": {
+              "Lucerne,  Lucerne Dairy Farms": 1,
+              "Lucerne, Lucerne Dairy Farms": 1
+            },
+            "safeway kitchens, safeway inc.": {
+              "Safeway Kitchens,  Safeway  Inc.": 48,
+              "Safeway Kitchens, Safeway  Inc.": 1
+            },
+            "primo taglio": {
+              "Primo Taglio": 20,
+              "PRIMO TAGLIO": 1
+            },
+            "waterfront bistro": {
+              "WATERFRONT BISTRO": 2,
+              "Waterfront Bistro": 5
+            },
+            "overjoyed": {
+              "overjoyed": 2,
+              "Overjoyed": 1
+            },
+            "refreshe, safeway inc.": {
+              "Refreshe,  Safeway  Inc.": 67,
+              "Refreshe, Safeway  Inc.": 1
+            },
+            "chek": {
+              "Chek": 4,
+              "chek ": 1
+            },
+            "lawry's": {
+              "Lawry's": 26,
+              "LAWRY'S": 3
+            },
+            "lawry's, mccormick & company inc.": {
+              "Lawry's,  Mccormick & Company  Inc.": 14,
+              "Lawry's, Mccormick & Company  Inc.": 4
+            },
+            "lawry's, mccormick & co inc.": {
+              "Lawry's,  Mccormick & Co  Inc.": 3,
+              "Lawry's, Mccormick & Co  Inc.": 2
+            },
+            "cascadian farm, small planet foods inc.": {
+              "Cascadian Farm,  Small Planet Foods  Inc.": 42,
+              "Cascadian Farm, Small Planet Foods  Inc.": 4
+            },
+            "cascadian farm": {
+              "Cascadian Farm": 8,
+              "CASCADIAN FARM": 2,
+              "Cascadian farm": 1
+            },
+            "larabar": {
+              "Larabar": 29,
+              "LARABAR": 1
+            },
+            "food should taste good, small planet foods inc.": {
+              "Food Should Taste Good,  Small Planet Foods  Inc.": 28,
+              "Food Should Taste Good, Small Planet Foods  Inc.": 1
+            },
+            "cascadian farm organic, small planet foods inc.": {
+              "Cascadian Farm Organic,  Small Planet Foods  Inc.": 20,
+              "Cascadian Farm Organic, Small Planet Foods  Inc.": 1
+            },
+            "cascadian farm organic": {
+              "Cascadian Farm Organic": 4,
+              "CASCADIAN FARM ORGANIC": 1
+            },
+            "wrigley": {
+              "Wrigley": 1,
+              "wrigley": 1
+            },
+            "altoids": {
+              "Altoids": 3,
+              "ALTOIDS": 1,
+              "altoids": 1
+            },
+            "cl\u00e9ment faugier": {
+              "Cl\u00e9ment Faugier": 24,
+              "cl\u00e9ment faugier": 1
+            },
+            "clement faugier": {
+              "Clement Faugier": 9,
+              "Clement faugier": 2
+            },
+            "el yucateco salsas y condimentos s.a. de c.v.": {
+              "El Yucateco Salsas Y Condimentos S.A. De C.V.": 1,
+              "El Yucateco Salsas Y Condimentos  S.A. De C.V.": 1
+            },
+            "spectrum, the hain celestial group inc.": {
+              "Spectrum, The Hain Celestial Group  Inc.": 2,
+              "Spectrum,  The Hain Celestial Group  Inc.": 7
+            },
+            "vita food products inc.": {
+              "Vita Food Products  Inc.": 8,
+              "Vita Food Products Inc.": 1
+            },
+            "butterball, butterball llc": {
+              "Butterball,  Butterball  Llc": 44,
+              "Butterball, Butterball  Llc": 1
+            },
+            "afc franchise corp.": {
+              "Afc Franchise Corp.": 3,
+              "AFC Franchise Corp.": 1
+            },
+            "pop secret": {
+              "Pop Secret": 9,
+              "Pop secret": 1
+            },
+            "del monte": {
+              "Del Monte": 255,
+              "Del MONTE": 1,
+              "Del monte": 3
+            },
+            "del monte, del monte foods": {
+              "Del Monte, Del Monte Foods": 8,
+              "Del Monte,  Del Monte Foods": 21
+            },
+            "contadina, contadina foods inc.": {
+              "Contadina,  Contadina Foods  Inc.": 5,
+              "Contadina, Contadina Foods  Inc.": 1
+            },
+            "cheez-it": {
+              "Cheez-It": 6,
+              "CHEEZ-IT": 1
+            },
+            "lewis bakeries inc.": {
+              "Lewis Bakeries  Inc.": 22,
+              "Lewis Bakeries Inc.": 6
+            },
+            "eden, eden foods inc.": {
+              "Eden,  Eden Foods  Inc.": 27,
+              "Eden, Eden Foods  Inc.": 2
+            },
+            "eden, eden foods": {
+              "Eden, Eden Foods": 1,
+              "Eden,  Eden Foods": 1
+            },
+            "little debbie, mckee foods": {
+              "Little Debbie,  Mckee Foods": 15,
+              "Little Debbie, Mckee Foods": 1
+            },
+            "consorzio casalasco del pomodoro s.a.c.": {
+              "Consorzio Casalasco Del  Pomodoro S.A.C.": 1,
+              "Consorzio Casalasco Del Pomodoro S.A.C.": 1
+            },
+            "huy fong foods, inc.": {
+              "HUY FONG FOODS, INC.": 3,
+              "Huy Fong Foods, Inc.": 3
+            },
+            "huy fong foods inc.": {
+              "Huy Fong Foods  Inc.": 1,
+              "Huy Fong Foods Inc.": 1
+            },
+            "morton": {
+              "Morton": 29,
+              "MORTON": 1
+            },
+            "southeastern mills inc.": {
+              "Southeastern Mills  Inc.": 2,
+              "Southeastern Mills Inc.": 1
+            },
+            "minute maid": {
+              "Minute Maid": 7,
+              "Minute Maid ": 1
+            },
+            "devour": {
+              "Devour": 11,
+              "DEVOUR": 2
+            },
+            "applegate": {
+              "Applegate": 29,
+              "APPLEGATE": 2
+            },
+            "applegate naturals": {
+              "Applegate Naturals": 25,
+              "APPLEGATE NATURALS": 5
+            },
+            "mama, marigold manufacturing corporation": {
+              "Mama, Marigold Manufacturing Corporation": 5,
+              "Mama,  Marigold Manufacturing Corporation": 5
+            },
+            "nasoya": {
+              "Nasoya": 20,
+              "nasoya": 2
+            },
+            "vitasoy usa inc.": {
+              "Vitasoy  Usa Inc.": 1,
+              "Vitasoy Usa Inc.": 1
+            },
+            "tofurky": {
+              "Tofurky": 45,
+              "TOFURKY": 2
+            },
+            "tastykake": {
+              "Tastykake": 38,
+              "TASTYKAKE": 1,
+              "TastyKake": 1
+            },
+            "paskesz": {
+              "Paskesz": 42,
+              "paskesz": 1
+            },
+            "david": {
+              "David": 5,
+              "DAVID": 1
+            },
+            "lily of the desert": {
+              "Lily Of The Desert": 5,
+              "Lily of the Desert": 2,
+              "Lily of the desert": 1
+            },
+            "darigold": {
+              "Darigold": 106,
+              "DARIGOLD": 1
+            },
+            "louana": {
+              "Louana": 4,
+              "LouAna": 2
+            },
+            "gia russa": {
+              "Gia Russa": 21,
+              "GIA RUSSA": 1
+            },
+            "gia russa, gia brands inc.": {
+              "Gia Russa, Gia Brands Inc.": 1,
+              "Gia Russa,  Gia Brands Inc.": 1
+            },
+            "kiolbassa": {
+              "Kiolbassa": 2,
+              "KIOLBASSA": 1
+            },
+            "nutrexpa s.l.": {
+              "Nutrexpa S.L.": 1,
+              "Nutrexpa  S.L.": 1
+            },
+            "briannas": {
+              "Briannas": 4,
+              "BRIANNAS": 4
+            },
+            "ol\u00e9 mexican foods": {
+              "OL\u00c9 MEXICAN FOODS": 1,
+              "OL\u00c9 Mexican Foods": 1
+            },
+            "country crock": {
+              "Country Crock": 11,
+              "COUNTRY CROCK": 2
+            },
+            "tropical cheese industries inc.": {
+              "Tropical Cheese Industries  Inc.": 16,
+              "Tropical Cheese Industries Inc.": 1
+            },
+            "eckrich": {
+              "Eckrich": 26,
+              "ECKRICH": 1
+            },
+            "armour-eckrich meats llc": {
+              "Armour-Eckrich Meats  Llc": 1,
+              "Armour-Eckrich Meats Llc": 7
+            },
+            "vitafusion": {
+              "Vitafusion": 1,
+              "vitafusion": 2
+            },
+            "nestle,nesquik": {
+              "nestle,Nesquik": 1,
+              "Nestle,Nesquik": 1
+            },
+            "trident seafoods": {
+              "Trident Seafoods": 1,
+              "Trident seafoods": 1
+            },
+            "jes": {
+              "JES": 1,
+              "Jes": 4
+            },
+            "hatch": {
+              "Hatch": 13,
+              "HATCH": 1
+            },
+            "brim's": {
+              "BRIM'S": 1,
+              "Brim's": 1
+            },
+            "frito lay, frito-lay company": {
+              "Frito Lay,  Frito-Lay Company": 6,
+              "Frito Lay, Frito-Lay Company": 1
+            },
+            "sun chips": {
+              "Sun Chips": 5,
+              "SUN CHIPS": 1
+            },
+            "funyuns": {
+              "FUNYUNS": 1,
+              "Funyuns": 4
+            },
+            "tostitos": {
+              "Tostitos": 5,
+              "tostitos": 1
+            },
+            "fritolay": {
+              "Fritolay": 3,
+              "FritoLay": 1
+            },
+            "tostitos,fritolay": {
+              "Tostitos,Fritolay": 1,
+              "Tostitos,FritoLay": 1
+            }
+          }
         },
         "product_name": {
           "dtype": "object",
@@ -2528,951 +3490,17 @@
             }
           }
         },
-        "brands": {
+        "product_type": {
           "dtype": "object",
-          "null_count": 273,
-          "null_pct": 1.09,
-          "distinct_count": 3431,
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 1,
           "outlier_count": 0,
           "sample_values": [
-            "Bovetti",
-            "Lagg's",
-            "Canola Harvest"
+            "food"
           ],
           "free_text_pii": {},
-          "casing_issues": {
-            "candy crush": {
-              "Candy Crush": 3,
-              "Candy crush": 1
-            },
-            "lu": {
-              "LU": 1,
-              "lu": 1,
-              "Lu": 1
-            },
-            "bofrost": {
-              "Bofrost": 16,
-              "bofrost": 1
-            },
-            "meiji, meiji seika (s) pte. ltd.": {
-              "Meiji,  Meiji Seika (S) Pte. Ltd.": 6,
-              "meiji, Meiji Seika (S) Pte. Ltd.": 1
-            },
-            "de nigris": {
-              "De Nigris": 2,
-              "DE NIGRIS": 1
-            },
-            "vitamalt": {
-              "VitaMalt": 1,
-              "Vitamalt": 1
-            },
-            "lindt lindor": {
-              "Lindt Lindor": 3,
-              "Lindt LINDOR": 1
-            },
-            "tic tac": {
-              "Tic Tac": 9,
-              "tic tac": 1
-            },
-            "tic tac, ferrero": {
-              "Tic Tac,  Ferrero": 3,
-              "Tic Tac, Ferrero": 1
-            },
-            "nutella": {
-              "Nutella": 6,
-              "nutella": 2
-            },
-            "sainsbury's,by sainsbury's": {
-              "Sainsbury's,by sainsbury's": 8,
-              "Sainsbury's,By Sainsbury's": 1
-            },
-            "trader joe's": {
-              "Trader Joe's": 67,
-              "TRADER JOE'S": 2,
-              "trader joe's": 1
-            },
-            "marks & spencer": {
-              "Marks & Spencer": 266,
-              "MARKS & SPENCER": 1,
-              "Marks & spencer": 1
-            },
-            "m&s": {
-              "M&S": 78,
-              "M&s": 2
-            },
-            "marks and spencer": {
-              "Marks And Spencer": 24,
-              "Marks and Spencer": 8,
-              "marks and Spencer": 1,
-              "Marks and spencer": 1
-            },
-            "m&s food": {
-              "M&S FOOD": 4,
-              "M&S Food": 19
-            },
-            "marks & spencer, marks and spencer": {
-              "Marks & Spencer, Marks And Spencer": 4,
-              "Marks & Spencer, Marks and Spencer": 3
-            },
-            "m&s collection": {
-              "M&S Collection": 1,
-              "M&S COLLECTION": 1
-            },
-            "by sainsbury's": {
-              "by sainsbury's": 4,
-              "by Sainsbury's": 1,
-              "By Sainsbury's": 1
-            },
-            "marks &spencer": {
-              "Marks &spencer": 1,
-              "Marks &Spencer": 1
-            },
-            "emerald": {
-              "Emerald": 46,
-              "EMERALD": 2
-            },
-            "diamond, diamond of california": {
-              "Diamond,  Diamond Of California": 1,
-              "Diamond,  Diamond of California": 1
-            },
-            "the father's table l.l.c.": {
-              "The Father's Table  L.L.C.": 10,
-              "The Father's Table L.L.C.": 1
-            },
-            "the father's table llc": {
-              "The Father's Table Llc": 22,
-              "The Father's Table  Llc": 1
-            },
-            "los pericos": {
-              "Los Pericos": 2,
-              "LOS PERICOS": 1
-            },
-            "jolly rancher": {
-              "Jolly rancher": 1,
-              "Jolly Rancher": 1,
-              "JOLLY RANCHER": 1
-            },
-            "indianola pecan house inc.": {
-              "Indianola Pecan House Inc.": 1,
-              "Indianola Pecan House  Inc.": 1
-            },
-            "dynasty": {
-              "Dynasty": 36,
-              "DYNASTY": 3
-            },
-            "private selection": {
-              "Private Selection": 241,
-              "PRIVATE SELECTION": 2
-            },
-            "private selection, the kroger co.": {
-              "Private Selection,  The Kroger Co.": 50,
-              "Private Selection, The Kroger Co.": 1
-            },
-            "kroger": {
-              "Kroger": 1645,
-              "kroger": 1
-            },
-            "big k, the kroger co.": {
-              "Big K, The Kroger Co.": 1,
-              "Big K,  The Kroger Co.": 20
-            },
-            "psst": {
-              "Psst": 18,
-              "psst": 1
-            },
-            "kroger, the kroger co.": {
-              "Kroger,  The Kroger Co.": 272,
-              "Kroger, The Kroger Co.": 5
-            },
-            "simple truth": {
-              "Simple Truth": 77,
-              "simple truth": 32,
-              "Simple truth": 1,
-              "Simple truth ": 1,
-              "Simple Truth ": 1
-            },
-            "king soopers city market": {
-              "King Soopers City Market": 1,
-              "King Soopers  City Market": 1
-            },
-            "simple truth organic": {
-              "Simple Truth Organic": 116,
-              "simple truth organic": 11
-            },
-            "van de kamp's": {
-              "Van De Kamp's": 17,
-              "Van de Kamp's": 3
-            },
-            "lipton": {
-              "Lipton": 6,
-              "lipton": 1
-            },
-            "roundy's": {
-              "Roundy's": 1273,
-              "ROUNDY'S": 1
-            },
-            "roundy's, roundy's supermarkets inc": {
-              "Roundy's,  Roundy's Supermarkets  Inc": 1,
-              "Roundy's,  Roundy's Supermarkets Inc": 1
-            },
-            "wel pac": {
-              "Wel pac": 2,
-              "Wel Pac": 3
-            },
-            "myojo": {
-              "Myojo": 7,
-              "MYOJO": 1
-            },
-            "yama moto yama": {
-              "Yama Moto Yama": 2,
-              "YAMA MOTO YAMA": 1
-            },
-            "jfc": {
-              "Jfc": 18,
-              "JFC": 1
-            },
-            "hapi": {
-              "Hapi": 8,
-              "hapi": 1
-            },
-            "botan": {
-              "Botan": 1,
-              "BOTAN": 1
-            },
-            "j-basket": {
-              "J-Basket": 3,
-              "J-BASKET": 1
-            },
-            "nishiki": {
-              "Nishiki": 6,
-              "NISHIKI": 1
-            },
-            "imperial dragon": {
-              "IMPERIAL DRAGON": 1,
-              "Imperial Dragon": 1
-            },
-            "hapi snacks": {
-              "Hapi Snacks": 1,
-              "hapi snacks": 1,
-              "HAPI SNACKS": 1
-            },
-            "s&w, s&w fine foods inc.": {
-              "S&W,  S&W Fine Foods  Inc.": 2,
-              "S&W, S&W Fine Foods  Inc.": 1
-            },
-            "mcilhenny company, tabasco": {
-              "McIlhenny Company, Tabasco": 5,
-              "Mcilhenny Company, Tabasco": 1,
-              "McIlhenny Company, TABASCO": 1
-            },
-            "tabasco": {
-              "Tabasco": 26,
-              "TABASCO": 3
-            },
-            "mcilhenny, tabasco": {
-              "McIlhenny, TABASCO": 1,
-              "McIlhenny, Tabasco": 1
-            },
-            "brachs": {
-              "BRACHS": 1,
-              "Brachs": 3
-            },
-            "zoi": {
-              "Zoi": 16,
-              "ZOI": 2
-            },
-            "deep foods inc.": {
-              "Deep Foods Inc.": 12,
-              "Deep Foods  Inc.": 1
-            },
-            "deep indian kitchen": {
-              "deep Indian Kitchen": 1,
-              "Deep Indian Kitchen": 2,
-              "deep indian kitchen": 1
-            },
-            "deep, deep foods inc.": {
-              "Deep,  Deep Foods Inc.": 19,
-              "Deep, Deep Foods Inc.": 1
-            },
-            "wild harvest": {
-              "Wild Harvest": 64,
-              "wild harvest": 1
-            },
-            "orientex": {
-              "ORIENTEX": 1,
-              "Orientex": 1
-            },
-            "vermont creamery": {
-              "VERMONT CREAMERY": 2,
-              "Vermont Creamery": 7
-            },
-            "la anita": {
-              "La Anita": 3,
-              "La anita": 1
-            },
-            "sartori": {
-              "Sartori": 14,
-              "SARTORI": 1
-            },
-            "sartori, sartori co.": {
-              "Sartori, Sartori Co.": 1,
-              "Sartori,  Sartori Co.": 1
-            },
-            "lipton, unilever": {
-              "Lipton,  Unilever": 21,
-              "Lipton, Unilever": 2
-            },
-            "starbucks": {
-              "Starbucks": 21,
-              "STARBUCKS": 1
-            },
-            "mountain dew": {
-              "Mountain Dew": 3,
-              "Mountain dew": 1
-            },
-            "pure leaf": {
-              "Pure Leaf": 4,
-              "Pure leaf": 1,
-              "PURE LEAF": 1
-            },
-            "sierra mist": {
-              "Sierra Mist": 4,
-              "Sierra mist": 1
-            },
-            "heinz": {
-              "Heinz": 10,
-              "heinz": 1
-            },
-            "crown": {
-              "CROWN": 2,
-              "Crown": 3,
-              "crown": 1
-            },
-            "kadoya": {
-              "Kadoya": 5,
-              "KADOYA": 1
-            },
-            "la croix, winter brook corporation": {
-              "La Croix,  Winter Brook Corporation": 4,
-              "La Croix, Winter Brook Corporation": 1
-            },
-            "cream of wheat": {
-              "Cream Of Wheat": 2,
-              "Cream of Wheat": 4
-            },
-            "sweet baby ray's": {
-              "Sweet Baby Ray's": 43,
-              "Sweet baby ray's": 2
-            },
-            "truvia": {
-              "Truvia": 6,
-              "truvia": 1
-            },
-            "dave's killer bread": {
-              "Dave's Killer Bread": 15,
-              "DAVE'S KILLER BREAD": 1
-            },
-            "bare": {
-              "Bare": 8,
-              "bare": 6
-            },
-            "odwalla": {
-              "odwalla": 3,
-              "Odwalla": 1
-            },
-            "pepperidge farm": {
-              "Pepperidge farm": 5,
-              "Pepperidge Farm": 49,
-              "PEPPERIDGE FARM": 1
-            },
-            "milano, pepperidge farm": {
-              "MILANO, PEPPERIDGE FARM": 1,
-              "Milano, Pepperidge Farm": 1
-            },
-            "wonderful": {
-              "Wonderful": 59,
-              "wonderful": 1
-            },
-            "mackie international inc.": {
-              "Mackie International  Inc.": 1,
-              "Mackie International Inc.": 2
-            },
-            "ufc": {
-              "UFC": 1,
-              "Ufc": 1
-            },
-            "birds eye": {
-              "Birds Eye": 145,
-              "BIRDS EYE": 9,
-              "Birds eye": 1
-            },
-            "birds eye, birds eye foods inc.": {
-              "Birds Eye,  Birds Eye Foods  Inc.": 4,
-              "Birds Eye,  Birds Eye Foods  Inc. ": 1
-            },
-            "pinnacle foods group llc.": {
-              "Pinnacle  Foods Group Llc.": 1,
-              "Pinnacle Foods Group Llc.": 1
-            },
-            "gerber": {
-              "Gerber": 10,
-              "Gerber ": 1
-            },
-            "creamette, new world pasta company": {
-              "Creamette,  New World Pasta Company": 23,
-              "Creamette, New World Pasta Company": 1
-            },
-            "creamette, nwpc": {
-              "Creamette,  Nwpc": 11,
-              "Creamette, Nwpc": 11
-            },
-            "parker house": {
-              "Parker House": 4,
-              "PARKER HOUSE": 1
-            },
-            "rice a roni": {
-              "Rice A Roni": 16,
-              "RICE A RONI": 1
-            },
-            "garden of eatin'": {
-              "Garden Of Eatin'": 17,
-              "Garden of Eatin'": 2
-            },
-            "bar s": {
-              "Bar S": 10,
-              "BAR S": 3
-            },
-            "bars": {
-              "Bars": 1,
-              "BARS": 1
-            },
-            "gold medal": {
-              "GOLD Medal": 2,
-              "Gold Medal": 1
-            },
-            "nature valley": {
-              "Nature Valley": 39,
-              "Nature valley": 4
-            },
-            "general mills": {
-              "General Mills": 29,
-              "General mills": 4,
-              "general mills": 1
-            },
-            "betty crocker": {
-              "Betty Crocker": 19,
-              "Betty crocker": 5
-            },
-            "nestle": {
-              "nestle": 1,
-              "Nestle": 3
-            },
-            "betty lou's inc.": {
-              "Betty Lou's  Inc.": 1,
-              "Betty Lou's Inc.": 7
-            },
-            "aroy-d": {
-              "Aroy-D": 21,
-              "AROY-D": 7
-            },
-            "foco, thai agri foods co. ltd.": {
-              "Foco,  Thai Agri Foods Co.  Ltd.": 10,
-              "Foco, Thai Agri Foods Co.  Ltd.": 9
-            },
-            "foco": {
-              "Foco": 20,
-              "FOCO": 3
-            },
-            "cock brand": {
-              "Cock brand": 3,
-              "Cock Brand": 2
-            },
-            "sparkling ice": {
-              "SPARKLING ICE": 2,
-              "Sparkling Ice": 23,
-              "Sparkling ICE": 1
-            },
-            "lifeway, lifeway foods inc.": {
-              "Lifeway,  Lifeway Foods Inc.": 23,
-              "Lifeway, Lifeway Foods Inc.": 3
-            },
-            "lifeway foods inc.": {
-              "Lifeway Foods Inc.": 9,
-              "Lifeway Foods  Inc.": 1
-            },
-            "jack link's": {
-              "Jack Link's": 82,
-              "JACK LINK'S": 7
-            },
-            "jack links": {
-              "Jack Links": 4,
-              "Jack links": 1,
-              "JACK LINKS": 1
-            },
-            "fiorucci foods inc.": {
-              "Fiorucci Foods  Inc.": 3,
-              "Fiorucci Foods  Inc. ": 1
-            },
-            "blake's": {
-              "Blake's": 27,
-              "BLAKE'S": 1
-            },
-            "seneca": {
-              "Seneca": 4,
-              "SENECA": 1
-            },
-            "hills bros.": {
-              "Hills Bros.": 10,
-              "HILLS BROS.": 1
-            },
-            "jemm burger": {
-              "Jemm Burger": 2,
-              "JEMM burger": 1
-            },
-            "bigy": {
-              "BigY": 1,
-              "Bigy": 1
-            },
-            "life savers": {
-              "LIFE SAVERS": 2,
-              "Life Savers": 2
-            },
-            "fruit2o, sunny delight beverages company": {
-              "Fruit2o,  Sunny Delight Beverages Company": 31,
-              "Fruit2o, Sunny Delight Beverages Company": 1
-            },
-            "toft's, toft dairy inc.": {
-              "Toft's,  Toft Dairy Inc.": 17,
-              "Toft's,  Toft Dairy  Inc.": 27
-            },
-            "musclepharm": {
-              "MusclePharm": 2,
-              "Musclepharm": 1
-            },
-            "sainsbury's, by sainsbury's": {
-              "Sainsbury's, By Sainsbury's": 1,
-              "Sainsbury's, by sainsbury's": 1
-            },
-            "sainsbury's,sainsbury's taste the difference, taste the difference": {
-              "Sainsbury's,sainsbury's taste the difference, Taste the difference": 1,
-              "Sainsbury's,Sainsbury's Taste the difference, Taste the difference": 1
-            },
-            "sainsbury's taste the difference,sainsbury's, taste the difference": {
-              "sainsbury's taste the difference,sainsbury's, Taste the difference": 1,
-              "sainsbury's taste the difference,Sainsbury's, Taste the difference": 1
-            },
-            "by sainsbury's,sainsbury's": {
-              "By Sainsbury's,Sainsbury's": 1,
-              "by sainsbury's,Sainsbury's": 1
-            },
-            "\u9678\u7fbd,luk yu": {
-              "\u9678\u7fbd,Luk Yu": 1,
-              "\u9678\u7fbd,Luk yu": 1
-            },
-            "simply potatoes": {
-              "Simply Potatoes": 7,
-              "SIMPLY POTATOES": 1
-            },
-            "simply, simply potatoes": {
-              "Simply, Simply Potatoes": 1,
-              "Simply,  Simply Potatoes": 1
-            },
-            "tofutti brands inc.": {
-              "Tofutti Brands  Inc.": 1,
-              "Tofutti Brands Inc.": 1
-            },
-            "tofutti": {
-              "Tofutti": 9,
-              "tofutti": 1
-            },
-            "girl scouts": {
-              "Girl Scouts": 1,
-              "girl scouts": 1
-            },
-            "butterball": {
-              "Butterball": 27,
-              "BUTTERBALL": 4
-            },
-            "seltzers": {
-              "Seltzers": 1,
-              "SELTZERS": 1
-            },
-            "heinens": {
-              "Heinens": 1,
-              "heinens": 1
-            },
-            "cedar crest": {
-              "Cedar Crest": 4,
-              "CEDAR CREST": 1
-            },
-            "newman's own, newman's own inc.": {
-              "Newman's Own,  Newman's Own  Inc.": 22,
-              "Newman's Own, Newman's Own  Inc.": 1
-            },
-            "cape cod": {
-              "Cape Cod": 52,
-              "CAPE COD": 2
-            },
-            "cape cod, cape cod potato chips inc.": {
-              "Cape Cod,  Cape Cod Potato Chips Inc.": 27,
-              "Cape Cod, Cape Cod Potato Chips Inc.": 1
-            },
-            "kettle, cape cod": {
-              "Kettle, Cape Cod": 1,
-              "Kettle,  Cape Cod": 4
-            },
-            "koon chun": {
-              "Koon Chun": 3,
-              "Koon chun": 2
-            },
-            "philadelphia": {
-              "Philadelphia": 44,
-              "PHILADELPHIA": 5
-            },
-            "kraft": {
-              "Kraft": 49,
-              "KRAFT": 1
-            },
-            "temp tee": {
-              "TEMP TEE": 1,
-              "Temp Tee": 1
-            },
-            "signature kitchens": {
-              "signature kitchens": 2,
-              "Signature Kitchens": 190,
-              "Signature kitchens": 1
-            },
-            "lucerne, safeway inc.": {
-              "Lucerne,  Safeway  Inc.": 65,
-              "Lucerne, Safeway  Inc.": 2
-            },
-            "signature select": {
-              "Signature Select": 154,
-              "Signature SELECT": 7,
-              "Signature select": 2
-            },
-            "safeway kitchens": {
-              "Safeway Kitchens": 30,
-              "Safeway kitchens": 1
-            },
-            "safeway kitchens,safeway, signature kitchens": {
-              "Safeway Kitchens,Safeway, Signature Kitchens": 1,
-              "Safeway kitchens,Safeway, Signature Kitchens": 1
-            },
-            "pantry essentials": {
-              "Pantry Essentials": 10,
-              "pantry essentials": 1
-            },
-            "signature cafe": {
-              "Signature Cafe": 50,
-              "Signature cafe": 1
-            },
-            "lucerne, lucerne dairy farms": {
-              "Lucerne,  Lucerne Dairy Farms": 1,
-              "Lucerne, Lucerne Dairy Farms": 1
-            },
-            "safeway kitchens, safeway inc.": {
-              "Safeway Kitchens,  Safeway  Inc.": 48,
-              "Safeway Kitchens, Safeway  Inc.": 1
-            },
-            "primo taglio": {
-              "Primo Taglio": 20,
-              "PRIMO TAGLIO": 1
-            },
-            "waterfront bistro": {
-              "WATERFRONT BISTRO": 2,
-              "Waterfront Bistro": 5
-            },
-            "overjoyed": {
-              "overjoyed": 2,
-              "Overjoyed": 1
-            },
-            "refreshe, safeway inc.": {
-              "Refreshe,  Safeway  Inc.": 67,
-              "Refreshe, Safeway  Inc.": 1
-            },
-            "chek": {
-              "Chek": 4,
-              "chek ": 1
-            },
-            "lawry's": {
-              "Lawry's": 26,
-              "LAWRY'S": 3
-            },
-            "lawry's, mccormick & company inc.": {
-              "Lawry's,  Mccormick & Company  Inc.": 14,
-              "Lawry's, Mccormick & Company  Inc.": 4
-            },
-            "lawry's, mccormick & co inc.": {
-              "Lawry's,  Mccormick & Co  Inc.": 3,
-              "Lawry's, Mccormick & Co  Inc.": 2
-            },
-            "cascadian farm, small planet foods inc.": {
-              "Cascadian Farm,  Small Planet Foods  Inc.": 42,
-              "Cascadian Farm, Small Planet Foods  Inc.": 4
-            },
-            "cascadian farm": {
-              "Cascadian Farm": 8,
-              "CASCADIAN FARM": 2,
-              "Cascadian farm": 1
-            },
-            "larabar": {
-              "Larabar": 29,
-              "LARABAR": 1
-            },
-            "food should taste good, small planet foods inc.": {
-              "Food Should Taste Good,  Small Planet Foods  Inc.": 28,
-              "Food Should Taste Good, Small Planet Foods  Inc.": 1
-            },
-            "cascadian farm organic, small planet foods inc.": {
-              "Cascadian Farm Organic,  Small Planet Foods  Inc.": 20,
-              "Cascadian Farm Organic, Small Planet Foods  Inc.": 1
-            },
-            "cascadian farm organic": {
-              "Cascadian Farm Organic": 4,
-              "CASCADIAN FARM ORGANIC": 1
-            },
-            "wrigley": {
-              "Wrigley": 1,
-              "wrigley": 1
-            },
-            "altoids": {
-              "Altoids": 3,
-              "ALTOIDS": 1,
-              "altoids": 1
-            },
-            "cl\u00e9ment faugier": {
-              "Cl\u00e9ment Faugier": 24,
-              "cl\u00e9ment faugier": 1
-            },
-            "clement faugier": {
-              "Clement Faugier": 9,
-              "Clement faugier": 2
-            },
-            "el yucateco salsas y condimentos s.a. de c.v.": {
-              "El Yucateco Salsas Y Condimentos S.A. De C.V.": 1,
-              "El Yucateco Salsas Y Condimentos  S.A. De C.V.": 1
-            },
-            "spectrum, the hain celestial group inc.": {
-              "Spectrum, The Hain Celestial Group  Inc.": 2,
-              "Spectrum,  The Hain Celestial Group  Inc.": 7
-            },
-            "vita food products inc.": {
-              "Vita Food Products  Inc.": 8,
-              "Vita Food Products Inc.": 1
-            },
-            "butterball, butterball llc": {
-              "Butterball,  Butterball  Llc": 44,
-              "Butterball, Butterball  Llc": 1
-            },
-            "afc franchise corp.": {
-              "Afc Franchise Corp.": 3,
-              "AFC Franchise Corp.": 1
-            },
-            "pop secret": {
-              "Pop Secret": 9,
-              "Pop secret": 1
-            },
-            "del monte": {
-              "Del Monte": 255,
-              "Del MONTE": 1,
-              "Del monte": 3
-            },
-            "del monte, del monte foods": {
-              "Del Monte, Del Monte Foods": 8,
-              "Del Monte,  Del Monte Foods": 21
-            },
-            "contadina, contadina foods inc.": {
-              "Contadina,  Contadina Foods  Inc.": 5,
-              "Contadina, Contadina Foods  Inc.": 1
-            },
-            "cheez-it": {
-              "Cheez-It": 6,
-              "CHEEZ-IT": 1
-            },
-            "lewis bakeries inc.": {
-              "Lewis Bakeries  Inc.": 22,
-              "Lewis Bakeries Inc.": 6
-            },
-            "eden, eden foods inc.": {
-              "Eden,  Eden Foods  Inc.": 27,
-              "Eden, Eden Foods  Inc.": 2
-            },
-            "eden, eden foods": {
-              "Eden, Eden Foods": 1,
-              "Eden,  Eden Foods": 1
-            },
-            "little debbie, mckee foods": {
-              "Little Debbie,  Mckee Foods": 15,
-              "Little Debbie, Mckee Foods": 1
-            },
-            "consorzio casalasco del pomodoro s.a.c.": {
-              "Consorzio Casalasco Del  Pomodoro S.A.C.": 1,
-              "Consorzio Casalasco Del Pomodoro S.A.C.": 1
-            },
-            "huy fong foods, inc.": {
-              "HUY FONG FOODS, INC.": 3,
-              "Huy Fong Foods, Inc.": 3
-            },
-            "huy fong foods inc.": {
-              "Huy Fong Foods  Inc.": 1,
-              "Huy Fong Foods Inc.": 1
-            },
-            "morton": {
-              "Morton": 29,
-              "MORTON": 1
-            },
-            "southeastern mills inc.": {
-              "Southeastern Mills  Inc.": 2,
-              "Southeastern Mills Inc.": 1
-            },
-            "minute maid": {
-              "Minute Maid": 7,
-              "Minute Maid ": 1
-            },
-            "devour": {
-              "Devour": 11,
-              "DEVOUR": 2
-            },
-            "applegate": {
-              "Applegate": 29,
-              "APPLEGATE": 2
-            },
-            "applegate naturals": {
-              "Applegate Naturals": 25,
-              "APPLEGATE NATURALS": 5
-            },
-            "mama, marigold manufacturing corporation": {
-              "Mama, Marigold Manufacturing Corporation": 5,
-              "Mama,  Marigold Manufacturing Corporation": 5
-            },
-            "nasoya": {
-              "Nasoya": 20,
-              "nasoya": 2
-            },
-            "vitasoy usa inc.": {
-              "Vitasoy  Usa Inc.": 1,
-              "Vitasoy Usa Inc.": 1
-            },
-            "tofurky": {
-              "Tofurky": 45,
-              "TOFURKY": 2
-            },
-            "tastykake": {
-              "Tastykake": 38,
-              "TASTYKAKE": 1,
-              "TastyKake": 1
-            },
-            "paskesz": {
-              "Paskesz": 42,
-              "paskesz": 1
-            },
-            "david": {
-              "David": 5,
-              "DAVID": 1
-            },
-            "lily of the desert": {
-              "Lily Of The Desert": 5,
-              "Lily of the Desert": 2,
-              "Lily of the desert": 1
-            },
-            "darigold": {
-              "Darigold": 106,
-              "DARIGOLD": 1
-            },
-            "louana": {
-              "Louana": 4,
-              "LouAna": 2
-            },
-            "gia russa": {
-              "Gia Russa": 21,
-              "GIA RUSSA": 1
-            },
-            "gia russa, gia brands inc.": {
-              "Gia Russa, Gia Brands Inc.": 1,
-              "Gia Russa,  Gia Brands Inc.": 1
-            },
-            "kiolbassa": {
-              "Kiolbassa": 2,
-              "KIOLBASSA": 1
-            },
-            "nutrexpa s.l.": {
-              "Nutrexpa S.L.": 1,
-              "Nutrexpa  S.L.": 1
-            },
-            "briannas": {
-              "Briannas": 4,
-              "BRIANNAS": 4
-            },
-            "ol\u00e9 mexican foods": {
-              "OL\u00c9 MEXICAN FOODS": 1,
-              "OL\u00c9 Mexican Foods": 1
-            },
-            "country crock": {
-              "Country Crock": 11,
-              "COUNTRY CROCK": 2
-            },
-            "tropical cheese industries inc.": {
-              "Tropical Cheese Industries  Inc.": 16,
-              "Tropical Cheese Industries Inc.": 1
-            },
-            "eckrich": {
-              "Eckrich": 26,
-              "ECKRICH": 1
-            },
-            "armour-eckrich meats llc": {
-              "Armour-Eckrich Meats  Llc": 1,
-              "Armour-Eckrich Meats Llc": 7
-            },
-            "vitafusion": {
-              "Vitafusion": 1,
-              "vitafusion": 2
-            },
-            "nestle,nesquik": {
-              "nestle,Nesquik": 1,
-              "Nestle,Nesquik": 1
-            },
-            "trident seafoods": {
-              "Trident Seafoods": 1,
-              "Trident seafoods": 1
-            },
-            "jes": {
-              "JES": 1,
-              "Jes": 4
-            },
-            "hatch": {
-              "Hatch": 13,
-              "HATCH": 1
-            },
-            "brim's": {
-              "BRIM'S": 1,
-              "Brim's": 1
-            },
-            "frito lay, frito-lay company": {
-              "Frito Lay,  Frito-Lay Company": 6,
-              "Frito Lay, Frito-Lay Company": 1
-            },
-            "sun chips": {
-              "Sun Chips": 5,
-              "SUN CHIPS": 1
-            },
-            "funyuns": {
-              "FUNYUNS": 1,
-              "Funyuns": 4
-            },
-            "tostitos": {
-              "Tostitos": 5,
-              "tostitos": 1
-            },
-            "fritolay": {
-              "Fritolay": 3,
-              "FritoLay": 1
-            },
-            "tostitos,fritolay": {
-              "Tostitos,Fritolay": 1,
-              "Tostitos,FritoLay": 1
-            }
-          }
+          "casing_issues": {}
         },
         "quantity": {
           "dtype": "object",
@@ -3695,28 +3723,102 @@
             }
           }
         },
-        "nova_group": {
+        "popularity_key": {
           "dtype": "object",
-          "null_count": 1854,
-          "null_pct": 7.42,
-          "distinct_count": 4,
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 191,
           "outlier_count": 0,
           "sample_values": [
-            "3",
             "1",
-            "4"
+            "0",
+            "2"
           ],
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "product_type": {
+        "states": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 1,
+          "distinct_count": 390,
           "outlier_count": 0,
           "sample_values": [
-            "food"
+            "en:to-be-completed, en:nutrition-facts-completed, en:ingredients-completed, en:expiration-date-completed, en:packaging-code-to-be-completed, en:characteristics-to-be-completed, en:origins-to-be-completed, en:categories-completed, en:brands-completed, en:packaging-to-be-completed, en:quantity-completed, en:product-name-completed, en:photos-to-be-validated, en:packaging-photo-to-be-selected, en:nutrition-photo-selected, en:ingredients-photo-selected, en:front-photo-selected, en:photos-uploaded",
+            "en:to-be-completed, en:nutrition-facts-completed, en:ingredients-completed, en:expiration-date-to-be-completed, en:packaging-code-to-be-completed, en:characteristics-to-be-completed, en:origins-to-be-completed, en:categories-completed, en:brands-completed, en:packaging-to-be-completed, en:quantity-completed, en:product-name-completed, en:photos-to-be-uploaded",
+            "en:to-be-completed, en:nutrition-facts-completed, en:ingredients-completed, en:expiration-date-to-be-completed, en:packaging-code-to-be-completed, en:characteristics-to-be-completed, en:origins-to-be-completed, en:categories-completed, en:brands-completed, en:packaging-to-be-completed, en:quantity-to-be-completed, en:product-name-completed, en:photos-to-be-uploaded"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "nutrition_grades": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 7,
+          "outlier_count": 0,
+          "sample_values": [
+            "e",
+            "unknown",
+            "b"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "product_quantity": {
+          "dtype": "object",
+          "null_count": 8932,
+          "null_pct": 35.73,
+          "distinct_count": 948,
+          "outlier_count": 0,
+          "sample_values": [
+            "350",
+            "1.0",
+            "1.5"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "nutriscore": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 25000,
+          "outlier_count": 0,
+          "sample_values": [
+            "{\"2023\": {\"nutriscore_computed\": 1, \"estimated\": 0, \"score\": 25, \"nutriscore_applicable\": 1, \"data\": {\"count_proteins_reason\": \"negative_points_greater_than_or_equal_to_11\", \"positive_nutrients\": [\"fiber\", \"fruits_vegetables_legumes\"], \"positive_points\": 0, \"is_fat_oil_nuts_seeds\": 0, \"components\": {\"positive\": [{\"id\": \"fiber\", \"points_max\": 5, \"value\": null, \"unit\": \"g\", \"points\": 0}, {\"points_max\": 5, \"id\": \"fruits_vegetables_legumes\", \"points\": 0, \"unit\": \"%\", \"value\": 0}], \"negative\": [{\"points_max\": 10, \"id\": \"energy\", \"unit\": \"kJ\", \"points\": 7, \"value\": 2524}, {\"value\": 32, \"points\": 9, \"unit\": \"g\", \"id\": \"sugars\", \"points_max\": 15}, {\"value\": 10, \"points\": 9, \"unit\": \"g\", \"id\": \"saturated_fat\", \"points_max\": 10}, {\"points_max\": 20, \"id\": \"salt\", \"points\": 0, \"unit\": \"g\", \"value\": 0.01}]}, \"is_water\": 0, \"positive_points_max\": 10, \"negative_points\": 25, \"is_cheese\": 0, \"is_beverage\": 0, \"count_proteins\": 0, \"is_red_meat_product\": 0, \"negative_points_max\": 55}, \"category_available\": 1, \"nutrients_available\": 1, \"preparation\": \"as_sold\", \"grade\": \"e\"}, \"2021\": {\"category_available\": 1, \"data\": {\"sugars_points\": 7, \"positive_points\": 2, \"energy_points\": 7, \"sodium_value\": 4, \"saturated_fat\": 10, \"is_water\": 0, \"proteins\": 8, \"fiber_value\": 0.0, \"proteins_points\": 4, \"sodium\": 4.0, \"saturated_fat_points\": 9, \"negative_points\": 23, \"fiber_points\": 0, \"is_cheese\": 0, \"energy\": 2524, \"is_beverage\": 0, \"saturated_fat_value\": 10, \"fruits_vegetables_nuts_colza_walnut_olive_oils\": 68.39, \"fruits_vegetables_nuts_colza_walnut_olive_oils_value\": 68.4, \"sugars\": 32, \"fiber\": 0, \"energy_value\": 2524, \"sodium_points\": 0, \"sugars_value\": 32.0, \"proteins_value\": 8.0, \"fruits_vegetables_nuts_colza_walnut_olive_oils_points\": 2, \"is_fat\": 0}, \"nutrients_available\": 1, \"preparation\": \"as_sold\", \"grade\": \"e\", \"nutriscore_computed\": 1, \"estimated\": 0, \"nutriscore_applicable\": 1, \"score\": 21}}",
+            "{\"2021\": {\"category_available\": 1, \"grade\": \"unknown\", \"data\": {\"fiber\": 0, \"proteins\": null, \"energy\": null, \"is_water\": 0, \"fruits_vegetables_nuts_colza_walnut_olive_oils\": 100, \"saturated_fat\": null, \"is_beverage\": 0, \"is_cheese\": 0, \"sodium\": null, \"is_fat\": 0, \"sugars\": null}, \"nutrients_available\": 0, \"nutriscore_applicable\": 1, \"nutriscore_computed\": 0}, \"2023\": {\"category_available\": 1, \"grade\": \"unknown\", \"nutriscore_applicable\": 1, \"nutrients_available\": 0, \"data\": {\"fiber\": null, \"is_red_meat_product\": 0, \"proteins\": null, \"fruits_vegetables_legumes\": 100, \"salt\": null, \"is_fat_oil_nuts_seeds\": 0, \"is_water\": 0, \"energy\": null, \"is_beverage\": 0, \"is_cheese\": 0, \"saturated_fat\": null, \"sugars\": null}, \"nutriscore_computed\": 0}}",
+            "{\"2023\": {\"nutriscore_applicable\": 1, \"grade\": \"unknown\", \"category_available\": 1, \"nutriscore_computed\": 0, \"nutrients_available\": 0, \"data\": {\"non_nutritive_sweeteners\": 0, \"salt\": 0.01, \"sugars\": null, \"proteins\": 0, \"is_water\": 0, \"fiber\": null, \"energy\": 0, \"saturated_fat_ratio\": 0, \"is_cheese\": 0, \"is_red_meat_product\": 0, \"is_beverage\": 1, \"fruits_vegetables_legumes\": 0, \"saturated_fat\": 0, \"is_fat_oil_nuts_seeds\": 0}}, \"2021\": {\"nutriscore_computed\": 0, \"grade\": \"unknown\", \"nutriscore_applicable\": 1, \"category_available\": 1, \"data\": {\"proteins\": 0, \"sugars\": null, \"is_fat\": 0, \"fiber\": 0, \"is_water\": 0, \"fruits_vegetables_nuts_colza_walnut_olive_oils\": 0, \"energy\": 0, \"is_cheese\": 0, \"saturated_fat_ratio\": 0, \"is_beverage\": 1, \"sodium\": 4, \"saturated_fat\": 0}, \"nutrients_available\": 0}}"
+          ],
+          "free_text_pii": {
+            "sample_size": 200,
+            "entities": {
+              "PERSON": {
+                "count": 7,
+                "pct": 3.5
+              },
+              "PHONE_NUMBER": {
+                "count": 20,
+                "pct": 10.0
+              },
+              "CREDIT_CARD": {
+                "count": 4,
+                "pct": 2.0
+              }
+            }
+          },
+          "casing_issues": {}
+        },
+        "creator": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 164,
+          "outlier_count": 0,
+          "sample_values": [
+            "kiliweb",
+            "usda-ndb-import",
+            "date-limite-app"
           ],
           "free_text_pii": {},
           "casing_issues": {}
@@ -3728,10 +3830,10 @@
       "row_count": 228100,
       "sampled": true,
       "sample_size": 114050,
-      "duplicate_rows": 61,
+      "duplicate_rows": 43,
       "pk_candidates": [],
       "columns": {
-        "product_code": {
+        "_id": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
@@ -3745,288 +3847,90 @@
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "ingredient_id": {
+        "is_in_taxonomy": {
+          "dtype": "object",
+          "null_count": 5940,
+          "null_pct": 5.21,
+          "distinct_count": 2,
+          "outlier_count": 0,
+          "sample_values": [
+            "1",
+            "0"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "ecobalyse_code": {
+          "dtype": "object",
+          "null_count": 88484,
+          "null_pct": 77.58,
+          "distinct_count": 193,
+          "outlier_count": 0,
+          "sample_values": [
+            "hazelnut-unshelled-non-eu",
+            "8f075c25-9ebf-430c-b41d-51d165c6e0d8",
+            "96b301d9-d21b-4cea-8903-bd7917e95a30"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "percent_estimate": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 8802,
+          "distinct_count": 19759,
           "outlier_count": 0,
           "sample_values": [
-            "en:hazelnut",
-            "en:sugar",
-            "en:peppermint"
+            "68.39",
+            "10.56",
+            "100"
           ],
           "free_text_pii": {},
-          "casing_issues": {
-            "en:ingredients": {
-              "en:ingredients": 32,
-              "en:INGREDIENTS": 10
-            },
-            "en:natural": {
-              "en:natural": 16,
-              "en:NATURAL": 1,
-              "en:Natural": 1
-            },
-            "en:monoglycerides": {
-              "en:monoglycerides": 64,
-              "en:Monoglycerides": 1,
-              "en:MONOGLYCERIDES": 1
-            },
-            "en:oatmeal": {
-              "en:oatmeal": 4,
-              "en:Oatmeal": 1
-            },
-            "en:s": {
-              "en:s": 39,
-              "en:S": 1
-            },
-            "en:fd": {
-              "en:fd": 8,
-              "en:FD": 3
-            },
-            "en:pretzels": {
-              "en:pretzels": 23,
-              "en:PRETZELS": 1
-            },
-            "en:alum": {
-              "en:alum": 39,
-              "en:ALUM": 2
-            },
-            "en:lecithin as emulsifier": {
-              "en:lecithin as emulsifier": 3,
-              "en:LECITHIN AS EMULSIFIER": 2
-            },
-            "en:coca": {
-              "en:COCA": 1,
-              "en:coca": 1
-            },
-            "en:toppings": {
-              "en:toppings": 7,
-              "en:TOPPINGS": 1
-            },
-            "fr:butteroil": {
-              "fr:Butteroil": 4,
-              "fr:butteroil": 1
-            },
-            "fr:water": {
-              "fr:water": 6,
-              "fr:Water": 1
-            },
-            "en:canola": {
-              "en:canola": 110,
-              "en:Canola": 2
-            },
-            "en:c": {
-              "en:c": 22,
-              "en:C": 1
-            },
-            "en:contains 2% and less of": {
-              "en:contains 2% and less of": 11,
-              "en:CONTAINS 2% and LESS OF": 8,
-              "en:Contains 2% and Less of": 1
-            },
-            "en:ca": {
-              "en:ca": 4,
-              "en:CA": 1
-            },
-            "en:w": {
-              "en:w": 7,
-              "en:W": 1
-            },
-            "en:distilled monoglycerides": {
-              "en:DISTILLED MONOGLYCERIDES": 1,
-              "en:distilled monoglycerides": 2
-            },
-            "en:dressing": {
-              "en:dressing": 7,
-              "en:DRESSING": 1,
-              "en:Dressing": 1
-            },
-            "en:contains": {
-              "en:contains": 24,
-              "en:Contains": 1
-            },
-            "en:dried": {
-              "en:dried": 32,
-              "en:DRIED": 1
-            },
-            "en:almondmilk": {
-              "en:almondmilk": 31,
-              "en:Almondmilk": 2,
-              "en:ALMONDMILK": 1
-            },
-            "en:inc": {
-              "en:inc": 7,
-              "en:INC": 1
-            },
-            "en:citri": {
-              "en:citri": 4,
-              "en:CITRI": 1
-            },
-            "en:cultured corn sugar": {
-              "en:CULTURED CORN SUGAR": 1,
-              "en:cultured corn sugar": 1
-            },
-            "en:soymilk": {
-              "en:soymilk": 32,
-              "en:Soymilk": 3
-            },
-            "en:live active cultures": {
-              "en:live active cultures": 1,
-              "en:LIVE ACTIVE CULTURES": 1
-            },
-            "fr:egg": {
-              "fr:Egg": 1,
-              "fr:egg": 1
-            },
-            "en:annatto color": {
-              "en:annatto color": 2,
-              "en:ANNATTO COLOR": 3
-            },
-            "en:sodium benzoate as a preservative": {
-              "en:sodium benzoate as a preservative": 2,
-              "en:SODIUM BENZOATE AS A PRESERVATIVE": 2
-            },
-            "en:contains less than 2% of": {
-              "en:contains less than 2% of": 1,
-              "en:CONTAINS LESS THAN 2% OF": 4,
-              "en:Contains Less Than 2% of": 1
-            },
-            "en:contains 2% and less of each of the following": {
-              "en:CONTAINS 2% and LESS OF EACH OF THE FOLLOWING": 4,
-              "en:contains 2% and less of each of the following": 8
-            },
-            "en:boneless": {
-              "en:BONELESS": 1,
-              "en:boneless": 7
-            },
-            "en:contains 2 percent and less of": {
-              "en:CONTAINS 2 PERCENT and LESS OF": 3,
-              "en:contains 2 percent and less of": 4
-            },
-            "en:tree nut meal": {
-              "en:TREE NUT MEAL": 1,
-              "en:tree nut meal": 1
-            },
-            "en:autolyzed yeast": {
-              "en:autolyzed yeast": 2,
-              "en:AUTOLYZED YEAST": 1
-            },
-            "en:pistaches": {
-              "en:pistaches": 4,
-              "en:Pistaches": 1
-            },
-            "en:and less of the following": {
-              "en:and LESS OF THE FOLLOWING": 2,
-              "en:and less of the following": 1
-            },
-            "en:vegetable glycerin": {
-              "en:Vegetable Glycerin": 6,
-              "en:vegetable glycerin": 4
-            },
-            "en:a b vitamins": {
-              "en:a b vitamins": 3,
-              "en:A B vitamins": 2
-            },
-            "en:added to preserve freshness": {
-              "en:added to preserve freshness": 7,
-              "en:Added to Preserve Freshness": 1,
-              "en:ADDED TO PRESERVE FRESHNESS": 2
-            },
-            "en:a b vitamin": {
-              "en:a b vitamin": 2,
-              "en:A B Vitamin": 2
-            },
-            "en:added to retain freshness": {
-              "en:Added to Retain Freshness": 2,
-              "en:added to retain freshness": 3
-            },
-            "en:honey roasted almond butter": {
-              "en:Honey Roasted Almond Butter": 2,
-              "en:honey roasted almond butter": 3
-            },
-            "en:crisp rice": {
-              "en:Crisp Rice": 1,
-              "en:crisp rice": 2,
-              "en:CRISP RICE": 2
-            },
-            "en:cocoa alkali processed": {
-              "en:cocoa alkali processed": 1,
-              "en:COCOA ALKALI PROCESSED": 1
-            },
-            "en:confectioner's glaze": {
-              "en:confectioner's glaze": 1,
-              "en:CONFECTIONER'S GLAZE": 1
-            },
-            "en:p": {
-              "en:p": 5,
-              "en:P": 1
-            },
-            "en:calciu": {
-              "en:calciu": 3,
-              "en:CALCIU": 1
-            },
-            "en:stout": {
-              "en:Stout": 1,
-              "en:stout": 1
-            },
-            "en:veget": {
-              "en:VEGET": 1,
-              "en:veget": 1
-            },
-            "en:cheese sauce mix": {
-              "en:CHEESE SAUCE MIX": 5,
-              "en:cheese sauce mix": 1
-            },
-            "en:contains less than 2% of modified food starch": {
-              "en:contains less than 2% of modified food starch": 3,
-              "en:CONTAINS LESS THAN 2% OF MODIFIED FOOD STARCH": 2
-            },
-            "en:to": {
-              "en:to": 3,
-              "en:TO": 1
-            },
-            "en:contains 2% and less of salt": {
-              "en:CONTAINS 2% and LESS OF SALT": 3,
-              "en:contains 2% and less of salt": 1,
-              "en:Contains 2% and less of salt": 1
-            },
-            "en:sod": {
-              "en:sod": 1,
-              "en:SOD": 1
-            },
-            "en:freshness preserved by tbhq": {
-              "en:freshness preserved by tbhq": 1,
-              "en:FRESHNESS PRESERVED BY TBHQ": 1
-            },
-            "en:contains less than 2% of the following": {
-              "en:contains less than 2% of the following": 5,
-              "en:CONTAINS LESS THAN 2% OF THE FOLLOWING": 2
-            },
-            "en:soybean oils with tbhq and citric acid to protect flavor": {
-              "en:SOYBEAN OILS WITH TBHQ and CITRIC ACID TO PROTECT FLAVOR": 4,
-              "en:soybean oils with tbhq and citric acid to protect flavor": 1
-            },
-            "en:chicken** breast tenders": {
-              "en:CHICKEN** BREAST TENDERS": 1,
-              "en:Chicken** breast tenders": 1
-            },
-            "en:contains 2% and less of dextrose": {
-              "en:contains 2% and less of dextrose": 1,
-              "en:CONTAINS 2% and LESS OF DEXTROSE": 1
-            },
-            "en:less than 2% of salt": {
-              "en:LESS THAN 2% OF SALT": 1,
-              "en:less than 2% of salt": 1
-            },
-            "en:and less than 2% of the following": {
-              "en:and less than 2% of the following": 2,
-              "en:and Less Than 2% of the Following": 1,
-              "en:and LESS THAN 2% OF THE FOLLOWING": 1
-            }
-          }
+          "casing_issues": {}
         },
-        "ingredient_text": {
+        "ciqual_food_code": {
+          "dtype": "object",
+          "null_count": 74567,
+          "null_pct": 65.38,
+          "distinct_count": 368,
+          "outlier_count": 0,
+          "sample_values": [
+            "15004",
+            "31016",
+            "11027"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "vegan": {
+          "dtype": "object",
+          "null_count": 18000,
+          "null_pct": 15.78,
+          "distinct_count": 4,
+          "outlier_count": 0,
+          "sample_values": [
+            "yes",
+            "maybe",
+            "no"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "vegetarian": {
+          "dtype": "object",
+          "null_count": 17997,
+          "null_pct": 15.78,
+          "distinct_count": 4,
+          "outlier_count": 0,
+          "sample_values": [
+            "yes",
+            "maybe",
+            "no"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "text": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
@@ -15490,47 +15394,459 @@
             }
           }
         },
-        "percent_estimate": {
-          "dtype": "float64",
-          "null_count": 0,
-          "null_pct": 0.0,
-          "distinct_count": 20304,
-          "outlier_count": 12115,
+        "quantity_estimate": {
+          "dtype": "object",
+          "null_count": 109027,
+          "null_pct": 95.6,
+          "distinct_count": 1108,
+          "outlier_count": 0,
           "sample_values": [
             "68.39",
             "10.56",
+            "36.89"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "id": {
+          "dtype": "object",
+          "null_count": 0,
+          "null_pct": 0.0,
+          "distinct_count": 8802,
+          "outlier_count": 0,
+          "sample_values": [
+            "en:hazelnut",
+            "en:sugar",
+            "en:peppermint"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "en:ingredients": {
+              "en:ingredients": 32,
+              "en:INGREDIENTS": 10
+            },
+            "en:natural": {
+              "en:natural": 16,
+              "en:NATURAL": 1,
+              "en:Natural": 1
+            },
+            "en:monoglycerides": {
+              "en:monoglycerides": 64,
+              "en:Monoglycerides": 1,
+              "en:MONOGLYCERIDES": 1
+            },
+            "en:oatmeal": {
+              "en:oatmeal": 4,
+              "en:Oatmeal": 1
+            },
+            "en:s": {
+              "en:s": 39,
+              "en:S": 1
+            },
+            "en:fd": {
+              "en:fd": 8,
+              "en:FD": 3
+            },
+            "en:pretzels": {
+              "en:pretzels": 23,
+              "en:PRETZELS": 1
+            },
+            "en:alum": {
+              "en:alum": 39,
+              "en:ALUM": 2
+            },
+            "en:lecithin as emulsifier": {
+              "en:lecithin as emulsifier": 3,
+              "en:LECITHIN AS EMULSIFIER": 2
+            },
+            "en:coca": {
+              "en:COCA": 1,
+              "en:coca": 1
+            },
+            "en:toppings": {
+              "en:toppings": 7,
+              "en:TOPPINGS": 1
+            },
+            "fr:butteroil": {
+              "fr:Butteroil": 4,
+              "fr:butteroil": 1
+            },
+            "fr:water": {
+              "fr:water": 6,
+              "fr:Water": 1
+            },
+            "en:canola": {
+              "en:canola": 110,
+              "en:Canola": 2
+            },
+            "en:c": {
+              "en:c": 22,
+              "en:C": 1
+            },
+            "en:contains 2% and less of": {
+              "en:contains 2% and less of": 11,
+              "en:CONTAINS 2% and LESS OF": 8,
+              "en:Contains 2% and Less of": 1
+            },
+            "en:ca": {
+              "en:ca": 4,
+              "en:CA": 1
+            },
+            "en:w": {
+              "en:w": 7,
+              "en:W": 1
+            },
+            "en:distilled monoglycerides": {
+              "en:DISTILLED MONOGLYCERIDES": 1,
+              "en:distilled monoglycerides": 2
+            },
+            "en:dressing": {
+              "en:dressing": 7,
+              "en:DRESSING": 1,
+              "en:Dressing": 1
+            },
+            "en:contains": {
+              "en:contains": 24,
+              "en:Contains": 1
+            },
+            "en:dried": {
+              "en:dried": 32,
+              "en:DRIED": 1
+            },
+            "en:almondmilk": {
+              "en:almondmilk": 31,
+              "en:Almondmilk": 2,
+              "en:ALMONDMILK": 1
+            },
+            "en:inc": {
+              "en:inc": 7,
+              "en:INC": 1
+            },
+            "en:citri": {
+              "en:citri": 4,
+              "en:CITRI": 1
+            },
+            "en:cultured corn sugar": {
+              "en:CULTURED CORN SUGAR": 1,
+              "en:cultured corn sugar": 1
+            },
+            "en:soymilk": {
+              "en:soymilk": 32,
+              "en:Soymilk": 3
+            },
+            "en:live active cultures": {
+              "en:live active cultures": 1,
+              "en:LIVE ACTIVE CULTURES": 1
+            },
+            "fr:egg": {
+              "fr:Egg": 1,
+              "fr:egg": 1
+            },
+            "en:annatto color": {
+              "en:annatto color": 2,
+              "en:ANNATTO COLOR": 3
+            },
+            "en:sodium benzoate as a preservative": {
+              "en:sodium benzoate as a preservative": 2,
+              "en:SODIUM BENZOATE AS A PRESERVATIVE": 2
+            },
+            "en:contains less than 2% of": {
+              "en:contains less than 2% of": 1,
+              "en:CONTAINS LESS THAN 2% OF": 4,
+              "en:Contains Less Than 2% of": 1
+            },
+            "en:contains 2% and less of each of the following": {
+              "en:CONTAINS 2% and LESS OF EACH OF THE FOLLOWING": 4,
+              "en:contains 2% and less of each of the following": 8
+            },
+            "en:boneless": {
+              "en:BONELESS": 1,
+              "en:boneless": 7
+            },
+            "en:contains 2 percent and less of": {
+              "en:CONTAINS 2 PERCENT and LESS OF": 3,
+              "en:contains 2 percent and less of": 4
+            },
+            "en:tree nut meal": {
+              "en:TREE NUT MEAL": 1,
+              "en:tree nut meal": 1
+            },
+            "en:autolyzed yeast": {
+              "en:autolyzed yeast": 2,
+              "en:AUTOLYZED YEAST": 1
+            },
+            "en:pistaches": {
+              "en:pistaches": 4,
+              "en:Pistaches": 1
+            },
+            "en:and less of the following": {
+              "en:and LESS OF THE FOLLOWING": 2,
+              "en:and less of the following": 1
+            },
+            "en:vegetable glycerin": {
+              "en:Vegetable Glycerin": 6,
+              "en:vegetable glycerin": 4
+            },
+            "en:a b vitamins": {
+              "en:a b vitamins": 3,
+              "en:A B vitamins": 2
+            },
+            "en:added to preserve freshness": {
+              "en:added to preserve freshness": 7,
+              "en:Added to Preserve Freshness": 1,
+              "en:ADDED TO PRESERVE FRESHNESS": 2
+            },
+            "en:a b vitamin": {
+              "en:a b vitamin": 2,
+              "en:A B Vitamin": 2
+            },
+            "en:added to retain freshness": {
+              "en:Added to Retain Freshness": 2,
+              "en:added to retain freshness": 3
+            },
+            "en:honey roasted almond butter": {
+              "en:Honey Roasted Almond Butter": 2,
+              "en:honey roasted almond butter": 3
+            },
+            "en:crisp rice": {
+              "en:Crisp Rice": 1,
+              "en:crisp rice": 2,
+              "en:CRISP RICE": 2
+            },
+            "en:cocoa alkali processed": {
+              "en:cocoa alkali processed": 1,
+              "en:COCOA ALKALI PROCESSED": 1
+            },
+            "en:confectioner's glaze": {
+              "en:confectioner's glaze": 1,
+              "en:CONFECTIONER'S GLAZE": 1
+            },
+            "en:p": {
+              "en:p": 5,
+              "en:P": 1
+            },
+            "en:calciu": {
+              "en:calciu": 3,
+              "en:CALCIU": 1
+            },
+            "en:stout": {
+              "en:Stout": 1,
+              "en:stout": 1
+            },
+            "en:veget": {
+              "en:VEGET": 1,
+              "en:veget": 1
+            },
+            "en:cheese sauce mix": {
+              "en:CHEESE SAUCE MIX": 5,
+              "en:cheese sauce mix": 1
+            },
+            "en:contains less than 2% of modified food starch": {
+              "en:contains less than 2% of modified food starch": 3,
+              "en:CONTAINS LESS THAN 2% OF MODIFIED FOOD STARCH": 2
+            },
+            "en:to": {
+              "en:to": 3,
+              "en:TO": 1
+            },
+            "en:contains 2% and less of salt": {
+              "en:CONTAINS 2% and LESS OF SALT": 3,
+              "en:contains 2% and less of salt": 1,
+              "en:Contains 2% and less of salt": 1
+            },
+            "en:sod": {
+              "en:sod": 1,
+              "en:SOD": 1
+            },
+            "en:freshness preserved by tbhq": {
+              "en:freshness preserved by tbhq": 1,
+              "en:FRESHNESS PRESERVED BY TBHQ": 1
+            },
+            "en:contains less than 2% of the following": {
+              "en:contains less than 2% of the following": 5,
+              "en:CONTAINS LESS THAN 2% OF THE FOLLOWING": 2
+            },
+            "en:soybean oils with tbhq and citric acid to protect flavor": {
+              "en:SOYBEAN OILS WITH TBHQ and CITRIC ACID TO PROTECT FLAVOR": 4,
+              "en:soybean oils with tbhq and citric acid to protect flavor": 1
+            },
+            "en:chicken** breast tenders": {
+              "en:CHICKEN** BREAST TENDERS": 1,
+              "en:Chicken** breast tenders": 1
+            },
+            "en:contains 2% and less of dextrose": {
+              "en:contains 2% and less of dextrose": 1,
+              "en:CONTAINS 2% and LESS OF DEXTROSE": 1
+            },
+            "en:less than 2% of salt": {
+              "en:LESS THAN 2% OF SALT": 1,
+              "en:less than 2% of salt": 1
+            },
+            "en:and less than 2% of the following": {
+              "en:and less than 2% of the following": 2,
+              "en:and Less Than 2% of the Following": 1,
+              "en:and LESS THAN 2% OF THE FOLLOWING": 1
+            }
+          }
+        },
+        "percent": {
+          "dtype": "object",
+          "null_count": 113250,
+          "null_pct": 99.3,
+          "distinct_count": 152,
+          "outlier_count": 0,
+          "sample_values": [
+            "50",
+            "14.0",
+            "50.0"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "ingredients": {
+          "dtype": "object",
+          "null_count": 95967,
+          "null_pct": 84.14,
+          "distinct_count": 17937,
+          "outlier_count": 0,
+          "sample_values": [
+            "[{\"id\": \"en:preservative\", \"text\": \"PRESERVATIVE\", \"is_in_taxonomy\": 1, \"percent_estimate\": 0.1822916666666643, \"percent_max\": 11.11111111111111, \"percent_min\": 0}]",
+            "[{\"text\": \"preservative\", \"percent_min\": 0, \"is_in_taxonomy\": 1, \"percent_estimate\": 0.10007352941176606, \"percent_max\": 1.34, \"id\": \"en:preservative\"}]",
+            "[{\"is_in_taxonomy\": 0, \"percent_min\": 0, \"id\": \"en:to-preserve-freshness\", \"percent_max\": 1.34, \"percent_estimate\": 0.006254595588231382, \"text\": \"to preserve freshness\"}]"
+          ],
+          "free_text_pii": {
+            "sample_size": 200,
+            "entities": {
+              "PERSON": {
+                "count": 3,
+                "pct": 1.5
+              },
+              "PHONE_NUMBER": {
+                "count": 46,
+                "pct": 23.0
+              },
+              "CREDIT_CARD": {
+                "count": 27,
+                "pct": 13.5
+              }
+            }
+          },
+          "casing_issues": {}
+        },
+        "ciqual_proxy_food_code": {
+          "dtype": "object",
+          "null_count": 95602,
+          "null_pct": 83.82,
+          "distinct_count": 81,
+          "outlier_count": 0,
+          "sample_values": [
+            "31016",
+            "9532",
+            "9410"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "percent_min": {
+          "dtype": "object",
+          "null_count": 6081,
+          "null_pct": 5.33,
+          "distinct_count": 1244,
+          "outlier_count": 0,
+          "sample_values": [
+            "100",
+            "0.0",
             "100.0"
           ],
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "vegan": {
+        "percent_max": {
           "dtype": "object",
-          "null_count": 18000,
-          "null_pct": 15.78,
-          "distinct_count": 4,
+          "null_count": 6081,
+          "null_pct": 5.33,
+          "distinct_count": 3468,
           "outlier_count": 0,
           "sample_values": [
-            "yes",
-            "maybe",
-            "no"
+            "100",
+            "50.0",
+            "100.0"
           ],
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "vegetarian": {
+        "from_palm_oil": {
           "dtype": "object",
-          "null_count": 17997,
-          "null_pct": 15.78,
-          "distinct_count": 4,
+          "null_count": 107695,
+          "null_pct": 94.43,
+          "distinct_count": 3,
           "outlier_count": 0,
           "sample_values": [
+            "no",
             "yes",
-            "maybe",
-            "no"
+            "maybe"
           ],
           "free_text_pii": {},
           "casing_issues": {}
+        },
+        "processing": {
+          "dtype": "object",
+          "null_count": 107090,
+          "null_pct": 93.9,
+          "distinct_count": 254,
+          "outlier_count": 0,
+          "sample_values": [
+            "en:dried",
+            "en:enriched,en:bleached",
+            "en:powder"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "ecobalyse_proxy_code": {
+          "dtype": "object",
+          "null_count": 114047,
+          "null_pct": 100.0,
+          "distinct_count": 1,
+          "outlier_count": 0,
+          "sample_values": [
+            "flour"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "labels": {
+          "dtype": "object",
+          "null_count": 111181,
+          "null_pct": 97.48,
+          "distinct_count": 28,
+          "outlier_count": 0,
+          "sample_values": [
+            "en:organic",
+            "en:organic, en:organic, en:organic",
+            "en:pgi"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {}
+        },
+        "origins": {
+          "dtype": "object",
+          "null_count": 113897,
+          "null_pct": 99.87,
+          "distinct_count": 42,
+          "outlier_count": 0,
+          "sample_values": [
+            "en:california",
+            "en:madagascar",
+            "en:united-states"
+          ],
+          "free_text_pii": {},
+          "casing_issues": {
+            "en:turkey,en:mechanically separated turkey": {
+              "en:turkey,en:MECHANICALLY SEPARATED TURKEY": 2,
+              "en:turkey,en:mechanically separated turkey": 3
+            }
+          }
         }
       }
     },
@@ -15542,7 +15858,7 @@
       "duplicate_rows": 0,
       "pk_candidates": [],
       "columns": {
-        "product_code": {
+        "_id": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
@@ -15556,7 +15872,7 @@
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "category_tag": {
+        "value": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
@@ -15601,19 +15917,19 @@
         }
       }
     },
-    "nutriments": {
-      "table": "nutriments",
-      "row_count": 1476182,
+    "nutritional_info": {
+      "table": "nutritional_info",
+      "row_count": 1798569,
       "sampled": true,
-      "sample_size": 105442,
+      "sample_size": 105799,
       "duplicate_rows": 0,
       "pk_candidates": [],
       "columns": {
-        "product_code": {
+        "_id": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 20693,
+          "distinct_count": 20684,
           "outlier_count": 0,
           "sample_values": [
             "0000105000011",
@@ -15623,30 +15939,30 @@
           "free_text_pii": {},
           "casing_issues": {}
         },
-        "nutrient_name": {
+        "key": {
           "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 220,
+          "distinct_count": 281,
           "outlier_count": 0,
           "sample_values": [
             "fruits-vegetables-legumes-estimate-from-ingredients_serving",
-            "salt",
-            "proteins_serving"
+            "energy_unit",
+            "energy"
           ],
           "free_text_pii": {},
           "casing_issues": {}
         },
         "value": {
-          "dtype": "float64",
+          "dtype": "object",
           "null_count": 0,
           "null_pct": 0.0,
-          "distinct_count": 14473,
-          "outlier_count": 18729,
+          "distinct_count": 13119,
+          "outlier_count": 0,
           "sample_values": [
-            "100.0",
-            "0.75",
-            "0.0"
+            "100",
+            "kcal",
+            "1172"
           ],
           "free_text_pii": {},
           "casing_issues": {}
@@ -15657,21 +15973,42 @@
   "fk_candidates": [
     {
       "child_table": "ingredients",
-      "child_column": "product_code",
+      "child_column": "_id",
+      "parent_table": "products",
+      "parent_column": "_id",
+      "value_overlap_pct": 100.0
+    },
+    {
+      "child_table": "ingredients",
+      "child_column": "_id",
       "parent_table": "products",
       "parent_column": "code",
       "value_overlap_pct": 100.0
     },
     {
       "child_table": "categories",
-      "child_column": "product_code",
+      "child_column": "_id",
+      "parent_table": "products",
+      "parent_column": "_id",
+      "value_overlap_pct": 100.0
+    },
+    {
+      "child_table": "categories",
+      "child_column": "_id",
       "parent_table": "products",
       "parent_column": "code",
       "value_overlap_pct": 100.0
     },
     {
-      "child_table": "nutriments",
-      "child_column": "product_code",
+      "child_table": "nutritional_info",
+      "child_column": "_id",
+      "parent_table": "products",
+      "parent_column": "_id",
+      "value_overlap_pct": 100.0
+    },
+    {
+      "child_table": "nutritional_info",
+      "child_column": "_id",
       "parent_table": "products",
       "parent_column": "code",
       "value_overlap_pct": 100.0

@@ -7,18 +7,17 @@
 Two build phases so far, both at a blended rate of 95 EUR/hour (see
 `cost_estimation/cost_analysis.md` for the Round 1 breakdown and its assumptions). Round 2's
 hours are broken out below rather than given as one number, since the actual scope grew
-substantially past the first estimate, three datasets tested at real scale, not one slice, plus
-a SQL self-correction loop that was not in the original build plan.
+substantially past the first estimate, three datasets tested at real scale, not one slice, plus a SQL self-correction loop.
 
 | Phase | Hours | Cost |
 |---|---|---|
 | Round 1: profiling, model/KPI generation, insights, LangSmith, one dataset | 32 | 3,040 EUR |
 | Round 2: free text quality + PII + casing checks | 3 | 285 EUR |
 | Round 2: CFPB at full scale (streaming loader, large-table sampling rework, KPI SQL retry loop) | 6 | 570 EUR |
-| Round 2: Open Food Facts (streaming JSON loader, relational flattening, FK detection fix) | 4 | 380 EUR |
+| Round 2: Open Food Facts (AI-driven schema inference, consensus mechanism, and about 9 real bugs found and fixed along the way) | 6 | 570 EUR |
 | Round 2: compliance docs, ROI/risk, strategic plan, delivery plan, doc maintenance | 8 | 760 EUR |
 | Round 2: MVP documentation | 0.5 | 48 EUR |
-| **Total upfront cost so far** | **53.5** | **5,083 EUR** |
+| **Total upfront cost so far** | **55.5** | **5,273 EUR** |
 
 Not yet included: the no-code/low-code POC and the final presentation, both still open per
 `delivery_plan.md`'s Definition of done. This table will need one more update once those are
@@ -26,15 +25,29 @@ done.
 
 ### Ongoing costs
 
-Per client onboarding run, unchanged from Round 1. The new Round 2 PII and casing checks run
-locally with Presidio (free, no API calls), so they add no marginal cost.
+Per client onboarding run. The new Round 2 PII and casing checks run locally with Presidio
+(free, no API calls), so they add no marginal cost. The LLM call count is not fixed at 2 like
+in Round 1, two things can add more calls, both real and already seen in testing:
+
+- A client whose raw data is nested JSON, not already a table, needs 3 extra calls first, to
+  propose the relational schema (`load_generic_json.py`'s consensus step, asks the AI 3 times
+  and takes the union). A client whose data is already tabular skips this step entirely.
+- Any KPI whose SQL fails adds 1 more call per retry, up to 5. Seen for real on the CFPB run:
+  2 of 5 KPIs needed 1 retry each.
 
 | Item | Cost |
 |---|---|
-| LLM API calls (2 calls per onboarding) | about 0.05 EUR |
+| LLM API calls: 2 calls (model/KPIs, insights), plus 3 more if the client's data is nested JSON, plus 1 per KPI retry | about 0.001 to 0.004 EUR |
 | Local PII and casing checks (Presidio, runs on the consultant's machine) | 0 EUR |
 | Consultant review time (30 minutes, checking the AI's draft before it reaches the client) | 48 EUR |
 | **Total per onboarding run** | **about 48 EUR** |
+
+The EUR figure above is not a guess: `pipeline/model_kpi_generator.py` now logs the real token
+usage OpenAI returns on every call (`cost_summary()`), prices it at gpt-4o-mini's real rate
+($0.15 per 1M input tokens, $0.60 per 1M output tokens), and every `report_*.json` carries the
+exact figure for that run under `"cost"`. A real Olist run: 2 calls, 6,411 tokens, $0.001361
+(about 0.0012 EUR). The LLM cost barely moves the total either way, it stays small next to the
+48 EUR review time regardless of data shape or retries.
 
 ### Quantified business value
 
@@ -70,15 +83,15 @@ midpoint manual cost per onboarding as the value avoided:
 
 | Period | Gross value avoided | Total cost (upfront + ongoing) | Net benefit | ROI |
 |---|---|---|---|---|
-| 12 months | 570 x 24 = 13,680 EUR | 5,083 + (48 x 24) = 6,235 EUR | 7,445 EUR | **119%** |
-| 36 months | 570 x 24 x 3 = 41,040 EUR | 5,083 + (48 x 24 x 3) = 8,539 EUR | 32,501 EUR | **381%** |
+| 12 months | 570 x 24 = 13,680 EUR | 5,273 + (48 x 24) = 6,425 EUR | 7,255 EUR | **113%** |
+| 36 months | 570 x 24 x 3 = 41,040 EUR | 5,273 + (48 x 24 x 3) = 8,729 EUR | 32,311 EUR | **370%** |
 
 The upfront cost is only paid once, in year one, so ROI grows faster after that, since only the
 48 EUR per run ongoing cost keeps accumulating against a fixed one-time investment.
 
 ### Break-even note
 
-At the 522 EUR midpoint net saving per run, break-even on the 5,083 EUR upfront cost is about 10
+At the 522 EUR midpoint net saving per run, break-even on the 5,273 EUR upfront cost is about 10
 onboarding runs, or about 5 months at 2 clients a month. Using the wider 332 to 712 EUR range
 instead, break-even falls between 8 months (slow case, 332 EUR/run) and 4 months (fast case,
 712 EUR/run).

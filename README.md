@@ -25,9 +25,10 @@ testing a different data shape:
   tested at its full real size, 17.4 million rows, to check the pipeline holds up past one tidy
   demo dataset. See `pipeline/pipeline_documentation.md`'s "Data volume" section for how.
 - **Open Food Facts**: genuinely semi-structured JSON, where even the top-level fields are not
-  consistent record to record, converted into relational tables (`products`, `ingredients`,
-  `categories`, `nutriments`) by `pipeline/load_openfoodfacts_data.py`. See
-  `pipeline/pipeline_documentation.md`'s "Data structure" section for how.
+  consistent record to record. Converted into relational tables by an AI-proposed schema, not a
+  hand-written one, see `pipeline/load_generic_json.py` and
+  `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section, including a known
+  reliability limit and how it is currently mitigated.
 
 ## Setup
 
@@ -40,22 +41,22 @@ cp .env.example .env   # fill in OPENAI_API_KEY and LANGSMITH_API_KEY
 
 Olist needs a manual download: get the dataset from Kaggle ("Brazilian E-Commerce Public
 Dataset by Olist") and place the CSV files in `data/`. CFPB and Open Food Facts do not,
-`pipeline/load_cfpb_data.py` and `pipeline/load_openfoodfacts_data.py` both download their own
-public data automatically.
+`pipeline/load_cfpb_data.py` and `pipeline/load_generic_json.py` both download or read their
+own public data.
 
 ## Run it
 
 ```bash
 # Olist
 python pipeline/load_data.py      # loads CSVs into data/warehouse.db
-python pipeline/run_pipeline.py   # runs the full pipeline, writes outputs/report.json
+python pipeline/run_pipeline.py --out outputs/report_olist.json
 
 # CFPB (downloads and loads the full 17.4 million row dataset, takes about 15-30 minutes)
 python pipeline/load_cfpb_data.py
 python pipeline/run_pipeline.py --db data/warehouse_cfpb.db --out outputs/report_cfpb.json
 
-# Open Food Facts (streams a 25,000 product slice from a 12.8 GB source, a few minutes)
-python pipeline/load_openfoodfacts_data.py
+# Open Food Facts (downloads the raw JSON once, then the AI proposes the schema, a few minutes)
+python pipeline/load_generic_json.py --jsonl data/openfoodfacts/raw_products.jsonl --db data/warehouse_openfoodfacts.db
 python pipeline/run_pipeline.py --db data/warehouse_openfoodfacts.db --out outputs/report_openfoodfacts.json
 
 # any of the above

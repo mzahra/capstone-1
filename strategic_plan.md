@@ -52,6 +52,18 @@ Licensed as a product to other boutique data consultancies, not just used intern
 further under Commercialisation model below. This phase only starts if Phase 3's KPIs hold up
 across Chleo's own client base first.
 
+**A specific capability this phase depends on, already built and in use, not just planned:**
+ingesting a brand-new client's nested JSON without writing a bespoke loader each time, see
+`pipeline/load_generic_json.py`. The AI is shown only field names, types, and how often each
+appears across the whole source, never a value, and proposes a relational schema, which
+deterministic code then applies to every record. This is the actual loader behind the Round 2
+Open Food Facts report, not a separate demo. Testing found a real reliability gap first, though:
+the same prompt against the same data did not always propose the same schema. Mitigated by
+asking 3 times and taking the union of tables found, not eliminated. Before Scale can rely on
+this without review on a client's data nobody has looked at yet, it needs either a stronger
+consistency guarantee or a human review step before a proposed schema is applied, see
+`pipeline/pipeline_documentation.md`'s "AI-proposed schema" section for the full finding.
+
 ## Timeline and milestones
 
 | Phase | Duration | Milestone that ends it |
@@ -100,7 +112,7 @@ in Round 2 changed that estimate's underlying assumptions.
 | Pilot | Consultant-reported trust in the draft | Qualitative, gathered after each pilot onboarding, not just measured in time saved |
 | Pilot to full deployment gate | All of the above, plus: no pilot client report was found by the reviewing consultant to contain unredacted personal data | All conditions met, or the gate does not open |
 | Full deployment | Share of new-client onboardings using the Data Copilot as standard practice | 100% within 2 months of the go decision |
-| Full deployment | ROI | Tracking against the 136% (12 month) and 406% (36 month) figures in `roi_risk_assessment.md`, revisited with real pilot data once available |
+| Full deployment | ROI | Tracking against the 113% (12 month) and 370% (36 month) figures in `roi_risk_assessment.md`, revisited with real pilot data once available |
 
 ## Commercialisation model
 

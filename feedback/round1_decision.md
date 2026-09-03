@@ -19,9 +19,10 @@ shape, which was already flagged as a risk in Round 1 (see `research/opportuniti
 Delivered as three datasets, each testing a different shape: Olist (clean, relational), CFPB
 Consumer Complaints (messy, mostly one flat table, free text heavy, tested at its full size,
 17.4 million rows), and Open Food Facts (genuinely semi-structured JSON, where even the
-top-level fields are not consistent record to record, converted into relational tables by
-`pipeline/load_openfoodfacts_data.py`). See `pipeline/pipeline_documentation.md`'s "Data
-structure" section for what each one proved.
+top-level fields are not consistent record to record, converted into relational tables by an
+AI-proposed schema, `pipeline/load_generic_json.py`, not a hand-written one). See
+`pipeline/pipeline_documentation.md`'s "Data structure" and "AI-proposed schema" sections for
+what each one proved, including a known reliability limit of the AI-proposed approach.
 
 **2. Add a free text quality check**
 

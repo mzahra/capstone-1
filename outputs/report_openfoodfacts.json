@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-02T15:05:13.703090+00:00",
+  "generated_at": "2026-09-03T11:44:08.321272+00:00",
   "profile_summary": {
     "tables": {
       "products": {
@@ -10,7 +10,7 @@
       },
       "ingredients": {
         "row_count": 228100,
-        "duplicate_rows": 61,
+        "duplicate_rows": 43,
         "sampled": true,
         "sample_size": 114050
       },
@@ -20,31 +20,52 @@
         "sampled": false,
         "sample_size": null
       },
-      "nutriments": {
-        "row_count": 1476182,
+      "nutritional_info": {
+        "row_count": 1798569,
         "duplicate_rows": 0,
         "sampled": true,
-        "sample_size": 105442
+        "sample_size": 105799
       }
     },
     "fk_candidates": [
       {
         "child_table": "ingredients",
-        "child_column": "product_code",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "ingredients",
+        "child_column": "_id",
         "parent_table": "products",
         "parent_column": "code",
         "value_overlap_pct": 100.0
       },
       {
         "child_table": "categories",
-        "child_column": "product_code",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "categories",
+        "child_column": "_id",
         "parent_table": "products",
         "parent_column": "code",
         "value_overlap_pct": 100.0
       },
       {
-        "child_table": "nutriments",
-        "child_column": "product_code",
+        "child_table": "nutritional_info",
+        "child_column": "_id",
+        "parent_table": "products",
+        "parent_column": "_id",
+        "value_overlap_pct": 100.0
+      },
+      {
+        "child_table": "nutritional_info",
+        "child_column": "_id",
         "parent_table": "products",
         "parent_column": "code",
         "value_overlap_pct": 100.0
@@ -52,267 +73,265 @@
     ]
   },
   "recommended_model": {
-    "fact_table": "nutriments",
+    "fact_table": "nutritional_info",
     "dimensions": [
       "products",
       "categories",
       "ingredients"
     ],
-    "rationale": "The nutriments table serves as the fact table because it contains quantitative measurements related to products, which can be analyzed in conjunction with product details, categories, and ingredients."
+    "rationale": "The nutritional_info table serves as the fact table because it contains detailed measurements related to the products, such as nutritional values, which are essential for analysis. The products, categories, and ingredients tables provide descriptive attributes that allow for richer insights into the nutritional data."
   },
   "quality_findings": [
-    "Inconsistent casing/format detected in product_name column of products table.",
-    "Inconsistent casing/format detected in brands column of products table.",
-    "Inconsistent casing/format detected in ingredient_id column of ingredients table.",
-    "Inconsistent casing/format detected in ingredient_text column of ingredients table.",
-    "Inconsistent casing/format detected in category_tag column of categories table."
+    "Inconsistent casing/format in brands column of products table affects data uniformity.",
+    "Inconsistent casing/format in product_name column of products table affects data readability.",
+    "Possible PII detected in ingredients table: PERSON in 1.5% of sampled values, PHONE_NUMBER in 23.0% of sampled values, CREDIT_CARD in 13.5% of sampled values."
   ],
   "data_science_opportunities": [
-    "Churn prediction could be implemented by analyzing customer purchasing patterns and product preferences.",
-    "Demand forecasting can be enhanced by analyzing historical sales data and seasonal trends in product categories.",
-    "Nutritional analysis and recommendation systems could be developed to suggest healthier alternatives based on ingredient composition."
+    "Churn prediction models could be developed to identify products that are losing popularity over time.",
+    "Demand forecasting could be implemented to optimize inventory based on historical sales data.",
+    "Nutritional analysis and recommendations could be generated using machine learning to suggest healthier alternatives to consumers."
   ],
   "kpis": [
     {
-      "name": "Average Nutrient Value by Product Category",
-      "sql": "SELECT c.category_tag, AVG(CAST(n.value AS REAL)) AS avg_nutrient_value FROM nutriments n JOIN categories c ON n.product_code = c.product_code GROUP BY c.category_tag ORDER BY avg_nutrient_value DESC LIMIT 10;",
-      "why_it_matters": "Understanding the average nutrient value by category helps in assessing the healthiness of product offerings.",
+      "name": "Average Nutritional Value by Product Category",
+      "sql": "SELECT c.value AS category, AVG(CAST(n.value AS REAL)) AS average_nutritional_value FROM nutritional_info n JOIN products p ON n._id = p._id JOIN categories c ON p._id = c._id GROUP BY c.value ORDER BY average_nutritional_value DESC LIMIT 10;",
+      "why_it_matters": "Understanding average nutritional values by category helps in assessing product offerings and guiding marketing strategies.",
       "rows": [
         {
-          "category_tag": "en:pink-himalayan-salt",
-          "avg_nutrient_value": 1232.85597325
+          "category": "en:pink-himalayan-salt",
+          "average_nutritional_value": 1027.3799777083334
         },
         {
-          "category_tag": "en:himalaya-salts",
-          "avg_nutrient_value": 1232.85597325
+          "category": "en:himalaya-salts",
+          "average_nutritional_value": 1027.3799777083334
         },
         {
-          "category_tag": "en:dehydrated-broths",
-          "avg_nutrient_value": 880.8056491427951
+          "category": "en:dehydrated-broths",
+          "average_nutritional_value": 728.9426061871408
         },
         {
-          "category_tag": "en:bouillon-cubes",
-          "avg_nutrient_value": 880.8056491427951
+          "category": "en:bouillon-cubes",
+          "average_nutritional_value": 728.9426061871408
         },
         {
-          "category_tag": "en:peanut-oils",
-          "avg_nutrient_value": 862.0363636363636
+          "category": "en:peanut-oils",
+          "average_nutritional_value": 707.6417910447761
         },
         {
-          "category_tag": "en:nut-oils",
-          "avg_nutrient_value": 862.0363636363636
+          "category": "en:nut-oils",
+          "average_nutritional_value": 707.6417910447761
         },
         {
-          "category_tag": "en:legume-oils",
-          "avg_nutrient_value": 488.88140495867765
+          "category": "en:legume-oils",
+          "average_nutritional_value": 402.41258503401355
         },
         {
-          "category_tag": "en:sugar-free-chewing-gum",
-          "avg_nutrient_value": 435.4170666341146
+          "category": "en:sugar-free-chewing-gum",
+          "average_nutritional_value": 355.4425033747874
         },
         {
-          "category_tag": "en:sweet-pies",
-          "avg_nutrient_value": 386.6720779220786
+          "category": "en:sweet-pies",
+          "average_nutritional_value": 293.3374384236458
         },
         {
-          "category_tag": "en:pies",
-          "avg_nutrient_value": 386.6720779220786
+          "category": "en:pies",
+          "average_nutritional_value": 293.3374384236458
         }
       ],
       "status": "ok",
       "attempts": 1
     },
     {
-      "name": "Total Products by Brand",
-      "sql": "SELECT p.brands, COUNT(*) AS total_products FROM products p GROUP BY p.brands ORDER BY total_products DESC LIMIT 10;",
-      "why_it_matters": "This KPI provides insight into brand performance and market presence.",
+      "name": "Total Ingredients Count by Product",
+      "sql": "SELECT p.product_name, COUNT(i._id) AS total_ingredients FROM products p JOIN ingredients i ON p._id = i._id GROUP BY p.product_name ORDER BY total_ingredients DESC LIMIT 10;",
+      "why_it_matters": "Identifying products with the highest ingredient counts can inform product development and consumer preferences.",
+      "rows": [
+        {
+          "product_name": "Ice Cream",
+          "total_ingredients": 935
+        },
+        {
+          "product_name": "Ice cream",
+          "total_ingredients": 581
+        },
+        {
+          "product_name": "Greek Nonfat Yogurt",
+          "total_ingredients": 448
+        },
+        {
+          "product_name": "Cottage Cheese",
+          "total_ingredients": 375
+        },
+        {
+          "product_name": "Soda",
+          "total_ingredients": 372
+        },
+        {
+          "product_name": "Condensed Soup",
+          "total_ingredients": 349
+        },
+        {
+          "product_name": "Potato Chips",
+          "total_ingredients": 297
+        },
+        {
+          "product_name": "Popcorn",
+          "total_ingredients": 272
+        },
+        {
+          "product_name": "Beef Jerky",
+          "total_ingredients": 252
+        },
+        {
+          "product_name": "Candy",
+          "total_ingredients": 250
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
+      "name": "Most Popular Product Brands",
+      "sql": "SELECT p.brands, COUNT(p._id) AS product_count FROM products p GROUP BY p.brands ORDER BY product_count DESC LIMIT 10;",
+      "why_it_matters": "This KPI helps in understanding brand performance and market presence, which is crucial for strategic partnerships.",
       "rows": [
         {
           "brands": "Kroger",
-          "total_products": 1645
+          "product_count": 1645
         },
         {
           "brands": "Roundy's",
-          "total_products": 1273
+          "product_count": 1273
         },
         {
           "brands": "Spartan",
-          "total_products": 1207
+          "product_count": 1207
         },
         {
           "brands": "Big Y",
-          "total_products": 326
+          "product_count": 326
         },
         {
           "brands": "Western Family",
-          "total_products": 307
+          "product_count": 307
         },
         {
           "brands": null,
-          "total_products": 273
+          "product_count": 273
         },
         {
           "brands": "Kroger,  The Kroger Co.",
-          "total_products": 272
+          "product_count": 272
         },
         {
           "brands": "Marks & Spencer",
-          "total_products": 266
+          "product_count": 266
         },
         {
           "brands": "Del Monte",
-          "total_products": 255
+          "product_count": 255
         },
         {
           "brands": "Private Selection",
-          "total_products": 241
+          "product_count": 241
         }
       ],
       "status": "ok",
       "attempts": 1
     },
     {
-      "name": "Total Ingredients by Product",
-      "sql": "SELECT i.product_code, COUNT(*) AS total_ingredients FROM ingredients i GROUP BY i.product_code ORDER BY total_ingredients DESC LIMIT 10;",
-      "why_it_matters": "Identifying products with the most ingredients can help in understanding complexity and potential allergen risks.",
+      "name": "Nutritional Value Breakdown by Key",
+      "sql": "SELECT n.key, AVG(CAST(n.value AS REAL)) AS average_value FROM nutritional_info n GROUP BY n.key ORDER BY average_value DESC LIMIT 10;",
+      "why_it_matters": "This provides insights into which nutritional aspects are most prevalent across products, guiding health-focused marketing.",
       "rows": [
         {
-          "product_code": "0020735990148",
-          "total_ingredients": 79
+          "key": "folates_value",
+          "average_value": 365801.70231729053
         },
         {
-          "product_code": "0016264006023",
-          "total_ingredients": 79
+          "key": "energy_100g",
+          "average_value": 2564.404177593277
         },
         {
-          "product_code": "0027815004481",
-          "total_ingredients": 78
+          "key": "iodine_value",
+          "average_value": 1626.2
         },
         {
-          "product_code": "0011110458674",
-          "total_ingredients": 70
+          "key": "carbon-footprint-from-meat-or-fish_serving",
+          "average_value": 1120.0
         },
         {
-          "product_code": "0028400035729",
-          "total_ingredients": 69
+          "key": "carbon-footprint-from-meat-or-fish_product",
+          "average_value": 1120.0
         },
         {
-          "product_code": "0011110823564",
-          "total_ingredients": 68
+          "key": "energy",
+          "average_value": 1051.1227354563935
         },
         {
-          "product_code": "0011225122743",
-          "total_ingredients": 66
+          "key": "energy-kj_100g",
+          "average_value": 954.7611111111112
         },
         {
-          "product_code": "0028400084048",
-          "total_ingredients": 64
+          "key": "carbon-footprint-from-meat-or-fish_100g",
+          "average_value": 859.1999999999999
         },
         {
-          "product_code": "0025600088760",
-          "total_ingredients": 64
+          "key": "energy_serving",
+          "average_value": 820.9424344619869
         },
         {
-          "product_code": "0011110895103",
-          "total_ingredients": 64
+          "key": "energy-kcal_100g",
+          "average_value": 613.0017462527933
         }
       ],
       "status": "ok",
       "attempts": 1
     },
     {
-      "name": "Vegan Product Count by Category",
-      "sql": "SELECT c.category_tag, COUNT(*) AS vegan_product_count FROM products p JOIN categories c ON p.code = c.product_code WHERE p.code IN (SELECT product_code FROM ingredients WHERE vegan = 'yes') GROUP BY c.category_tag ORDER BY vegan_product_count DESC LIMIT 10;",
-      "why_it_matters": "This KPI highlights the availability of vegan options across different categories, catering to a growing consumer segment.",
+      "name": "Ingredient Types Breakdown",
+      "sql": "SELECT i.text, COUNT(i._id) AS ingredient_count FROM ingredients i GROUP BY i.text ORDER BY ingredient_count DESC LIMIT 10;",
+      "why_it_matters": "Understanding the most common ingredients can help in product formulation and compliance with health regulations.",
       "rows": [
         {
-          "category_tag": "en:undefined",
-          "vegan_product_count": 11933
+          "text": "SALT",
+          "ingredient_count": 6311
         },
         {
-          "category_tag": "en:snacks",
-          "vegan_product_count": 2675
+          "text": "WATER",
+          "ingredient_count": 5263
         },
         {
-          "category_tag": "en:plant-based-foods-and-beverages",
-          "vegan_product_count": 2619
+          "text": "SUGAR",
+          "ingredient_count": 5046
         },
         {
-          "category_tag": "en:plant-based-foods",
-          "vegan_product_count": 2106
+          "text": "salt",
+          "ingredient_count": 3936
         },
         {
-          "category_tag": "en:sweet-snacks",
-          "vegan_product_count": 1604
+          "text": "sugar",
+          "ingredient_count": 3057
         },
         {
-          "category_tag": "en:beverages",
-          "vegan_product_count": 1192
+          "text": "CITRIC ACID",
+          "ingredient_count": 2165
         },
         {
-          "category_tag": "en:null",
-          "vegan_product_count": 977
+          "text": "water",
+          "ingredient_count": 2105
         },
         {
-          "category_tag": "en:cereals-and-potatoes",
-          "vegan_product_count": 971
+          "text": "citric acid",
+          "ingredient_count": 1943
         },
         {
-          "category_tag": "en:condiments",
-          "vegan_product_count": 970
+          "text": "CORN SYRUP",
+          "ingredient_count": 1696
         },
         {
-          "category_tag": "en:biscuits-and-cakes",
-          "vegan_product_count": 851
-        }
-      ],
-      "status": "ok",
-      "attempts": 1
-    },
-    {
-      "name": "Average Percent Estimate of Ingredients by Product",
-      "sql": "SELECT i.product_code, AVG(CAST(i.percent_estimate AS REAL)) AS avg_percent_estimate FROM ingredients i GROUP BY i.product_code ORDER BY avg_percent_estimate DESC LIMIT 10;",
-      "why_it_matters": "This metric helps in assessing the primary ingredients in products and their estimated proportions.",
-      "rows": [
-        {
-          "product_code": "0016229914578",
-          "avg_percent_estimate": 156.28
-        },
-        {
-          "product_code": "00062114",
-          "avg_percent_estimate": 110.03
-        },
-        {
-          "product_code": "0025500000343",
-          "avg_percent_estimate": 102.12
-        },
-        {
-          "product_code": "0017400118105",
-          "avg_percent_estimate": 100.01
-        },
-        {
-          "product_code": "0017400118051",
-          "avg_percent_estimate": 100.01
-        },
-        {
-          "product_code": "0017400109516",
-          "avg_percent_estimate": 100.01
-        },
-        {
-          "product_code": "0028400435765",
-          "avg_percent_estimate": 100.0
-        },
-        {
-          "product_code": "0028400231039",
-          "avg_percent_estimate": 100.0
-        },
-        {
-          "product_code": "0028400025409",
-          "avg_percent_estimate": 100.0
-        },
-        {
-          "product_code": "0028244863137",
-          "avg_percent_estimate": 100.0
+          "text": "GARLIC",
+          "ingredient_count": 1437
         }
       ],
       "status": "ok",
@@ -320,10 +339,11 @@
     }
   ],
   "insights": [
-    "The average nutrient value for pink Himalayan salt and Himalayan salts is significantly high at approximately 1233, indicating that these products are nutrient-rich. This could be a strong selling point for health-conscious consumers.",
-    "Kroger leads the market with 1,645 products, followed by Roundy's and Spartan. This dominance suggests that Kroger has a robust market presence, which could be leveraged in marketing strategies to attract more customers.",
-    "There are 11,933 vegan products categorized as 'undefined', which indicates a potential data quality issue. This inconsistency may mislead consumers looking for vegan options, affecting their trust in the brand.",
-    "The highest number of ingredients in a product is 79, which may raise concerns about complexity and allergen risks for consumers. Simplifying ingredient lists could enhance product appeal and consumer trust.",
-    "The average percent estimate of ingredients shows some products exceeding 100%, which is unrealistic and indicates a data quality issue. This could undermine confidence in product labeling and should be addressed to maintain brand integrity."
+    "The highest average nutritional values are found in pink Himalayan salt and dehydrated broths, indicating a potential market opportunity to promote these products as healthier options, which can enhance brand reputation.",
+    "Ice Cream leads with the highest total ingredient count, suggesting a complex formulation that may appeal to consumers looking for indulgent treats; however, this could also raise concerns about healthiness, impacting marketing strategies.",
+    "Kroger is the most popular brand with 1,645 products, highlighting its strong market presence; leveraging this brand in partnerships could enhance sales and customer loyalty.",
+    "The nutritional value breakdown shows that energy content is a significant focus, which can guide marketing strategies towards health-conscious consumers, but the presence of possible personal identifiable information (PII) in the ingredients data may undermine trust and requires immediate attention.",
+    "Common ingredients like salt and sugar dominate the ingredient types, indicating consumer familiarity, but also potential health concerns that could affect product perception and compliance with health regulations.",
+    "Inconsistent casing in the brands and product names may lead to confusion and affect data reliability, suggesting a need for standardization to improve data quality and consumer trust."
   ]
 }

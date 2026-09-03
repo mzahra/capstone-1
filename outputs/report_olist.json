@@ -1,5 +1,27 @@
 {
-  "generated_at": "2026-09-02T13:01:34.339959+00:00",
+  "generated_at": "2026-09-03T16:35:28.539219+00:00",
+  "cost": {
+    "calls": 2,
+    "prompt_tokens": 5505,
+    "completion_tokens": 844,
+    "total_tokens": 6349,
+    "cost_usd": 0.001332,
+    "cost_eur": 0.001146,
+    "by_call": [
+      {
+        "label": "generate_model_and_kpis",
+        "prompt_tokens": 4240,
+        "completion_tokens": 666,
+        "cost_usd": 0.0010356
+      },
+      {
+        "label": "generate_insights",
+        "prompt_tokens": 1265,
+        "completion_tokens": 178,
+        "cost_usd": 0.00029655
+      }
+    ]
+  },
   "profile_summary": {
     "tables": {
       "customers": {
@@ -118,17 +140,17 @@
       "order_payments",
       "order_reviews"
     ],
-    "rationale": "The order_items table serves as the central fact table because it contains transactional data related to each order, including product details, seller information, and pricing. The associated dimension tables provide context for the transactions, such as customer demographics, product categories, seller locations, payment methods, and customer reviews."
+    "rationale": "The fact table 'order_items' captures transactional data related to each order, including product details and pricing. The dimensions provide context such as customer information, product categories, seller details, payment methods, and reviews, enabling comprehensive analysis of sales performance."
   },
   "quality_findings": [
-    "The 'review_comment_title' column in the 'order_reviews' table has inconsistent casing/format affecting 496 values.",
-    "The 'review_comment_message' column in the 'order_reviews' table has possible PII detected, with PERSON in 44.0% of sampled values and LOCATION in 13.5% of sampled values.",
-    "The 'seller_city' column in the 'sellers' table has inconsistent casing/format affecting 3 values."
+    "Inconsistent casing/format detected in 'review_comment_title' of the 'order_reviews' table, affecting readability.",
+    "Possible PII detected in 'review_comment_message' of the 'order_reviews' table, raising privacy concerns.",
+    "Inconsistent casing/format detected in 'seller_city' of the 'sellers' table, affecting data uniformity."
   ],
   "data_science_opportunities": [
-    "Churn prediction could be implemented by analyzing customer purchase patterns and review sentiments.",
-    "Demand forecasting can be enhanced by leveraging historical order data and seasonal trends.",
-    "Customer segmentation analysis could identify distinct groups based on purchasing behavior and demographics."
+    "Churn prediction to identify customers likely to stop purchasing based on their order history and review scores.",
+    "Demand forecasting using historical sales data to predict future product demand and optimize inventory.",
+    "Sentiment analysis on review comments to gauge customer satisfaction and identify areas for product improvement."
   ],
   "kpis": [
     {
@@ -146,7 +168,7 @@
     {
       "name": "Revenue by Product Category",
       "sql": "SELECT pc.product_category_name_english, SUM(oi.price + oi.freight_value) AS revenue FROM order_items oi JOIN products p ON oi.product_id = p.product_id JOIN product_category_name_translation pc ON p.product_category_name = pc.product_category_name GROUP BY pc.product_category_name_english ORDER BY revenue DESC LIMIT 10;",
-      "why_it_matters": "",
+      "why_it_matters": "Understanding revenue by product category helps identify which categories are driving sales and where to focus marketing efforts.",
       "rows": [
         {
           "product_category_name_english": "health_beauty",
@@ -193,13 +215,25 @@
       "attempts": 1
     },
     {
+      "name": "Average Order Value",
+      "sql": "SELECT CAST(SUM(price + freight_value) AS REAL) / COUNT(DISTINCT order_id) AS average_order_value FROM order_items;",
+      "why_it_matters": "Average order value indicates how much customers are spending per transaction, which is crucial for pricing strategies.",
+      "rows": [
+        {
+          "average_order_value": 160.57763809214927
+        }
+      ],
+      "status": "ok",
+      "attempts": 1
+    },
+    {
       "name": "Orders by Payment Type",
-      "sql": "SELECT op.payment_type, COUNT(*) AS order_count FROM order_payments op JOIN orders o ON op.order_id = o.order_id GROUP BY op.payment_type ORDER BY order_count DESC LIMIT 10;",
-      "why_it_matters": "",
+      "sql": "SELECT op.payment_type, COUNT(DISTINCT o.order_id) AS order_count FROM order_payments op JOIN orders o ON op.order_id = o.order_id GROUP BY op.payment_type ORDER BY order_count DESC LIMIT 10;",
+      "why_it_matters": "Analyzing orders by payment type reveals customer preferences and can inform payment processing strategies.",
       "rows": [
         {
           "payment_type": "credit_card",
-          "order_count": 76795
+          "order_count": 76505
         },
         {
           "payment_type": "boleto",
@@ -207,11 +241,11 @@
         },
         {
           "payment_type": "voucher",
-          "order_count": 5775
+          "order_count": 3866
         },
         {
           "payment_type": "debit_card",
-          "order_count": 1529
+          "order_count": 1528
         },
         {
           "payment_type": "not_defined",
@@ -222,21 +256,9 @@
       "attempts": 1
     },
     {
-      "name": "Average Review Score",
-      "sql": "SELECT AVG(review_score) AS average_review_score FROM order_reviews;",
-      "why_it_matters": "",
-      "rows": [
-        {
-          "average_review_score": 4.08642062404257
-        }
-      ],
-      "status": "ok",
-      "attempts": 1
-    },
-    {
-      "name": "Reviews by Score",
+      "name": "Customer Reviews by Score",
       "sql": "SELECT review_score, COUNT(*) AS review_count FROM order_reviews GROUP BY review_score ORDER BY review_count DESC LIMIT 10;",
-      "why_it_matters": "",
+      "why_it_matters": "Customer reviews by score provide insights into customer satisfaction and product quality, which can guide improvements.",
       "rows": [
         {
           "review_score": 5,
@@ -261,25 +283,13 @@
       ],
       "status": "ok",
       "attempts": 1
-    },
-    {
-      "name": "Total Orders",
-      "sql": "SELECT COUNT(*) AS total_orders FROM orders;",
-      "why_it_matters": "",
-      "rows": [
-        {
-          "total_orders": 99441
-        }
-      ],
-      "status": "ok",
-      "attempts": 1
     }
   ],
   "insights": [
-    "Total revenue for the period reached R$15,843,553.24, indicating strong overall sales performance, which is crucial for sustaining business growth and profitability.",
-    "The top revenue-generating product category is 'Health & Beauty', contributing R$1,441,248.07. This highlights a key area for potential marketing focus and inventory investment.",
-    "Credit card payments dominate the payment methods, accounting for 76,795 orders. This suggests that optimizing the credit card payment process could enhance customer satisfaction and retention.",
-    "The average review score stands at 4.09, reflecting generally positive customer feedback. However, with a significant number of reviews scoring 1, addressing customer concerns could improve overall satisfaction and brand reputation.",
-    "There are data quality issues, including inconsistent casing in review titles and potential PII in review comments. These issues could undermine trust in customer feedback and require attention to maintain data integrity."
+    "Total revenue for the period stands at R$15,843,553.24, indicating strong sales performance and overall business health.",
+    "The top revenue-generating product category is 'health_beauty' with R$1,441,248.07, suggesting a potential focus area for marketing and inventory strategies.",
+    "The average order value is R$160.58, which is crucial for understanding customer spending habits and can inform pricing strategies.",
+    "The majority of orders (76,505) are made using credit cards, highlighting a clear customer preference that can guide payment processing decisions.",
+    "Customer satisfaction appears high, with 57,328 reviews rated 5 stars, but there are data quality issues in the reviews that could affect trust in these ratings. Inconsistent casing in review titles and potential privacy concerns in comments should be addressed to enhance data reliability."
   ]
 }
