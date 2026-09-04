@@ -20,9 +20,16 @@ cp .env.example .env   # fill in OPENAI_API_KEY and LANGSMITH_API_KEY
 Then any of:
 
 ```bash
-python pipeline/load_data.py && python pipeline/run_pipeline.py --out outputs/report_olist.json   # Olist
-python pipeline/load_cfpb_data.py && python pipeline/run_pipeline.py --db data/warehouse_cfpb.db --out outputs/report_cfpb.json   # CFPB
-python pipeline/load_generic_json.py --jsonl data/openfoodfacts/raw_products.jsonl --db data/warehouse_openfoodfacts.db && python pipeline/run_pipeline.py --db data/warehouse_openfoodfacts.db --out outputs/report_openfoodfacts.json   # Open Food Facts
+# Olist
+python pipeline/load_data.py && python pipeline/run_pipeline.py --out outputs/report_olist.json
+
+# CFPB
+python pipeline/load_cfpb_data.py && python pipeline/run_pipeline.py --db data/warehouse_cfpb.db --out outputs/report_cfpb.json
+
+# Open Food Facts
+python pipeline/load_generic_json.py --jsonl data/openfoodfacts/raw_products.jsonl --db data/warehouse_openfoodfacts.db && python pipeline/run_pipeline.py --db data/warehouse_openfoodfacts.db --out outputs/report_openfoodfacts.json
+
+# run the app
 streamlit run dashboard/app.py
 ```
 

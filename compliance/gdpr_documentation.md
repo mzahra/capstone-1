@@ -17,18 +17,24 @@ like, exactly as `research/sector_research.md` describes.
 
 ```mermaid
 flowchart LR
-    A["Client's raw data export<br/>(CSV files)"] --> B["Local SQLite warehouse<br/>(load_data.py / load_cfpb_data.py)"]
+    A["Client's raw data export<br/>(CSV files, or nested JSON)"] --> B["Local SQLite warehouse<br/>(load_data.py / load_cfpb_data.py /<br/>load_generic_json.py)"]
+    A -.->|nested JSON sources only| L["Field catalog: names, types,<br/>presence % only, never values<br/>(load_generic_json.py)"]
+    L --> M["OpenAI API (United States)<br/>schema proposal, 3-run consensus"]
+    M --> B
     B --> C["Local profiling + PII scan<br/>and redaction (text_quality.py)<br/>runs on this machine, no API calls"]
     C --> D["Compact schema summary:<br/>stats, plus a few short<br/>example values, redacted"]
     D --> E["OpenAI API (United States)<br/>model + KPI recommendation"]
-    B --> F["Real KPI SQL executed<br/>locally against full data"]
+    E --> F["The KPI SQL E proposed,<br/>executed locally against full data"]
+    B --> F
     F --> G["OpenAI API (United States)<br/>insight writing, KPI numbers only"]
     E --> H["Draft report"]
+    F --> H
     G --> H
     H --> I["Consultant review<br/>(mandatory human gate)"]
     I --> J["Client"]
     D -.trace.-> K["LangSmith<br/>(EU endpoint available)"]
     G -.trace.-> K
+    M -.trace.-> K
 ```
 
 The key property this diagram is meant to show: raw client rows, and complete free-text
@@ -39,10 +45,18 @@ snippets, not statistics alone. Step F to G sends only computed KPI numbers, no 
 at all. Both are enforced in code, not just policy, see
 `pipeline/pipeline_documentation.md`'s "Where the AI is actually called" table.
 
+The L to M branch only applies to a genuinely nested JSON source (Open Food Facts in this
+round), before there is even a SQLite warehouse to profile yet. It carries a stronger guarantee
+than step D, not a weaker one: `load_generic_json.py` shows the AI field names, types, and how
+often each appears, never an actual value, so no personal data can reach OpenAI at this step
+even in principle, not just by redaction. See `pipeline/load_generic_json.py`'s module
+docstring and `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section.
+
 ## Processing activities register
 
 | Activity | Purpose | Data categories | Legal basis | Retention | Recipients |
 |---|---|---|---|---|---|
+| AI-proposed schema for nested JSON sources (`load_generic_json.py`) | Turn a genuinely nested JSON export into relational tables, before there is even a SQLite warehouse to load it into, without a hand-written loader | Field names, types, and presence percentages only, across the whole source, asked for 3 times and the results merged. No actual field values are ever included, so no personal data can reach this step even in principle, not just by redaction | Performance of the consultancy's contract with the client (client is controller, consultancy is processor under a DPA) | The proposed schema plan is saved to `outputs/schema_plan_*.json` for the engagement's review period | OpenAI (United States) |
 | Loading a client export into SQLite | Stand up the working copy the pipeline runs against | Whatever the client's export contains: transaction records, complaint narratives, and so on, possibly including personal data in free text | Performance of the consultancy's contract with the client (client is controller, consultancy is processor under a DPA) | Deleted after the engagement's review period ends, not retained indefinitely | None outside the consultancy |
 | Local data quality profiling | Assess completeness and structure before modeling | Column-level statistics, not individual records | Same as above | Same as above | None |
 | Local free text PII scan and redaction | Flag and mask personal data in free text before anything leaves the local machine | Free text fields, scanned locally, only aggregate counts and redacted samples are kept afterward | Same as above, and also a GDPR Article 25 (data protection by design) control in its own right | Redacted output only; the pre-redaction text is never written to `outputs/` | None, this step runs entirely locally |
@@ -111,7 +125,7 @@ full-deployment hardening item in `strategic_plan.md`.
 
 | Recipient | Location | What it receives | Transfer mechanism |
 |---|---|---|---|
-| OpenAI | United States | Redacted schema summaries and computed KPI numbers, never raw client rows | OpenAI's standard contractual clauses / EU-US Data Privacy Framework participation, would need to be confirmed and documented in the client DPA before any real engagement |
+| OpenAI | United States | Redacted schema summaries, computed KPI numbers, and (for nested JSON sources only) field name/type/presence catalogs, never raw client rows or field values | OpenAI's standard contractual clauses / EU-US Data Privacy Framework participation, would need to be confirmed and documented in the client DPA before any real engagement |
 | LangSmith | United States by default, EU available | The same redacted prompts and outputs sent to OpenAI, for audit trace purposes | `.env.example` already documents `LANGSMITH_ENDPOINT=https://eu.api.smith.langchain.com` as an EU data residency option, this should be the default for any EU client |
 | Presidio (local PII scan) | Runs on the consultant's own machine | Nothing, it is a local library, not a service | Not a transfer, no data leaves the machine for this step |
 
