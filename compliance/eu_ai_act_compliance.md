@@ -1,7 +1,7 @@
 # EU AI Act Compliance
 
-This is a coursework capstone, written to show the reasoning a real AI Manager would document.
-It is not legal advice. A real deployment would need review by counsel before going to a
+This document shows the reasoning an AI Manager documents for this project. It is not legal
+advice. A real deployment would need review by counsel before going to a
 client.
 
 ## Risk classification, step by step

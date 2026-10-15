@@ -1,25 +1,25 @@
 # Timeline Estimate
 
-## Round 1 (this capstone build, for reference)
-
-Built in about 1 day (around 8 hours) as a proof of concept, against one dataset. This is a
-short capstone timeline, not a realistic client delivery timeline. See below for that.
-
 ## Proposed real world rollout
 
-| Phase | Duration | What happens |
+Four two-week sprints. The stories, owners, and capacity behind each sprint are in
+`delivery_plan.md`.
+
+| Sprint | Weeks | What happens |
 |---|---|---|
-| Discovery | 1 week | Confirm scope with 1 to 2 pilot clients, agree what "good" looks like |
-| Pilot build | 2 to 3 weeks | Make the pipeline more solid (error handling, prompt tuning) against real client data shapes, not just one demo dataset |
-| Pilot run | 2 to 4 weeks | Run it on 2 to 3 real client onboardings, next to the existing manual process, and compare |
-| Review and decide | 1 week | Compare AI assisted onboarding to manual onboarding, on time and quality, and decide whether to roll it out |
+| 1: Discovery | 1 to 2 | Measure today's manual onboarding time and client volume, and stop if below break-even (Gate 1). Agree with 2 to 3 pilot clients what "good" looks like. Then start the isolated environment, the DPA template, and consultant training |
+| 2: Pilot build | 3 to 4 | Search-and-erase tool, independent security review, signed DPAs with every pilot client (Gate 2) |
+| 3: Pilot run | 5 to 6 | Pilot clients 1 and 2, next to the existing manual process. Fix issues before client 3 |
+| 4: Pilot run and decision | 7 to 8 | Pilot client 3, client feedback, AI-assisted vs. manual comparison, go or no-go (Gate 3) |
 | Full rollout | ongoing | Make it part of the standard onboarding workflow for new clients |
 
-**Total time to a go or no go decision: about 6 to 9 weeks.**
+**Total time to a go or no-go decision: 8 weeks.** One extra sprint (10 weeks at most) if a
+dependency is late: a pilot client, the lawyer, or the security reviewer.
 
 ## Key assumptions
 
 - Pilot clients agree to have their onboarding partly AI assisted, with human review
-- No client data needs special compliance handling beyond what is covered in Round 2's GDPR
-  documentation
-- One consultant is available part time to own the pilot
+- No client data needs special compliance handling beyond what is covered in
+  `compliance/gdpr_documentation.md`
+- Zahra (AI Manager) has 20 hours per week, and Joseph (senior consultant, pilot lead) has about
+  8 hours per sprint next to client work, see `delivery_plan.md`

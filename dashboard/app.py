@@ -2,7 +2,7 @@
 Client onboarding report dashboard. Reads a report.json (produced by pipeline/run_pipeline.py)
 and a profiling.json (produced by pipeline/profiling.py), and presents them as a client facing
 onboarding report. A sidebar dropdown switches between the "clients" the pipeline has been run
-against so far (Olist and, new in Round 2, CFPB), see the DATASETS dict below.
+against (Olist, CFPB, and Open Food Facts), see the DATASETS dict below.
 
 Business content (KPIs, charts, insights) comes first. Technical content (the data
 model diagram, the full quality check breakdown) is collapsed at the end, since a

@@ -77,6 +77,6 @@ LLM provider fallback, caching, and so on) and why.
 
 - Repo structure: see `README.md`'s "Repo structure" section.
 - `requirements.txt`: pinned at the top level, includes `presidio-analyzer` and
-  `presidio-anonymizer` alongside the Round 1 dependencies.
+  `presidio-anonymizer` alongside the core dependencies.
 - `.env.example`: documents both required keys (`OPENAI_API_KEY`, `LANGSMITH_API_KEY`) and the
   optional EU data residency endpoint for LangSmith.
