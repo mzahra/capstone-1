@@ -5,8 +5,8 @@
 Chleo runs a small data analytics consultancy. Every new client starts the same way: a raw
 data export lands on a consultant's desk, and someone has to manually check its quality, work
 out how the tables relate, decide on a data model, pick the right KPIs, and write a first draft
-"here is what your data tells us" report. This takes a senior consultant hours or days per
-client, and it does not scale. Chleo also worries that handing this work to "the AI" means
+"here is what your data tells us" report. This takes a senior consultant an estimated 4 to
+8 hours per client, and it does not scale. Chleo also worries that handing this work to "the AI" means
 losing the ability to explain a result back to a client, or to catch it when the AI gets
 something wrong, including missing private data hidden inside free text fields.
 
@@ -42,8 +42,9 @@ KPI numbers for the insight-writing step.
 
 ## Success criteria
 
-1. Cut new-client onboarding time (profiling plus a first-draft report) from the current 4 to 8
-   hours down to under 1 hour per client. Baseline from `cost_estimation/cost_analysis.md`.
+1. Cut new-client onboarding time (profiling plus a first-draft report) from an estimated 4 to
+   8 hours down to under 1 hour of consultant time per client. The 4 to 8 hours is an estimate;
+   the pilot measures the real baseline first (story P1 in `delivery_plan.md`).
 2. Flag 100% of free-text columns that contain detectable PII (email address, phone number,
    person name, and similar) before any report reaches a client. Verified by testing on Olist,
    CFPB, and Open Food Facts.
@@ -60,12 +61,11 @@ KPI numbers for the insight-writing step.
   reaches a client.
 - No support for fully unstructured sources (PDFs, scanned documents, images) as-is. Those need
   a separate conversion step before this pipeline can run on them, the same kind of step
-  `load_generic_json.py` now handles for genuinely nested JSON, but not yet written for these
-  other formats.
-- No fallback to a second LLM provider. Documented as a hardening item for a later
+  `load_generic_json.py` handles for nested JSON, but not written for these other formats.
+- No fallback to a second LLM provider. Documented as a hardening item for the
   full-deployment phase, see `pipeline/pipeline_documentation.md` and `strategic_plan.md`.
-  (Failed KPI SQL is retried, up to 5 attempts, against the model itself, this is no longer
-  out of scope, see `pipeline/pipeline_documentation.md`'s limits section.)
+  (Failed KPI SQL is in scope: it is retried up to 5 times against the model itself, see
+  `pipeline/pipeline_documentation.md`'s limits section.)
 - No true production-scale data volume handling everywhere. The pipeline was tested successfully
   against the full CFPB dataset (17.4 million rows), which works because `profiling.py` samples
   large tables instead of loading them whole into pandas. But this fix is not everywhere:
@@ -75,28 +75,22 @@ KPI numbers for the insight-writing step.
   `pipeline/pipeline_documentation.md`'s "Data volume" section for exactly what was and was not
   tested at what scale.
 - No fully reliable AI-proposed schema yet. `load_generic_json.py` converts nested JSON to
-  relational tables by having the AI propose the structure, used for Open Food Facts in this
-  round instead of a hand-written loader. Testing found it is not fully reproducible run to
+  relational tables by having the AI propose the structure, used for Open Food Facts instead
+  of a hand-written loader. Testing found it is not fully reproducible run to
   run, even at temperature 0, mitigated by asking 3 times and taking the union
   (`propose_flattening_plan_consensus`), not eliminated. See
   `pipeline/pipeline_documentation.md`'s "AI-proposed schema" section.
 
-## How this evolved from Round 1
+## How the solution was tested
 
-The sector and use case are unchanged: a boutique data and analytics consultancy, automating new
-client onboarding. See `feedback/round1_decision.md` for the full decision record.
+Three public datasets stand in for three different kinds of new client data:
 
-Round 2 adds three things on top of Round 1's working pipeline:
+1. **Olist Brazilian E-Commerce:** clean and relational, about 1.5 million rows.
+2. **CFPB Consumer Complaints:** messy, mostly a single flat table, full of free text, tested at
+   its full real size (17.4 million rows). This shows the pipeline holds up on large data.
+3. **Open Food Facts:** semi-structured JSON, where even the top-level fields change from record
+   to record. A loader converts it into 4 relational tables, with the schema proposed by the AI.
 
-1. A second dataset, CFPB Consumer Complaints, messy and mostly a single flat table, tested at
-   its full real size (17.4 million rows), to test whether the pipeline generalizes past one
-   clean, relational schema shape, and holds up past Olist's scale.
-2. A free text quality and PII check. Round 1's profiler only checked structured columns
-   (nulls, duplicates, outliers). It did not look inside free text at all, and it actually sent
-   raw free text sample values into the OpenAI prompt as part of the schema summary. Round 2
-   fixes this: PII detection runs locally first, and any sample value shown to the LLM, or saved
-   to `outputs/profiling.json`, is redacted first.
-3. A third dataset, Open Food Facts, genuinely semi-structured JSON, not just messy tables with
-   free text, converted into 4 relational tables by a new loader. This closed the gap named in
-   `feedback/round1_decision.md`: Round 1's pipeline only ever read tabular data, and nested JSON
-   was explicitly out of scope.
+Personal data protection is part of the design: PII detection runs locally first, and any
+sample value shown to the LLM, or saved to `outputs/profiling.json`, is redacted before it
+leaves the machine.

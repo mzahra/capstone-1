@@ -1,7 +1,7 @@
 # GDPR Documentation
 
-This is a coursework capstone, written to show the reasoning a real AI Manager would document.
-It is not legal advice. A real engagement would need a signed Data Processing Agreement with
+This document shows the reasoning an AI Manager documents for this project. It is not legal
+advice. A real engagement would need a signed Data Processing Agreement with
 each client and review by counsel before going live.
 
 ## Who is the controller here
@@ -87,9 +87,8 @@ anywhere.
 **Risks to data subjects:**
 
 - A person's name, phone number, or location mentioned in a complaint or review reaching a
-  third-party AI provider (OpenAI) as part of a "sample value." This was a real, latent bug in
-  Round 1, see `feedback/round1_decision.md`, fixed in Round 2 by redacting before anything is
-  added to the schema summary.
+  third-party AI provider (OpenAI) as part of a "sample value." Prevented by redacting locally
+  before anything is added to the schema summary.
 - The local PII scanner missing something, particularly on non-English text (it uses an English
   spaCy model) or an unusual format, giving a false sense of safety.
 - Large-scale processing amplifying a small per-record risk. Even a low false-negative rate
@@ -117,9 +116,9 @@ Since the consultancy acts as a processor in a real engagement, requests from an
 (access, correction, erasure, and so on) are the controller's (the client's) responsibility to
 respond to, with the consultancy supporting that response under the DPA, per Article 28(3)(e).
 In practice, that support means being able to locate and remove a given person's data from a
-client's warehouse on request. This capstone does not yet build a dedicated per-person
-search-and-erase tool, that is a real gap for a production version, and is listed as a
-full-deployment hardening item in `strategic_plan.md`.
+client's warehouse on request. The project does not yet include a dedicated per-person
+search-and-erase tool, that is a real gap for a production version, and is planned for the
+pilot, before real client data is used (story P9 in `delivery_plan.md`).
 
 ## Third-party and cross-border transfers
 

@@ -5,8 +5,9 @@
 ### Phase 1: POC (done)
 
 What exists today: the pipeline described in `pipeline/pipeline_documentation.md`, tested end
-to end on two structurally different datasets, Olist (clean, relational, about 1.5 million rows)
-and the full CFPB Consumer Complaint Database (messy, mostly flat, 17.4 million rows). Includes
+to end on three structurally different datasets: Olist (clean, relational, about 1.5 million
+rows), the full CFPB Consumer Complaint Database (messy, mostly flat, 17.4 million rows), and
+Open Food Facts (nested JSON with an inconsistent schema). Includes
 the free text PII check, the casing consistency check, and a retry loop that fixes most failed
 KPI SQL automatically. This proves the core idea works, not that it is ready for a paying
 client's real data unsupervised.
@@ -25,13 +26,13 @@ staying mandatory.
 **Hardening work planned for this phase**, carried over from
 `pipeline/pipeline_documentation.md`'s limits section:
 
-- Add caching and basic cost control on repeated runs. Not urgent today (cost stays under 50
-  EUR per onboarding, see `roi_risk_assessment.md`), but worth having before pilot volume.
 - Build the per-data-subject search-and-erase capability named as a gap in
   `compliance/gdpr_documentation.md`, needed before real client data (not public stand-in data)
   is used.
 - Sign a Data Processing Agreement with each pilot client, and confirm OpenAI's and LangSmith's
   transfer mechanisms against it, per `compliance/gdpr_documentation.md`'s transfers table.
+- Security review and one isolated environment per client before any real client data is
+  loaded. Costed in `roi_risk_assessment.md`'s "Commercial readiness" table.
 
 ### Phase 3: Full deployment
 
@@ -40,6 +41,8 @@ client gets a Data Copilot first draft as a normal part of onboarding.
 
 **Hardening work planned for this phase:**
 
+- Add caching and basic cost control on repeated runs. Not needed at pilot volume (LLM cost is
+  about 0.001 EUR per run, see `roi_risk_assessment.md`), but worth having before full volume.
 - Add a fallback to a second LLM provider, so a single vendor's outage or pricing change does
   not block onboarding, see the vendor lock-in risk in `roi_risk_assessment.md`.
 - Extend the large-table sampling approach proven in `profiling.py` (see
@@ -56,8 +59,8 @@ across Chleo's own client base first.
 ingesting a brand-new client's nested JSON without writing a bespoke loader each time, see
 `pipeline/load_generic_json.py`. The AI is shown only field names, types, and how often each
 appears across the whole source, never a value, and proposes a relational schema, which
-deterministic code then applies to every record. This is the actual loader behind the Round 2
-Open Food Facts report, not a separate demo. Testing found a real reliability gap first, though:
+deterministic code then applies to every record. This is the actual loader behind the Open Food
+Facts report, not a separate demo. Testing found a real reliability gap first, though:
 the same prompt against the same data did not always propose the same schema. Mitigated by
 asking 3 times and taking the union of tables found, not eliminated. Before Scale can rely on
 this without review on a client's data nobody has looked at yet, it needs either a stronger
@@ -68,16 +71,16 @@ consistency guarantee or a human review step before a proposed schema is applied
 
 | Phase | Duration | Milestone that ends it |
 |---|---|---|
-| POC | Done (this capstone) | Pipeline runs end to end on 2 structurally different datasets, including one at real scale (17.4 million rows) |
-| Discovery | 1 week | Scope agreed with 1 to 2 pilot clients, "good" defined with them up front |
-| Pilot build | 2 to 3 weeks | Caching, cost control, and the data subject rights tooling above are in place |
-| Pilot run | 2 to 4 weeks | 2 to 3 real client onboardings completed, each with mandatory consultant review |
-| Review and decide | 1 week | Pilot compared to the manual process on time and quality, go or no-go decision made |
+| POC | Done | Pipeline runs end to end on 3 structurally different datasets, including one at real scale (17.4 million rows) |
+| Sprint 1: Discovery | Weeks 1 to 2 | Manual onboarding time and client volume measured, and checked against the break-even table in `roi_risk_assessment.md` ("What has to be true for this to pay off"): **Gate 1**. 2 to 3 pilot clients agreed, "good" defined with them. After the gate: isolated environment, DPA template, consultant training started |
+| Sprint 2: Pilot build | Weeks 3 to 4 | Search-and-erase tool in place, security review passed, DPAs signed with every pilot client: **Gate 2** |
+| Sprint 3: Pilot run | Weeks 5 to 6 | Pilot clients 1 and 2 onboarded, each with mandatory consultant review. Issues fixed before client 3 |
+| Sprint 4: Pilot run and decision | Weeks 7 to 8 | Pilot client 3 onboarded, client feedback collected, AI-assisted vs. manual compared: **Gate 3, go or no-go** |
 | Full rollout | Ongoing | Every new client onboarding uses the Data Copilot as standard practice |
 
-Total time to a go or no-go decision: about 6 to 9 weeks, per
-`cost_estimation/timeline_estimate.md`, which this plan carries forward unchanged, since nothing
-in Round 2 changed that estimate's underlying assumptions.
+Total time to a go or no-go decision: **8 weeks** (four two-week sprints). If a dependency is
+late (a pilot client, the lawyer, or the security reviewer), one extra sprint: 10 weeks at most.
+Owners, capacity, and the stories behind each sprint are in `delivery_plan.md`.
 
 ## Go-to-market
 
@@ -87,8 +90,13 @@ in Round 2 changed that estimate's underlying assumptions.
   that boutique firms already use to find tooling and partners. No paid advertising budget
   assumed at this stage.
 - **Pricing:** an internal efficiency tool first (Phase 3), not sold externally yet. If Phase 4
-  happens, priced as a per-seat or per-onboarding-run subscription for other consultancies,
-  reflecting the same 48 EUR per-run cost structure documented in `roi_risk_assessment.md`.
+  happens, the price has to cover more than the 48 EUR per run. Each licensed consultancy needs
+  its own isolated environment (about 8 hours setup, 760 EUR), a processor agreement with us as
+  their sub-processor (about 1 hour of lawyer time, 250 EUR), a share of the yearly security
+  review, hosting (about 30 EUR per month) and support (about 2 hours, 190 EUR per month). So
+  the price floor is a one-time setup fee of about 1,000 EUR plus a monthly subscription of at
+  least 220 EUR, before any per-run fee or margin. The numbers come from the same assumptions
+  as `cost_estimation/roi_scenarios.py`.
 - **Differentiator:** per `research/opportunities_risks.md`'s competitor landscape, no single
   existing tool bundles quality profiling, AI data modeling, and KPI generation for a boutique
   consultancy's specific new-client onboarding workflow. Existing tools assume a client already
@@ -107,12 +115,13 @@ in Round 2 changed that estimate's underlying assumptions.
 
 | Phase | KPI | Target |
 |---|---|---|
-| Pilot | Onboarding time, AI-assisted vs. manual | Under 1 hour vs. the current 4 to 8 hours, per `use_case_definition.md`'s success criteria |
+| Discovery | Measured manual onboarding time and real client volume | At or above the break-even table in `roi_risk_assessment.md` ("What has to be true for this to pay off"), or the project stops or is rescoped |
+| Pilot | Onboarding time, AI-assisted vs. manual | Under 1 hour of consultant time, against the manual time measured in Discovery, per `use_case_definition.md`'s success criteria |
 | Pilot | Free text PII correctly flagged before client delivery | 100%, verified against a held-out sample the consultant checks by hand |
-| Pilot | Consultant-reported trust in the draft | Qualitative, gathered after each pilot onboarding, not just measured in time saved |
-| Pilot to full deployment gate | All of the above, plus: no pilot client report was found by the reviewing consultant to contain unredacted personal data | All conditions met, or the gate does not open |
+| Pilot | Consultant and client view of the report | Rated useful, gathered after each pilot onboarding, not just measured in time saved |
+| Pilot to full deployment gate (Gate 3) | All of the above, plus: no pilot report contained unredacted personal data, and the ROI recalculated with the measured numbers is still positive within 36 months | All conditions met, or the gate does not open |
 | Full deployment | Share of new-client onboardings using the Data Copilot as standard practice | 100% within 2 months of the go decision |
-| Full deployment | ROI | Tracking against the 113% (12 month) and 370% (36 month) figures in `roi_risk_assessment.md`, revisited with real pilot data once available |
+| Full deployment | ROI | Tracking against the base case in `roi_risk_assessment.md` (-16% at 12 months, 72% at 36 months, break-even after about 15 months), recalculated with the measured pilot numbers |
 
 ## Commercialisation model
 

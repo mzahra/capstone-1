@@ -1,6 +1,6 @@
 # Data Copilot
 
-Capstone project, Round 1 and Round 2.
+AI Manager final project.
 
 **Sector:** Data & Analytics Consulting Services (small company)
 
@@ -79,7 +79,7 @@ needing to run the pipeline first (which needs your own OpenAI and LangSmith API
   the KPI list with real executed results, the quality findings, the data science
   opportunities, and the AI written business insights. This is the main file `dashboard/app.py`
   reads to render the report.
-- **`Client Onboarding Report.pdf`**: a static snapshot of the Round 1 dashboard, so the report
+- **`Client Onboarding Report.pdf`**: a static snapshot of the dashboard, so the report
   can be viewed without running Streamlit at all.
 
 ## Repo structure
@@ -89,9 +89,9 @@ research/            sector research, opportunity and risk mapping, use cases, c
 dashboard/           Streamlit dashboard (app.py) and its documentation
 pipeline/            the pipeline: load data, profile it, AI model/KPI/insight generation, orchestration
 langsmith/            monitoring setup and what is traced, and why
-cost_estimation/      upfront cost and timeline estimate, with assumptions
+cost_estimation/      one-time investment, ongoing cost and timeline estimate, with assumptions
 compliance/           EU AI Act and GDPR documentation
-feedback/             round1_decision.md, written after presenting to teaching staff
+feedback/             review feedback on the project
 outputs/              generated reports and profiles, for all three datasets
 ```
 
